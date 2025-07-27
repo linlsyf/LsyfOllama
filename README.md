@@ -1,0 +1,2 @@
+# LsyfOllama
+Ollama plugin
