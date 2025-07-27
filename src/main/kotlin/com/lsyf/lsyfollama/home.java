@@ -9,6 +9,6 @@ public class home extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         //显示对话框并展示对应的信息
-        Messages.showInfoMessage("素材不够，插件来凑！", "Hello");
+        Messages.showInfoMessage("这是新的开始！", "Hello");
     }
 }
