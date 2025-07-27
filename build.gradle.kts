@@ -1,8 +1,8 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
-//    id("org.jetbrains.intellij.platform") version "2.5.0"
-    id("org.jetbrains.intellij") version "1.17.3" // 2025.1+ 推荐 ≥1.17.x
+    id("org.jetbrains.intellij.platform") version "2.5.0"
+//    id("org.jetbrains.intellij") version "2.2.0" // 2025.1+ 推荐 ≥1.17.x
 }
 
 group = "com.lsyf"
@@ -19,42 +19,33 @@ repositories {
     // 默认仓库（保持兼容性）
     gradlePluginPortal()
     mavenCentral()
-//    intellijPlatform {
-//        defaultRepositories()
-//    }
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
-//    intellijPlatform {
+    intellijPlatform {
 //        create("IU", "2025.1")
 //        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
+
+        local("C:\\\\Program Files\\\\JetBrains\\\\IntelliJ_IDEA") // Windows 路径示例
 //
-////
-////        localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1.4.1") // macOS路径
-////        // Windows示例：localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1")
-////        downloadSources.set(false) // 关闭源码下载（可选）
-
-//    }
-
-
-    //intellij {
-//    localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1.4.1") // macOS路径
-//    // Windows示例：localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1")
-//    downloadSources.set(false) // 关闭源码下载（可选）
-//}
-    intellij {
 //        localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1.4.1") // macOS路径
-        // Windows示例：localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1")
-
-        localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1.4.1")
-
+//        // Windows示例：localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1")
 //        downloadSources.set(false) // 关闭源码下载（可选）
-    }
-    //        // Add necessary plugin dependencies for compilation here, example:
-//        bundledPlugin("com.intellij.java")
 
+    }
+
+
+//    intellij {
+////        localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1.4.1") // macOS路径
+//        // Windows示例：localPath.set("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1")
+//        localPath.set("C:\\Program Files\\JetBrains\\IntelliJ_IDEA")
+//
+//    }
 }
 
 //intellijPlatform {
