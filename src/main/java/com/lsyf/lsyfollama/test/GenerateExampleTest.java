@@ -1,5 +1,6 @@
 package com.lsyf.lsyfollama.test;
 
+import com.lsyf.lsyfollama.ChatConstant;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
 import io.github.ollama4j.exceptions.ToolInvocationException;
@@ -9,6 +10,7 @@ import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatResponseModel;
 import io.github.ollama4j.models.generate.OllamaTokenHandler;
 import io.github.ollama4j.models.response.OllamaResult;
+import io.github.ollama4j.utils.Options;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,13 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 public class GenerateExampleTest {
-            static String model = "qwen2.5-coder:0.5b";
 
     public static void main(String[] args) throws OllamaBaseException, IOException, InterruptedException, ToolInvocationException {
 
+        gen();
 
-
-        extracted();
+//        extracted();
 
     }
 
@@ -40,7 +41,7 @@ public class GenerateExampleTest {
 
         OllamaChatRequest request=new OllamaChatRequest();
         request.setStream(true);
-        request.setModel(model);
+        request.setModel(ChatConstant.MODEL);
         List<OllamaChatMessage> messages = new ArrayList<>();
 
 
@@ -58,20 +59,14 @@ public class GenerateExampleTest {
 
     }
     private static void gen() throws OllamaBaseException, IOException, InterruptedException, ToolInvocationException {
-                String model = "qwen2.5-coder:0.5b";
         OllamaAPI ollama = new OllamaAPI("http://www.linlsyf.cn:11434");
 
         Map<String, Object> optionsMap = new HashMap<>();
-        optionsMap.put("temperature", 0.7);  // 温度参数
-        optionsMap.put("max_tokens", 100); // 最大 token 数
-        OllamaResult result = ollama.generate(model, """
-            修复 int i=10/0;
-            ，要求：
-            1. 错误类型：%s
-            2. 包含至少3行代码
-            3. 不要提供修复方案，仅输出代码
-            示例错误：缺少分号、变量未定义、逻辑错误等
-            """, optionsMap);
+//        optionsMap.put("temperature", 0.7);  // 温度参数
+//        optionsMap.put("stream",false);  // 温度参数
+//        optionsMap.put("max_tokens", 100); // 最大 token 数
+        Options options=new Options(optionsMap);
+        OllamaResult result = ollama.generate(ChatConstant.MODEL, "修复 int i=10/0  ", optionsMap);
         System.out.println(result.getResponse());
 
 

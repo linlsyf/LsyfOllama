@@ -4,4 +4,5 @@ public class ChatConstant {
    public  static String MY_PLUGIN_SETTING= "MY_PLUGIN_SETTING";
    public  static String MY_MODEL_SETTING= "MY_MODEL_SETTING";
    public  static String MY_SIDE_BAR= "MySidebar";
+   public  static String MODEL= "qwen2.5-coder:14b";
 }

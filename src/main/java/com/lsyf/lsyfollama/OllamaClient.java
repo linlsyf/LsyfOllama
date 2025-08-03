@@ -30,7 +30,6 @@ public class OllamaClient {
     );
     public static void chatStreaming(OllamaChatRequest request, OllamaTokenHandler tokenHandler) throws Exception {
         String model = modelSetting;
-//        String model = "qwen2.5-coder:0.5b";
         request.setStream(true);
         request.setModel(model);
 
@@ -87,15 +86,12 @@ public class OllamaClient {
     }
 
     private static String processText(String selectedText) {
-
-//
         OllamaAPI ollama =new OllamaAPI("http://www.linlsyf.cn:11434");
         String result = "";
 
-        String  model="qwen2.5-coder:0.5b";
         OllamaChatRequest request=new OllamaChatRequest();
         request.setStream(true);
-        request.setModel(model);
+        request.setModel(modelSetting);
         List<OllamaChatMessage> messages = new ArrayList<>();
         messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, selectedText));
         request.setMessages(messages); // 必须包含消息列表
@@ -108,7 +104,5 @@ public class OllamaClient {
 
        return result;
     }
-//    public static void repairMessage(String selectedText) {
-//
-//    }
+
 }
