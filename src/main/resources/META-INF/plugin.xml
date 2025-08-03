@@ -8,13 +8,15 @@
     <name>LsyfOllama</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor url="http://www.linlsyf.cn">linlsyf</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+          ai chat and contextmenu query    you can  config  Ollama ip:11434 and model
+          after that you select code  right click select linlsyfQuery menu  and
+          linlsyfRepair
+
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -25,10 +27,10 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow
-                id="MySidebar"
+                id="LinlsyfAi"
                 anchor="right"
                 factoryClass="com.lsyf.lsyfollama.ui.ChatWindowHomeFactory"/>
-        <applicationConfigurable id="MyPlugin.Settings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
+        <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
     </extensions>
 
@@ -37,11 +39,11 @@
         <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
         <!--        </action>-->
 
-        <action id="Hello11" class="com.lsyf.lsyfollama.ui.ContextMenuHelloAction" text="建议"
+        <action id="Hello11" class="com.lsyf.lsyfollama.ui.ContextMenuHelloAction" text="linlsyfQuery"
                 description="显示修复建议">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="Hello12" class="com.lsyf.lsyfollama.ui.ContextMenuRepairAction" text="立即修复"
+        <action id="Hello12" class="com.lsyf.lsyfollama.ui.ContextMenuRepairAction" text="linlsyfRepair"
                 description="立即修复">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>

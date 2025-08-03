@@ -22,19 +22,17 @@ import java.util.List;
 public class OllamaClient {
     static String apiUrl = PropertiesComponent.getInstance().getValue(
             ChatConstant.MY_PLUGIN_SETTING,
-            "未設置" // 默认值
+            "请设置ip:11434" // 默认值
     );
     static String modelSetting = PropertiesComponent.getInstance().getValue(
             ChatConstant.MY_MODEL_SETTING,
-            "未設置" // 默认值
+            ChatConstant.MODEL // 默认值
     );
     public static void chatStreaming(OllamaChatRequest request, OllamaTokenHandler tokenHandler) throws Exception {
         String model = modelSetting;
         request.setStream(true);
         request.setModel(model);
-
-        io.github.ollama4j.OllamaAPI ollama = new io.github.ollama4j.OllamaAPI(apiUrl);
-
+        OllamaAPI ollama = new OllamaAPI(apiUrl);
         ollama.chatStreaming(request, tokenHandler);
 
     }
@@ -51,10 +49,9 @@ public class OllamaClient {
         String selectedText = selectionModel.getSelectedText();
         String prompt = "修复以下Java代码的错误：\n```java\n" + selectedText + "\n```";
 
-
         ToolWindowService service = project.getService(ToolWindowService.class);
-        ChatToolWindow chatTool =service.getCustomPanel();
-          chatTool.sendMessage(prompt);
+        ChatToolWindow chatTool = service.getCustomPanel();
+        chatTool.sendMessage(prompt);
 
     }
     public static void repair(AnActionEvent e, AnAction action) {
@@ -72,16 +69,13 @@ public class OllamaClient {
 
         final int start = selectionModel.getSelectionStart();
         final int end = selectionModel.getSelectionEnd();
-        final String newText = processText(selectedText); // 自定义替换逻辑
+        final String newText = processText(prompt); // 自定义替换逻辑
 
         // 执行替换（线程安全）
         WriteCommandAction.runWriteCommandAction(project, () -> {
             editor.getDocument().replaceString(start, end, newText);
             selectionModel.removeSelection(); // 取消选中状态
         });
-//        ToolWindowService service = project.getService(ToolWindowService.class);
-//        ChatToolWindow chatTool =service.getCustomPanel();
-//          chatTool.sendMessage(prompt);
 
     }
 

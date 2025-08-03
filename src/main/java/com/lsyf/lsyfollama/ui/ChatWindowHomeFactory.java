@@ -11,7 +11,6 @@ import javax.swing.*;
 public class ChatWindowHomeFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-//        SwingUtilities.invokeLater(() -> { // 确保在 EDT 线程
         ChatToolWindow chatTool = new ChatToolWindow();
 
         // 注册到服务
@@ -23,7 +22,5 @@ public class ChatWindowHomeFactory implements ToolWindowFactory {
         panel.revalidate(); // 强制刷新布局
 //        });
         toolWindow.show(); // 显示窗口
-
-
     }
 }

@@ -45,14 +45,14 @@ public class ChatToolWindow {
         // 底部输入面板
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.add(inputField, BorderLayout.CENTER);
-        inputPanel.add(repairButton, BorderLayout.WEST);
+//        inputPanel.add(repairButton, BorderLayout.WEST);
         inputPanel.add(sendButton, BorderLayout.EAST);
 
         // 组装主面板
         chatPanel.add(scrollPane, BorderLayout.CENTER);
         chatPanel.add(inputPanel, BorderLayout.SOUTH);
 
-        // 事件监听
+//        // 事件监听
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,14 +64,14 @@ public class ChatToolWindow {
             }
         });
         // 事件监听
-        repairButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedText = messageArea.getSelectedText();
-
-//                OllamaClient.repair(e);
-            }
-        });
+//        repairButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String selectedText = messageArea.getSelectedText();
+//
+////                OllamaClient.repair(e);
+//            }
+//        });
         inputField.addActionListener(new ActionListener() { // 支持回车发送
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,40 +122,14 @@ public class ChatToolWindow {
 
     }
 
-    StringBuilder buffer = new StringBuilder();
 
     private void writeMsg(String message) {
-
-//        messageArea.append(message);
         SwingUtilities.invokeLater(() -> messageArea.append(message));
-
-//        buffer.append(message);
-//        if (buffer.length() >= 32768 || message.endsWith(" ") || message.endsWith("\n") || message.endsWith("。")) {
-//            String chunk = buffer.toString();
-//            buffer.setLength(0);
-//            SwingUtilities.invokeLater(() -> messageArea.append(chunk));
-//        }
-
-//
-//        buffer.append(message);
-//
-//        // 按标点或空格分块（避免频繁刷新）
-//        if (message.endsWith(" ") || message.endsWith("\n") || message.endsWith("。")) {
-//            String chunk = buffer.toString();
-//            buffer.setLength(0); // 清空缓冲
-//            SwingUtilities.invokeLater(() -> {
-//                messageArea.append(chunk);
-////                messageArea.setCaretPosition(messageArea.getDocument().getLength());
-//            });
-
-//        }
-
     }
 
     // 返回主面板（供IDEA插件集成）
     public JPanel getContent() {
         return chatPanel;
     }
-
 
 }
