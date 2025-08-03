@@ -1,0 +1,156 @@
+package com.lsyf.lsyfollama.ui;
+
+import com.lsyf.lsyfollama.OllamaClient;
+import io.github.ollama4j.models.chat.OllamaChatMessage;
+import io.github.ollama4j.models.chat.OllamaChatMessageRole;
+import io.github.ollama4j.models.chat.OllamaChatRequest;
+import io.github.ollama4j.models.chat.OllamaChatResponseModel;
+import io.github.ollama4j.models.generate.OllamaTokenHandler;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatToolWindow {
+    private JPanel chatPanel;          // 主面板
+    private JTextArea messageArea;    // 消息显示区域
+    private JTextField inputField;     // 消息输入框
+    private JButton sendButton;        // 发送按钮
+    private JButton stopButton;        // stop按钮
+
+    public ChatToolWindow() {
+        // 初始化组件
+        chatPanel = new JPanel(new BorderLayout());
+//        chatPanel.add(new JButton("测试按钮"));
+        messageArea =  new JTextArea() {
+            @Override
+            public void paintComponent(Graphics g) {
+                // 启用双缓冲
+                super.paintComponent(g);
+            }
+        };
+        inputField = new JTextField(20);
+        inputField.setText("如何记单词");
+        sendButton = new JButton("发送");
+        stopButton = new JButton("stop");
+
+        // 消息区域设置
+        messageArea.setEditable(false); // 禁止编辑
+        messageArea.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        JScrollPane scrollPane = new JScrollPane(messageArea); // 添加滚动条
+
+        // 底部输入面板
+        JPanel inputPanel = new JPanel(new BorderLayout());
+        inputPanel.add(inputField, BorderLayout.CENTER);
+        inputPanel.add(stopButton, BorderLayout.WEST);
+        inputPanel.add(sendButton, BorderLayout.EAST);
+
+        // 组装主面板
+        chatPanel.add(scrollPane, BorderLayout.CENTER);
+        chatPanel.add(inputPanel, BorderLayout.SOUTH);
+
+        // 事件监听
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                        sendMessage();
+
+
+            }
+        });
+        // 事件监听
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OllamaClient.stopMessage();
+            }
+        });
+        inputField.addActionListener(new ActionListener() { // 支持回车发送
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sendMessage();
+            }
+        });
+    }
+
+    // 发送消息逻辑
+    private void sendMessage()  {
+        String prompt = inputField.getText().trim();
+        messageArea.append("我: " + prompt + "\n"); // 添加消息到显示区
+        inputField.setText("");                      // 清空输入框
+        inputField.requestFocus();                   // 焦点回到输入框
+
+        try {
+
+            Thread appThread = new Thread() {
+                public void run() {
+                    OllamaChatRequest request=new OllamaChatRequest();
+                    List<OllamaChatMessage> messages = new ArrayList<>();
+                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
+                    request.setMessages(messages); // 必须包含消息列表
+                    try {
+                        OllamaClient.chatStreaming(request, new OllamaTokenHandler() {
+                            @Override
+                            public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
+                                writeMsg(ollamaChatResponseModel.getMessage().getContent());
+                                System.out.println(ollamaChatResponseModel.getMessage().getContent());
+                            }
+
+                        });
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+            };
+            appThread.start();
+
+
+        } catch (Exception e) {
+          writeMsg(e.getMessage() + "\n"); // 添加消息到显示区
+//            throw new RuntimeException(e);
+        }
+
+
+    }
+    StringBuilder buffer = new StringBuilder();
+
+    private void writeMsg(String message){
+
+//        messageArea.append(message);
+          SwingUtilities.invokeLater(() -> messageArea.append(message));
+
+//        buffer.append(message);
+//        if (buffer.length() >= 32768 || message.endsWith(" ") || message.endsWith("\n") || message.endsWith("。")) {
+//            String chunk = buffer.toString();
+//            buffer.setLength(0);
+//            SwingUtilities.invokeLater(() -> messageArea.append(chunk));
+//        }
+
+//
+//        buffer.append(message);
+//
+//        // 按标点或空格分块（避免频繁刷新）
+//        if (message.endsWith(" ") || message.endsWith("\n") || message.endsWith("。")) {
+//            String chunk = buffer.toString();
+//            buffer.setLength(0); // 清空缓冲
+//            SwingUtilities.invokeLater(() -> {
+//                messageArea.append(chunk);
+////                messageArea.setCaretPosition(messageArea.getDocument().getLength());
+//            });
+
+//        }
+
+    }
+
+    // 返回主面板（供IDEA插件集成）
+    public JPanel getContent() {
+        return chatPanel;
+    }
+
+
+}

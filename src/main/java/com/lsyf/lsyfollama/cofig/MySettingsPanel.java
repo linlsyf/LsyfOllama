@@ -1,22 +1,31 @@
-package com.lsyf.lsyfollama;
+package com.lsyf.lsyfollama.cofig;
 
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
+import com.lsyf.lsyfollama.ChatConstant;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MySettingsPanel implements Configurable {
     private JPanel mainPanel;
 
     private JTextField inputField;
+    private JTextField modelField;
 
 
     @Override
     public @Nullable JComponent createComponent() {
+        mainPanel= new JPanel(new BorderLayout());
+
         inputField = new JTextField();
-        return inputField;
+
+        modelField = new JTextField();
+        mainPanel.add(inputField, BorderLayout.CENTER);
+        mainPanel.add(modelField, BorderLayout.SOUTH);
+        return mainPanel;
     }
 
     @Override
@@ -35,12 +44,15 @@ public class MySettingsPanel implements Configurable {
     public void apply() {
         // 保存配置到 PropertiesComponent
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_PLUGIN_SETTING, inputField.getText());
+        PropertiesComponent.getInstance().setValue(ChatConstant.MY_MODEL_SETTING, modelField.getText());
+
     }
 
     @Override
     public void reset() {
         // 重置为默认值或加载已保存的配置
-        inputField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "defaultValue"));
+        inputField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
+        modelField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
     }
 
     @Override

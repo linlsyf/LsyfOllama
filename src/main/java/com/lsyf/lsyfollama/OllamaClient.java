@@ -9,8 +9,13 @@ public class OllamaClient {
             ChatConstant.MY_PLUGIN_SETTING,
             "未設置" // 默认值
     );
+    static String modelSetting = PropertiesComponent.getInstance().getValue(
+            ChatConstant.MY_MODEL_SETTING,
+            "未設置" // 默认值
+    );
     public static void chatStreaming(OllamaChatRequest request, OllamaTokenHandler tokenHandler) throws Exception {
-        String model = "qwen2.5-coder:0.5b";
+        String model = modelSetting;
+//        String model = "qwen2.5-coder:0.5b";
         request.setStream(true);
         request.setModel(model);
 

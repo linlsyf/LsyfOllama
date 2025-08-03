@@ -1,4 +1,4 @@
-package com.lsyf.lsyfollama;
+package com.lsyf.lsyfollama.test;
 
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
@@ -24,7 +24,6 @@ public class GenerateExampleTest {
 
         String  model="qwen2.5-coder:0.5b";
         OllamaChatRequest request=new OllamaChatRequest();
-//        request.set
         request.setStream(true);
         request.setModel(model);
         List<OllamaChatMessage> messages = new ArrayList<>();
