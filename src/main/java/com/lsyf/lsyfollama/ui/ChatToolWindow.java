@@ -56,8 +56,9 @@ public class ChatToolWindow {
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String prompt = inputField.getText().trim();
 
-                        sendMessage();
+                sendMessage(prompt);
 
 
             }
@@ -72,14 +73,15 @@ public class ChatToolWindow {
         inputField.addActionListener(new ActionListener() { // 支持回车发送
             @Override
             public void actionPerformed(ActionEvent e) {
-                sendMessage();
+                String prompt = inputField.getText().trim();
+
+                sendMessage(prompt);
             }
         });
     }
 
     // 发送消息逻辑
-    private void sendMessage()  {
-        String prompt = inputField.getText().trim();
+    public void sendMessage(String prompt)  {
         messageArea.append("我: " + prompt + "\n"); // 添加消息到显示区
         inputField.setText("");                      // 清空输入框
         inputField.requestFocus();                   // 焦点回到输入框

@@ -27,12 +27,19 @@
         <toolWindow
                 id="MySidebar"
                 anchor="right"
-        factoryClass="com.lsyf.lsyfollama.ui.ChatWindowFactory"/>
-            <applicationConfigurable id="MyPlugin.Settings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
+                factoryClass="com.lsyf.lsyfollama.ui.ChatWindowHomeFactory"/>
+        <applicationConfigurable id="MyPlugin.Settings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
+        <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
     </extensions>
+
     <actions>
-<!--        <action id="ollamakit" class="com.lsyf.lsyfollama.ui.home" text="linOllama">-->
-<!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
-<!--        </action>-->
+        <!--        <action id="ollamakit" class="com.lsyf.lsyfollama.ui.home" text="linOllama">-->
+        <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
+        <!--        </action>-->
+
+        <action id="Hello11" class="com.lsyf.lsyfollama.ui.ContextMenuHelloAction" text="Hello 11"
+                description="Hello11">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
     </actions>
 </idea-plugin>
