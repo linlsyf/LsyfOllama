@@ -19,13 +19,13 @@ public class ChatToolWindow {
     private JTextArea messageArea;    // 消息显示区域
     private JTextField inputField;     // 消息输入框
     private JButton sendButton;        // 发送按钮
-    private JButton stopButton;        // stop按钮
+    private JButton repairButton;        // stop按钮
 
     public ChatToolWindow() {
         // 初始化组件
         chatPanel = new JPanel(new BorderLayout());
 //        chatPanel.add(new JButton("测试按钮"));
-        messageArea =  new JTextArea() {
+        messageArea = new JTextArea() {
             @Override
             public void paintComponent(Graphics g) {
                 // 启用双缓冲
@@ -35,7 +35,7 @@ public class ChatToolWindow {
         inputField = new JTextField(20);
         inputField.setText("如何记单词");
         sendButton = new JButton("发送");
-        stopButton = new JButton("stop");
+        repairButton = new JButton("stop");
 
         // 消息区域设置
         messageArea.setEditable(false); // 禁止编辑
@@ -45,7 +45,7 @@ public class ChatToolWindow {
         // 底部输入面板
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.add(inputField, BorderLayout.CENTER);
-        inputPanel.add(stopButton, BorderLayout.WEST);
+        inputPanel.add(repairButton, BorderLayout.WEST);
         inputPanel.add(sendButton, BorderLayout.EAST);
 
         // 组装主面板
@@ -64,10 +64,12 @@ public class ChatToolWindow {
             }
         });
         // 事件监听
-        stopButton.addActionListener(new ActionListener() {
+        repairButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                OllamaClient.stopMessage();
+                String selectedText = messageArea.getSelectedText();
+
+//                OllamaClient.repair(e);
             }
         });
         inputField.addActionListener(new ActionListener() { // 支持回车发送
@@ -81,7 +83,7 @@ public class ChatToolWindow {
     }
 
     // 发送消息逻辑
-    public void sendMessage(String prompt)  {
+    public void sendMessage(String prompt) {
         messageArea.append("我: " + prompt + "\n"); // 添加消息到显示区
         inputField.setText("");                      // 清空输入框
         inputField.requestFocus();                   // 焦点回到输入框
@@ -90,7 +92,7 @@ public class ChatToolWindow {
 
             Thread appThread = new Thread() {
                 public void run() {
-                    OllamaChatRequest request=new OllamaChatRequest();
+                    OllamaChatRequest request = new OllamaChatRequest();
                     List<OllamaChatMessage> messages = new ArrayList<>();
                     messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
                     request.setMessages(messages); // 必须包含消息列表
@@ -113,18 +115,19 @@ public class ChatToolWindow {
 
 
         } catch (Exception e) {
-          writeMsg(e.getMessage() + "\n"); // 添加消息到显示区
+            writeMsg(e.getMessage() + "\n"); // 添加消息到显示区
 //            throw new RuntimeException(e);
         }
 
 
     }
+
     StringBuilder buffer = new StringBuilder();
 
-    private void writeMsg(String message){
+    private void writeMsg(String message) {
 
 //        messageArea.append(message);
-          SwingUtilities.invokeLater(() -> messageArea.append(message));
+        SwingUtilities.invokeLater(() -> messageArea.append(message));
 
 //        buffer.append(message);
 //        if (buffer.length() >= 32768 || message.endsWith(" ") || message.endsWith("\n") || message.endsWith("。")) {

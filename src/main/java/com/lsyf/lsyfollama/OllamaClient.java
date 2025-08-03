@@ -4,13 +4,20 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.lsyf.lsyfollama.ui.ChatToolWindow;
+import io.github.ollama4j.OllamaAPI;
+import io.github.ollama4j.models.chat.OllamaChatMessage;
+import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
+import io.github.ollama4j.models.chat.OllamaChatResult;
 import io.github.ollama4j.models.generate.OllamaTokenHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OllamaClient {
     static String apiUrl = PropertiesComponent.getInstance().getValue(
@@ -33,32 +40,75 @@ public class OllamaClient {
 
     }
     public static void consumerContextMenu(AnActionEvent e, AnAction action) {
-//        Messages.showInfoMessage("这是新的开始！", action.getTemplateText());
         Editor editor = e.getData(CommonDataKeys.EDITOR);
         if (editor == null) return; // 确保编辑器存在
-
         Project project = e.getProject();
         if (project == null) return; // 确保项目存在
-        Document document = editor.getDocument();
-        String fullText = document.getText(); // 读取整个文件内容
+//        Document document = editor.getDocument();
+//        String fullText = document.getText(); // 读取整个文件内容
 
 // 读取选中文本（若有）
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        String prompt = "检测以下 Java 代码的错误：\n```java\n" + selectedText + "\n```";
+        String prompt = "修复以下Java代码的错误：\n```java\n" + selectedText + "\n```";
 
-// 获取当前项目实例
-// 通过 ToolWindowManager 获取工具窗口
-//        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(MY_SIDE_BAR);
-//        JComponent jComponent= toolWindow.getComponent();
-//        Component chatComponent =  jComponent.getComponent(0);
-//        ChatToolWindow chatTool = (ChatToolWindow) chatComponent.getParent().getComponent(0);
-//        ChatToolWindow chatTool =project.getComponent(ChatToolWindow.class);
+
         ToolWindowService service = project.getService(ToolWindowService.class);
         ChatToolWindow chatTool =service.getCustomPanel();
           chatTool.sendMessage(prompt);
 
     }
-    public static void stopMessage() {
+    public static void repair(AnActionEvent e, AnAction action) {
+        Editor editor = e.getData(CommonDataKeys.EDITOR);
+        if (editor == null) return; // 确保编辑器存在
+        Project project = e.getProject();
+        if (project == null) return; // 确保项目存在
+//        Document document = editor.getDocument();
+//        String fullText = document.getText(); // 读取整个文件内容
+
+// 读取选中文本（若有）
+        SelectionModel selectionModel = editor.getSelectionModel();
+        String selectedText = selectionModel.getSelectedText();
+        String prompt = "修复 Java 代码的错误：\n```java\n" + selectedText + "\n```";
+
+        final int start = selectionModel.getSelectionStart();
+        final int end = selectionModel.getSelectionEnd();
+        final String newText = processText(selectedText); // 自定义替换逻辑
+
+        // 执行替换（线程安全）
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            editor.getDocument().replaceString(start, end, newText);
+            selectionModel.removeSelection(); // 取消选中状态
+        });
+//        ToolWindowService service = project.getService(ToolWindowService.class);
+//        ChatToolWindow chatTool =service.getCustomPanel();
+//          chatTool.sendMessage(prompt);
+
     }
+
+    private static String processText(String selectedText) {
+
+//
+        OllamaAPI ollama =new OllamaAPI("http://www.linlsyf.cn:11434");
+        String result = "";
+
+        String  model="qwen2.5-coder:0.5b";
+        OllamaChatRequest request=new OllamaChatRequest();
+        request.setStream(true);
+        request.setModel(model);
+        List<OllamaChatMessage> messages = new ArrayList<>();
+        messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, selectedText));
+        request.setMessages(messages); // 必须包含消息列表
+        try {
+            OllamaChatResult ollamaChatResult=ollama.chat(request);
+            result=ollamaChatResult.getResponse();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+       return result;
+    }
+//    public static void repairMessage(String selectedText) {
+//
+//    }
 }

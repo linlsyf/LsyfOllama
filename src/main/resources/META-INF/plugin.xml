@@ -37,8 +37,12 @@
         <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
         <!--        </action>-->
 
-        <action id="Hello11" class="com.lsyf.lsyfollama.ui.ContextMenuHelloAction" text="Hello 11"
-                description="Hello11">
+        <action id="Hello11" class="com.lsyf.lsyfollama.ui.ContextMenuHelloAction" text="建议"
+                description="显示修复建议">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="Hello12" class="com.lsyf.lsyfollama.ui.ContextMenuRepairAction" text="立即修复"
+                description="立即修复">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
     </actions>
