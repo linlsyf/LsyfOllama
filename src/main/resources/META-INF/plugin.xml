@@ -24,15 +24,11 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-<!--        <toolWindow-->
-<!--                id="MySidebar"-->
-<!--                anchor="right"-->
-<!--                icon="com.intellij.webcore.libraries.ui.ScriptingLibraryIcons.CHECKED_ICON"-->
-<!--        factoryClass="com.lsyf.lsyfollama.ChatWindowFactory"/>-->
         <toolWindow
                 id="MySidebar"
                 anchor="right"
-        factoryClass="com.lsyf.lsyfollama.ToolWindowFactory"/>
+        factoryClass="com.lsyf.lsyfollama.ChatWindowFactory"/>
+            <applicationConfigurable id="MyPlugin.Settings" instance="com.lsyf.lsyfollama.MySettingsPanel"/>
     </extensions>
     <actions>
         <action id="ollamakit" class="com.lsyf.lsyfollama.home" text="linOllama">

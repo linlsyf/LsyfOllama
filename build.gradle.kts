@@ -35,8 +35,7 @@ dependencies {
 //        implementation("com.intellij.platform:ui-dsl-platform:2024.3.0")
 
     }
-//    implementation("com.intellij.platform:ui-dsl-platform:2025.1.0")
-//    implementation ("com.intellij:forms_rt:7.0.3") // 支持Swing设计器
+    implementation("io.github.ollama4j:ollama4j:1.0.100")
 }
 
 
