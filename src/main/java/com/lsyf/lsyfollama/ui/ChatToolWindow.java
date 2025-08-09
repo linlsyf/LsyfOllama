@@ -1,5 +1,6 @@
 package com.lsyf.lsyfollama.ui;
 
+import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.OllamaClient;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
@@ -88,6 +89,10 @@ public class ChatToolWindow {
         inputField.setText("");                      // 清空输入框
         inputField.requestFocus();                   // 焦点回到输入框
 
+         if (!ChatConstant.apiUrl.startsWith("http")){
+             writeMsg("please  set ip and  model");
+         }
+
         try {
 
             Thread appThread = new Thread() {
@@ -97,8 +102,6 @@ public class ChatToolWindow {
 //                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, "你是一个Java专家，只回答技术问题"));
                     messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
 //                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.ASSISTANT, "直接输出代码"));
-
-
 
                     request.setMessages(messages); // 必须包含消息列表
                     try {

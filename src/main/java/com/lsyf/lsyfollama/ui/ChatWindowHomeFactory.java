@@ -22,5 +22,6 @@ public class ChatWindowHomeFactory implements ToolWindowFactory {
         panel.revalidate(); // 强制刷新布局
 //        });
         toolWindow.show(); // 显示窗口
+
     }
 }

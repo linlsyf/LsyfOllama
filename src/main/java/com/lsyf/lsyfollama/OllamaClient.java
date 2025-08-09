@@ -21,13 +21,14 @@ import java.util.List;
 
 public class OllamaClient {
 
+
     public static void chatStreaming(OllamaChatRequest request, OllamaTokenHandler tokenHandler) throws Exception {
         String model = ChatConstant.modelSetting;
         request.setStream(true);
         request.setModel(model);
+
         OllamaAPI ollama = new OllamaAPI(ChatConstant.apiUrl);
         ollama.chatStreaming(request, tokenHandler);
-
     }
     public static void consumerContextMenu(AnActionEvent e, AnAction action) {
         Editor editor = e.getData(CommonDataKeys.EDITOR);
@@ -40,7 +41,7 @@ public class OllamaClient {
 // 读取选中文本（若有）
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        String prompt = "解释以下Java代码：\n```java\n" + selectedText + "\n  buyo ```";
+        String prompt = "解释以下Java代码：" + selectedText + "\n ";
 
         ToolWindowService service = project.getService(ToolWindowService.class);
         ChatToolWindow chatTool = service.getCustomPanel();
@@ -58,7 +59,7 @@ public class OllamaClient {
 // 读取选中文本（若有）
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        String prompt = "修复 Java 代码的错误：\n```java\n" + selectedText + "\n```";
+        String prompt = "修复 Java 代码的错误：\n" + selectedText + "\n";
         Document document = editor.getDocument();
 //        final int start = selectionModel.getSelectionStart();
         final String newText = processText(prompt); // 自定义替换逻辑

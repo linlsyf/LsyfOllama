@@ -43,9 +43,14 @@ public class MySettingsPanel implements Configurable {
     @Override
     public void apply() {
         // 保存配置到 PropertiesComponent
-        PropertiesComponent.getInstance().setValue(ChatConstant.MY_PLUGIN_SETTING, inputField.getText());
-        PropertiesComponent.getInstance().setValue(ChatConstant.MY_MODEL_SETTING, modelField.getText());
+        String  IP= inputField.getText();
+        String  MODE= modelField.getText();
+        PropertiesComponent.getInstance().setValue(ChatConstant.MY_PLUGIN_SETTING, IP);
+        PropertiesComponent.getInstance().setValue(ChatConstant.MY_MODEL_SETTING, MODE);
 
+
+        ChatConstant.apiUrl =IP;
+        ChatConstant.modelSetting =MODE;
     }
 
     @Override
@@ -53,6 +58,8 @@ public class MySettingsPanel implements Configurable {
         // 重置为默认值或加载已保存的配置
         inputField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
         modelField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
+        ChatConstant.apiUrl ="";
+        ChatConstant.modelSetting ="";
     }
 
     @Override
@@ -67,6 +74,6 @@ public class MySettingsPanel implements Configurable {
 
     @Override
     public String getDisplayName() {
-        return "lsyf  Settings";
+        return "lsyfSettings";
     }
 }

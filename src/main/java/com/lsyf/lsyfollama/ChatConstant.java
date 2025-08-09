@@ -14,6 +14,6 @@ public class ChatConstant {
    );
    public static String modelSetting = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_MODEL_SETTING,
-           ChatConstant.MODEL // 默认值
+           "qwen2.5-coder:0.5b" // 默认值
    );
 }
