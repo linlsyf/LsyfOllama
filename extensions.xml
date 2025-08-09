@@ -1,0 +1,3 @@
+<extensions defaultExtensionNs="com.intellij">
+    <dynamicReloadable>true</dynamicReloadable>
+</extensions>

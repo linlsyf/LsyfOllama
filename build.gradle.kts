@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
     id("org.jetbrains.intellij.platform") version "2.5.0"
-//    id("org.jetbrains.intellij") version "2.2.0" // 2025.1+ 推荐 ≥1.17.x
+    id("distribution")// 引入分发插件
 }
 
 group = "com.lsyf"
@@ -32,7 +32,6 @@ dependencies {
 
         local("C:\\\\Program Files\\\\JetBrains\\\\IntelliJ_IDEA") // Windows 路径示例
 
-//        implementation("com.intellij.platform:ui-dsl-platform:2024.3.0")
 
     }
     implementation("io.github.ollama4j:ollama4j:1.0.100")

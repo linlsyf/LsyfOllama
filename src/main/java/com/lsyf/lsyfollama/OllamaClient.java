@@ -1,10 +1,10 @@
 package com.lsyf.lsyfollama;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
@@ -20,19 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OllamaClient {
-    static String apiUrl = PropertiesComponent.getInstance().getValue(
-            ChatConstant.MY_PLUGIN_SETTING,
-            "请设置ip:11434" // 默认值
-    );
-    static String modelSetting = PropertiesComponent.getInstance().getValue(
-            ChatConstant.MY_MODEL_SETTING,
-            ChatConstant.MODEL // 默认值
-    );
+
     public static void chatStreaming(OllamaChatRequest request, OllamaTokenHandler tokenHandler) throws Exception {
-        String model = modelSetting;
+        String model = ChatConstant.modelSetting;
         request.setStream(true);
         request.setModel(model);
-        OllamaAPI ollama = new OllamaAPI(apiUrl);
+        OllamaAPI ollama = new OllamaAPI(ChatConstant.apiUrl);
         ollama.chatStreaming(request, tokenHandler);
 
     }
@@ -47,7 +40,7 @@ public class OllamaClient {
 // 读取选中文本（若有）
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        String prompt = "修复以下Java代码的错误：\n```java\n" + selectedText + "\n```";
+        String prompt = "解释以下Java代码：\n```java\n" + selectedText + "\n  buyo ```";
 
         ToolWindowService service = project.getService(ToolWindowService.class);
         ChatToolWindow chatTool = service.getCustomPanel();
@@ -66,32 +59,36 @@ public class OllamaClient {
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
         String prompt = "修复 Java 代码的错误：\n```java\n" + selectedText + "\n```";
-
-        final int start = selectionModel.getSelectionStart();
-        final int end = selectionModel.getSelectionEnd();
+        Document document = editor.getDocument();
+//        final int start = selectionModel.getSelectionStart();
         final String newText = processText(prompt); // 自定义替换逻辑
-
+        int endOffset = selectionModel.getSelectionEnd();
+        int lineEndOffset = document.getLineEndOffset(document.getLineNumber(endOffset));
         // 执行替换（线程安全）
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            editor.getDocument().replaceString(start, end, newText);
-            selectionModel.removeSelection(); // 取消选中状态
+//            editor.getDocument().replaceString(start, end, newText);
+//            selectionModel.removeSelection(); // 取消选中状态
+            document.insertString(lineEndOffset, "\n" + newText); // 插入下一行[6](@ref)
+
         });
 
     }
 
     private static String processText(String selectedText) {
-        OllamaAPI ollama =new OllamaAPI("http://www.linlsyf.cn:11434");
+        OllamaAPI ollama =new OllamaAPI(ChatConstant.apiUrl);
         String result = "";
-
         OllamaChatRequest request=new OllamaChatRequest();
         request.setStream(true);
-        request.setModel(modelSetting);
+        request.setModel(ChatConstant.modelSetting);
         List<OllamaChatMessage> messages = new ArrayList<>();
+        messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, "你是一个Java专家，优先回答技术问题"));
         messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, selectedText));
+        messages.add(new OllamaChatMessage(OllamaChatMessageRole.ASSISTANT, "直接输出代码"));
+
         request.setMessages(messages); // 必须包含消息列表
         try {
             OllamaChatResult ollamaChatResult=ollama.chat(request);
-            result=ollamaChatResult.getResponse();
+            result=ollamaChatResult.getResponseModel().getMessage().getContent();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

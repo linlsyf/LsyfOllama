@@ -21,11 +21,15 @@
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-    <depends>com.intellij.modules.platform</depends>
+    <idea-version since-build="251.0" until-build="255.*"/>  <!-- 控制兼容的 IDE 版本范围 -->
+
+<!--    <depends optional="true" config-file="extensions.xml">com.intellij.modules.platform</depends>-->
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <dynamicReloadable>true</dynamicReloadable>
+
         <toolWindow
                 id="LinlsyfAi"
                 anchor="right"

@@ -94,7 +94,12 @@ public class ChatToolWindow {
                 public void run() {
                     OllamaChatRequest request = new OllamaChatRequest();
                     List<OllamaChatMessage> messages = new ArrayList<>();
+//                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, "你是一个Java专家，只回答技术问题"));
                     messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
+//                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.ASSISTANT, "直接输出代码"));
+
+
+
                     request.setMessages(messages); // 必须包含消息列表
                     try {
                         OllamaClient.chatStreaming(request, new OllamaTokenHandler() {
