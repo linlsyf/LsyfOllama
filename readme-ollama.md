@@ -40,6 +40,10 @@ docker stop $(docker ps -q --filter ancestor=ollama/ollama)
 # 强制删除所有关联容器（包括已停止的）
 docker rm -f $(docker ps -aq --filter ancestor=ollama/ollama)
 
-docer  ollama rm qwen2.5-coder:14b
+docker exec -it          4ac951805169       ollama rm qwen2.5-coder:1.5b
 
-# 删除本地所有 Ollama 镜像
+docker exec  -it   4ac951805169   ollama  stop  qwen2.5-coder:0.5b
+
+docker exec  -it   4ac951805169   ollama  run  qwen2.5-coder:0.5b
+
+sync; echo 3 | sudo tee /proc/sys/vm/drop_caches  # 清理系统缓存
