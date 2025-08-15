@@ -58,8 +58,8 @@ public class MySettingsPanel implements Configurable {
         // 重置为默认值或加载已保存的配置
         inputField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
         modelField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
-        ChatConstant.apiUrl ="";
-        ChatConstant.modelSetting ="";
+        ChatConstant.apiUrl =ChatConstant.apiUrl;
+        ChatConstant.modelSetting =ChatConstant.modelSetting;
     }
 
     @Override

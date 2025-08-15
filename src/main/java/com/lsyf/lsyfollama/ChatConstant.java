@@ -10,7 +10,7 @@ public class ChatConstant {
 
    public static String apiUrl = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_PLUGIN_SETTING,
-           "请设置ip:11434" // 默认值
+           API_TEST // 默认值
    );
    public static String modelSetting = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_MODEL_SETTING,
