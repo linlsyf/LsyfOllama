@@ -21,6 +21,7 @@ public class ChatToolWindow {
     private JTextField inputField;     // 消息输入框
     private JButton sendButton;        // 发送按钮
     private JButton repairButton;        // stop按钮
+    private JButton stopButton;        // stop按钮
 
     public ChatToolWindow() {
         // 初始化组件
@@ -37,6 +38,15 @@ public class ChatToolWindow {
         inputField.setText("如何记单词");
         sendButton = new JButton("发送");
         repairButton = new JButton("stop");
+        stopButton = new JButton("clean");
+
+
+        // 底部输入面板
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(stopButton, BorderLayout.EAST);
+//        inputPanel.add(repairButton, BorderLayout.WEST);
+//        topPanel.add(sendButton, BorderLayout.EAST);
+
 
         // 消息区域设置
         messageArea.setEditable(false); // 禁止编辑
@@ -50,8 +60,9 @@ public class ChatToolWindow {
         inputPanel.add(sendButton, BorderLayout.EAST);
 
         // 组装主面板
-        chatPanel.add(scrollPane, BorderLayout.CENTER);
+        chatPanel.add(topPanel, BorderLayout.NORTH);
         chatPanel.add(inputPanel, BorderLayout.SOUTH);
+        chatPanel.add(scrollPane, BorderLayout.CENTER);
 
 //        // 事件监听
         sendButton.addActionListener(new ActionListener() {
@@ -61,6 +72,14 @@ public class ChatToolWindow {
 
                 sendMessage(prompt);
 
+
+            }
+        });
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                SwingUtilities.invokeLater(() -> messageArea.setText("")); //
 
             }
         });

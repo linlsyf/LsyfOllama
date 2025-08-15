@@ -12,7 +12,6 @@ public class ChatWindowHomeFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         ChatToolWindow chatTool = new ChatToolWindow();
-
         // 注册到服务
         ToolWindowService service = project.getService(ToolWindowService.class);
         service.registerPanel(chatTool);
@@ -20,7 +19,6 @@ public class ChatWindowHomeFactory implements ToolWindowFactory {
         JPanel panel = chatTool.getContent();
         toolWindow.getComponent().add(panel);
         panel.revalidate(); // 强制刷新布局
-//        });
         toolWindow.show(); // 显示窗口
 
     }

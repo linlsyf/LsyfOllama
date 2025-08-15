@@ -30,7 +30,8 @@ repositories {
 dependencies {
     intellijPlatform {
 
-        local("C:\\\\Program Files\\\\JetBrains\\\\IntelliJ_IDEA") // Windows 路径示例
+        local("C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2025.1.3") // Windows 路径示例
+//        local("C:\\\\Program Files\\\\JetBrains\\\\IntelliJ_IDEA") // Windows 路径示例
 
 
     }
