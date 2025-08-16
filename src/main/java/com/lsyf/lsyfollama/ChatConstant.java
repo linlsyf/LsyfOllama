@@ -7,6 +7,16 @@ public class ChatConstant {
    public  static String MY_MODEL_SETTING= "MY_MODEL_SETTING";
    public  static String MODEL= "qwen2.5-coder:0.5b";
    public  static String API_TEST= "http://www.linlsyf.cn:11434";
+   public  static String DEV_LAN= "java";
+   public  static String TXT= "txt";
+   public  static String XML= "xml";
+   public  static String ChatToolWindow_ID= "LinlsyfAi";
+   public  static String JAVA_FILE= "java";
+   public  static String PYTHON_File= "py";
+   public  static String TYPE_REPAIR= "repair";
+   public  static String TYPE_repari= "repair";
+   public  static String TYPE_code_generation= "code generation";
+   public  static String OPEN_RIGHT_PANEL= "please  open right panel first";
 
    public static String apiUrl = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_PLUGIN_SETTING,

@@ -1,9 +1,8 @@
 package com.lsyf.lsyfollama.ui;
 
-import com.intellij.openapi.roots.ui.componentsList.layout.Orientation;
 import com.lsyf.lsyfollama.ChatConstant;
-import com.lsyf.lsyfollama.Contant;
-import com.lsyf.lsyfollama.OllamaClient;
+import com.lsyf.lsyfollama.constant.Contant;
+import com.lsyf.lsyfollama.constant.OllamaClient;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;

@@ -3,12 +3,13 @@ package com.lsyf.lsyfollama.ui;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.lsyf.lsyfollama.OllamaClient;
+import com.lsyf.lsyfollama.business.ContextMenuLogic;
+import com.lsyf.lsyfollama.constant.OllamaClient;
 
-public class ContextMenuHelloAction extends AnAction {
+public class ContextMenuSearchAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        OllamaClient.consumerContextMenu(e , this);
+        ContextMenuLogic.consumerContextMenu(e,this);
     }
 }

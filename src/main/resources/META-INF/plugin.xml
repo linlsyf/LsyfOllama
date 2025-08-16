@@ -41,11 +41,15 @@
         <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
         <!--        </action>-->
 
-        <action id="Hello11" class="com.lsyf.lsyfollama.ui.ContextMenuHelloAction" text="linlsyfQuery"
+        <action id="genCode" class="com.lsyf.lsyfollama.ui.ContextMenuGenCodeAction" text="genCode"
                 description="显示修复建议">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="Hello12" class="com.lsyf.lsyfollama.ui.ContextMenuRepairAction" text="linlsyfRepair"
+        <action id="linlsyfQuery" class="com.lsyf.lsyfollama.ui.ContextMenuSearchAction" text="linlsyfQuery"
+                description="显示修复建议">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="linlsyfRepair" class="com.lsyf.lsyfollama.ui.ContextMenuRepairAction" text="linlsyfRepair"
                 description="立即修复">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
