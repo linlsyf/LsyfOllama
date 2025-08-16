@@ -1,6 +1,8 @@
 package com.lsyf.lsyfollama.ui;
 
+import com.intellij.openapi.roots.ui.componentsList.layout.Orientation;
 import com.lsyf.lsyfollama.ChatConstant;
+import com.lsyf.lsyfollama.Contant;
 import com.lsyf.lsyfollama.OllamaClient;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
@@ -20,13 +22,16 @@ public class ChatToolWindow {
     private JTextArea messageArea;    // 消息显示区域
     private JTextField inputField;     // 消息输入框
     private JButton sendButton;        // 发送按钮
-    private JButton repairButton;        // stop按钮
     private JButton stopButton;        // stop按钮
+    private JButton cleanButton;        // stop按钮
+JPanel inputPanel;
+
+     String lastRequestTxt="";
+    private Thread appThread;
 
     public ChatToolWindow() {
         // 初始化组件
         chatPanel = new JPanel(new BorderLayout());
-//        chatPanel.add(new JButton("测试按钮"));
         messageArea = new JTextArea() {
             @Override
             public void paintComponent(Graphics g) {
@@ -34,29 +39,31 @@ public class ChatToolWindow {
                 super.paintComponent(g);
             }
         };
+//        messageArea.setColumns(10);
         inputField = new JTextField(20);
         inputField.setText("如何记单词");
-        sendButton = new JButton("发送");
-        repairButton = new JButton("stop");
-        stopButton = new JButton("clean");
-
-
+        sendButton = new JButton("send");
+        stopButton = new JButton("stop");
+        cleanButton = new JButton("clean");
         // 底部输入面板
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(stopButton, BorderLayout.EAST);
-//        inputPanel.add(repairButton, BorderLayout.WEST);
-//        topPanel.add(sendButton, BorderLayout.EAST);
-
+        topPanel.add(cleanButton, BorderLayout.EAST);
 
         // 消息区域设置
         messageArea.setEditable(false); // 禁止编辑
         messageArea.setFont(new Font("微软雅黑", Font.PLAIN, 14));
-        JScrollPane scrollPane = new JScrollPane(messageArea); // 添加滚动条
-
+        messageArea.setLineWrap(true);      // 启用自动换行
+        messageArea.setWrapStyleWord(true); // 按单词边界换行（避免截断单词）
+        JScrollPane scrollPane =new JScrollPane(
+                messageArea,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
         // 底部输入面板
-        JPanel inputPanel = new JPanel(new BorderLayout());
+         inputPanel = new JPanel(new BorderLayout(10, 10));
+
         inputPanel.add(inputField, BorderLayout.CENTER);
-//        inputPanel.add(repairButton, BorderLayout.WEST);
+
         inputPanel.add(sendButton, BorderLayout.EAST);
 
         // 组装主面板
@@ -68,14 +75,20 @@ public class ChatToolWindow {
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String prompt = inputField.getText().trim();
-
-                sendMessage(prompt);
-
+               String buttonText =sendButton.getText();
+                if (buttonText.equals(Contant.SEND)) {
+                    String prompt = inputField.getText().trim();
+                    sendButton.setText(Contant.STOP);
+                    sendMessage(prompt);
+                }else{
+                    sendButton.setText(Contant.SEND);
+                    appThread.interrupt();
+                }
 
             }
         });
-        stopButton.addActionListener(new ActionListener() {
+
+        cleanButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -83,15 +96,7 @@ public class ChatToolWindow {
 
             }
         });
-        // 事件监听
-//        repairButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String selectedText = messageArea.getSelectedText();
-//
-////                OllamaClient.repair(e);
-//            }
-//        });
+
         inputField.addActionListener(new ActionListener() { // 支持回车发送
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,21 +119,33 @@ public class ChatToolWindow {
 
         try {
 
-            Thread appThread = new Thread() {
+             appThread = new Thread() {
                 public void run() {
                     OllamaChatRequest request = new OllamaChatRequest();
                     List<OllamaChatMessage> messages = new ArrayList<>();
-//                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, "你是一个Java专家，只回答技术问题"));
-                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
-//                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.ASSISTANT, "直接输出代码"));
 
+                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
+                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
                     request.setMessages(messages); // 必须包含消息列表
+                    lastRequestTxt=prompt;
+
+
+//                    OllamaChatOptions options = OllamaChatOptions.create()
+//                            .withTemperature(0.4)
+//                            .withMaxTokens(500); // 可选：限制生成长度
+
                     try {
                         OllamaClient.chatStreaming(request, new OllamaTokenHandler() {
                             @Override
                             public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
-                                writeMsg(ollamaChatResponseModel.getMessage().getContent());
-                                System.out.println(ollamaChatResponseModel.getMessage().getContent());
+
+                                if (ollamaChatResponseModel.isDone()){
+                                    sendButton.setText(Contant.SEND);
+                                }else{
+
+                                    writeMsg(ollamaChatResponseModel.getMessage().getContent());
+                                    System.out.println(ollamaChatResponseModel.getMessage().getContent());
+                                }
                             }
 
                         });

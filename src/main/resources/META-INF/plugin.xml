@@ -30,6 +30,7 @@
         <toolWindow
                 id="LinlsyfAi"
                 anchor="right"
+                icon="/META-INF/pluginIcon.svg"
                 factoryClass="com.lsyf.lsyfollama.ui.ChatWindowHomeFactory"/>
         <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>

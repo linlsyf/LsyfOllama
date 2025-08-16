@@ -17,13 +17,7 @@ import java.util.Map;
 
 public class GenerateExampleTest {
 
-    public static void main(String[] args) throws Exception {
 
-//        gen();
-
-        extracted();
-
-    }
 
     private static void extracted() throws Exception {
         OllamaAPI ollama =new OllamaAPI(ChatConstant.API_TEST);
@@ -55,12 +49,19 @@ public class GenerateExampleTest {
 
 
     }
+    public static void main(String[] args) throws Exception {
+
+        gen();
+
+//        extracted();
+
+    }
     private static void gen() throws Exception {
         OllamaAPI ollama = new OllamaAPI(ChatConstant.API_TEST);
 
         Map<String, Object> optionsMap = new HashMap<>();
-//        optionsMap.put("temperature", 0.7);  // 温度参数
-//        optionsMap.put("stream",false);  // 温度参数
+        optionsMap.put("temperature", 0.1);  // 温度参数
+        optionsMap.put("stream",false);  // 温度参数
 //        optionsMap.put("max_tokens", 100); // 最大 token 数
         Options options=new Options(optionsMap);
         OllamaResult result = ollama.generate(ChatConstant.MODEL, "修复 int i=10/0 不需要解释直接给代码", optionsMap);
