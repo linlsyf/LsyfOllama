@@ -38,7 +38,6 @@ public class ContextMenuLogic {
             }
         }
 
-
         if (Contant.genCode.equals(actionId)){
             String actionDesc="生成"+ ChatConstant.DEV_LAN+" 代码：\n" ;
 
@@ -47,11 +46,12 @@ public class ContextMenuLogic {
         else if (Contant.linlsyfQuery.equals(actionId)) {
             query(e,action);
         }
-        else if (Contant.linlsyfRepair.equals(actionId)) {
-            String actionDesc="修复"+ ChatConstant.DEV_LAN+" 代码的错误：\n" ;
-            genCode(e,action,actionDesc);
-   }
+        else if (Contant.apiTest.equals(actionId)) {
+//            String actionDesc="修复"+ ChatConstant.DEV_LAN+" 代码的错误：\n" ;
+//            genCode(e,action,actionDesc);
+            Messages.showInfoMessage(ChatConstant.OPEN_RIGHT_PANEL,ChatConstant.DEV_ING);
 
+        }
     }
 
     private static void query(AnActionEvent e, AnAction action){

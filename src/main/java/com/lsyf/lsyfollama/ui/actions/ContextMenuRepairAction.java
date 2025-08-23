@@ -1,17 +1,14 @@
-package com.lsyf.lsyfollama.ui;
+package com.lsyf.lsyfollama.ui.actions;
 
 
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.lsyf.lsyfollama.business.ContextMenuLogic;
-import com.lsyf.lsyfollama.constant.OllamaClient;
 
-public class ContextMenuGenCodeAction extends AnAction {
+public class ContextMenuRepairAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         ContextMenuLogic.consumerContextMenu(e,this);
-
     }
 }

@@ -17,6 +17,7 @@ public class ChatConstant {
    public  static String TYPE_repari= "repair";
    public  static String TYPE_code_generation= "code generation";
    public  static String OPEN_RIGHT_PANEL= "please  open right panel first";
+   public  static String DEV_ING= "function is developing";
 
    public static String apiUrl = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_PLUGIN_SETTING,

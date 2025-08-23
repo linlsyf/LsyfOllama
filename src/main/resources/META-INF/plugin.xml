@@ -22,6 +22,9 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+    <!-- 若需兼容旧版平台（≤2019.1），添加模块依赖 -->
+    <depends>com.intellij.modules.java</depends>
     <idea-version since-build="251.0" until-build="255.*"/>  <!-- 控制兼容的 IDE 版本范围 -->
 
     <!-- Extension points defined by the plugin.
@@ -31,7 +34,7 @@
                 id="LinlsyfAi"
                 anchor="right"
                 icon="/META-INF/pluginIcon.svg"
-                factoryClass="com.lsyf.lsyfollama.ui.ChatWindowHomeFactory"/>
+                factoryClass="com.lsyf.lsyfollama.ui.toolWindowFactory.ChatWindowHomeFactory"/>
         <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
     </extensions>
@@ -41,17 +44,21 @@
         <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
         <!--        </action>-->
 
-        <action id="genCode" class="com.lsyf.lsyfollama.ui.ContextMenuGenCodeAction" text="genCode"
+        <action id="linlsyfQuery" class="com.lsyf.lsyfollama.ui.actions.ContextMenuSearchAction" text="linlsyfQuery"
                 description="显示修复建议">
+            <action id="apiTest" class="com.lsyf.lsyfollama.ui.actions.ParseApiAction" text="apiTest"
+                    description="显示修复建议">
+                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            </action>
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="linlsyfQuery" class="com.lsyf.lsyfollama.ui.ContextMenuSearchAction" text="linlsyfQuery"
-                description="显示修复建议">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
-        <action id="linlsyfRepair" class="com.lsyf.lsyfollama.ui.ContextMenuRepairAction" text="linlsyfRepair"
+        <action id="linlsyfRepair" class="com.lsyf.lsyfollama.ui.actions.ContextMenuRepairAction" text="linlsyfRepair"
                 description="立即修复">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="ApiTester.ParseCurrentFile" class="com.lsyf.lsyfollama.ui.actions.ParseApiAction"
+                text="Parse APIs in File" description="Find all API endpoints in current file">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
     </actions>
 </idea-plugin>

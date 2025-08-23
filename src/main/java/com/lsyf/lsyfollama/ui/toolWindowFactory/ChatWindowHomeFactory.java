@@ -1,9 +1,10 @@
-package com.lsyf.lsyfollama.ui;
+package com.lsyf.lsyfollama.ui.toolWindowFactory;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.lsyf.lsyfollama.ToolWindowService;
+import com.lsyf.lsyfollama.ui.ChatToolWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
