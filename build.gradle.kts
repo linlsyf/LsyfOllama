@@ -28,16 +28,36 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
-    intellijPlatform {
-
-        local("C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2025.1.3") // Windows 路径示例
+//    intellijPlatform {
+//
+////        local("C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2025.1.3") // Windows 路径示例
 //        local("C:\\\\Program Files\\\\JetBrains\\\\IntelliJ_IDEA") // Windows 路径示例
+//
+//
+//    }
+    intellijPlatform {
+        create("IC", "2025.1")
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
-
+        // Add necessary plugin dependencies for compilation here, example:
+        // bundledPlugin("com.intellij.java")
     }
     implementation("io.github.ollama4j:ollama4j:1.0.100")
+    implementation("org.projectlombok:lombok:1.18.22")
+//    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+//    implementation("cn.hutool:hutool-all:5.8.5")
 }
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = "251"
+        }
 
+        changeNotes = """
+      Initial version
+    """.trimIndent()
+    }
+}
 
 tasks {
     // Set the JVM compatibility versions

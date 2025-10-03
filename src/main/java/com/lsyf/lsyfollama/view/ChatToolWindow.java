@@ -38,7 +38,6 @@ JPanel inputPanel;
                 super.paintComponent(g);
             }
         };
-//        messageArea.setColumns(10);
         inputField = new JTextField(20);
         inputField.setText("如何记单词");
         sendButton = new JButton("send");
@@ -47,7 +46,6 @@ JPanel inputPanel;
         // 底部输入面板
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(cleanButton, BorderLayout.EAST);
-
         // 消息区域设置
         messageArea.setEditable(false); // 禁止编辑
         messageArea.setFont(new Font("微软雅黑", Font.PLAIN, 14));
@@ -133,6 +131,14 @@ JPanel inputPanel;
 //                            .withTemperature(0.4)
 //                            .withMaxTokens(500); // 可选：限制生成长度
 
+//                   		const punctuation = [
+//                    '.',
+//                            '。',  '!', '?', ';', ':', '"', "'",
+//                            '(', ')', '[', ']', '{', '}', '<', '>', '/', '\\',
+//                            '、', '！', '？', '；', '：', '「', '」', '『', '』', '《', '》'
+//		];
+//
+//		/ollama/stream
                     try {
                         OllamaClient.chatStreaming(request, new OllamaTokenHandler() {
                             @Override
