@@ -147,7 +147,7 @@
       <command value="gradle runIde" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.LsyfOllama [build]">
+  <component name="RunManager" selected="Gradle.G:/000workplace/LsyfOllama [runIde]">
     <configuration name="GenerateExampleTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.lsyf.lsyfollama.test.GenerateExampleTest" />
       <module name="LsyfOllama.main" />
@@ -161,17 +161,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="D:/000/LsyfOllama" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="G:/000workplace/LsyfOllama [runIde]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--dry-run" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
-          <list />
+          <list>
+            <option value="runIde" />
+          </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
@@ -249,11 +251,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.G:/000workplace/LsyfOllama [runIde]" />
         <item itemvalue="Gradle.LsyfOllama [build]" />
         <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
         <item itemvalue="Application.GenerateExampleTest" />
         <item itemvalue="Gradle.LsyfOllama [runIde]" />
-        <item itemvalue="Gradle.D:/000/LsyfOllama" />
       </list>
     </recent_temporary>
   </component>
