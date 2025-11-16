@@ -21,9 +21,9 @@ public class ApiEndpointVisitor extends PsiRecursiveElementWalkingVisitor {
         super.visitElement(element);
     }
 
-    private boolean hasAnnotation(PsiMethod method, String annotationFQN) {
-        return method.getAnnotation(annotationFQN) != null;
-    }
+//    private boolean hasAnnotation(PsiMethod method, String annotationFQN) {
+//        return method.getAnnotation(annotationFQN) != null;
+//    }
 
 //    public List<PsiMethod> getApiMethods() {
 //        return apiMethods;
