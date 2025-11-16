@@ -2,12 +2,9 @@ package com.lsyf.lsyfollama.ui;
 
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.constant.Contant;
-import com.lsyf.lsyfollama.constant.OllamaClient;
-import io.github.ollama4j.models.chat.OllamaChatMessage;
-import io.github.ollama4j.models.chat.OllamaChatMessageRole;
-import io.github.ollama4j.models.chat.OllamaChatRequest;
-import io.github.ollama4j.models.chat.OllamaChatResponseModel;
-import io.github.ollama4j.models.generate.OllamaTokenHandler;
+import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import io.github.ollama4j.models.chat.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -140,7 +137,7 @@ JPanel inputPanel;
 //
 //		/ollama/stream
                     try {
-                        OllamaClient.chatStreaming(request, new OllamaTokenHandler() {
+                        OllamaClientUtils.chatStreaming(request, new OllamaChatTokenHandler() {
                             @Override
                             public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
 
@@ -148,8 +145,17 @@ JPanel inputPanel;
                                     sendButton.setText(Contant.SEND);
                                 }else{
 
-                                    writeMsg(ollamaChatResponseModel.getMessage().getContent());
-                                    System.out.println(ollamaChatResponseModel.getMessage().getContent());
+                                String thinking=    ollamaChatResponseModel.getMessage().getThinking();
+                                String response=    ollamaChatResponseModel.getMessage().getResponse();
+                                String  writeText;
+                                 if(StringUtils.isNoneBlank(thinking)){
+                                     writeText=thinking;
+                                 }else{
+                                     writeText=response;
+                                 }
+                                   writeMsg(writeText);
+
+                                    System.out.println(writeText);
                                 }
                             }
 

@@ -1,25 +1,9 @@
 package com.lsyf.lsyfollama.constant;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.lsyf.lsyfollama.ChatConstant;
-import com.lsyf.lsyfollama.ToolWindowService;
-import com.lsyf.lsyfollama.business.ContextMenuLogic;
-import com.lsyf.lsyfollama.ui.ChatToolWindow;
-import io.github.ollama4j.OllamaAPI;
-import io.github.ollama4j.models.chat.OllamaChatMessage;
-import io.github.ollama4j.models.chat.OllamaChatMessageRole;
-import io.github.ollama4j.models.chat.OllamaChatRequest;
-import io.github.ollama4j.models.chat.OllamaChatResult;
-import io.github.ollama4j.models.generate.OllamaTokenHandler;
+import io.github.ollama4j.Ollama;
+import io.github.ollama4j.models.chat.*;
 import io.github.ollama4j.utils.Options;
 
 import java.util.ArrayList;
@@ -27,24 +11,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OllamaClient {
-    public static OllamaAPI ollama;
+public class OllamaClientUtils {
+    public static Ollama ollama;
 
-    public static void chatStreaming(OllamaChatRequest request, OllamaTokenHandler tokenHandler) throws Exception {
+    public static void chatStreaming(OllamaChatRequest request, OllamaChatTokenHandler tokenHandler) throws Exception {
         String model = ChatConstant.modelSetting;
         request.setStream(true);
         request.setModel(model);
 
-         ollama = new OllamaAPI(ChatConstant.apiUrl);
-        ollama.chatStreaming(request, tokenHandler);
+         ollama = new Ollama(ChatConstant.apiUrl);
+
+        ollama.chat(request, tokenHandler);
     }
 
 
 
     public  static String processText(String selectedText) {
-        OllamaAPI ollama =new OllamaAPI(ChatConstant.apiUrl);
         String result = "";
         OllamaChatRequest request=new OllamaChatRequest();
+
         request.setStream(true);
         request.setModel(ChatConstant.modelSetting);
         List<OllamaChatMessage> messages = new ArrayList<>();
@@ -58,11 +43,19 @@ public class OllamaClient {
             Map<String, Object> optionsMap = new HashMap<>();
 //            optionsMap.put("temperature", 0.5);  // 温度参数
 //            optionsMap.put("stream",false);  // 温度参数
-            Options options=new Options(optionsMap);
+//            Options options=new Options(optionsMap);
 //            String model, String prompt, boolean raw, Options options
 //            OllamaResult ollamaChatResult=ollama.generate(request.getModel(),selectedText,true,options);
-            OllamaChatResult ollamaChatResult=ollama.chat(request);
-            result=ollamaChatResult.getResponseModel().getMessage().getContent();
+
+            OllamaChatTokenHandler tokenHandler=new OllamaChatTokenHandler() {
+                @Override
+                public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
+
+                }
+            };
+
+            OllamaChatResult ollamaChatResult=ollama.chat(request,tokenHandler);
+            result=ollamaChatResult.getResponseModel().getMessage().getResponse();
 //            result=new String(ollamaChatResult.getResponse().getBytes());
         } catch (Exception e) {
             Messages.showInfoMessage("repair fail ", e.getMessage());

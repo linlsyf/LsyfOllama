@@ -19,7 +19,7 @@ import com.intellij.psi.PsiFile;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.ToolWindowService;
 import com.lsyf.lsyfollama.constant.Contant;
-import com.lsyf.lsyfollama.constant.OllamaClient;
+import com.lsyf.lsyfollama.constant.OllamaClientUtils;
 import com.lsyf.lsyfollama.ui.ChatToolWindow;
 
 import static com.lsyf.lsyfollama.ChatConstant.ChatToolWindow_ID;
@@ -131,7 +131,7 @@ public class ContextMenuLogic {
                 "输出格式要求：纯代码，无换行符(\\n)或描述 \n";
 
 
-        final String newText = OllamaClient.processText(prompt); // 自定义替换逻辑
+        final String newText = OllamaClientUtils.processText(prompt); // 自定义替换逻辑
         int endOffset = selectionModel.getSelectionEnd();
         int lineEndOffset = document.getLineEndOffset(document.getLineNumber(endOffset));
         // 执行替换（线程安全）

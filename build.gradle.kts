@@ -31,7 +31,7 @@ dependencies {
     intellijPlatform {
 
 //        local("C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2025.1.3") // Windows 路径示例
-        local("C:\\Program Files\\JetBrains\\IntelliJ IDEA 2025.1.6") // Windows 路径示例
+        local("D:\\Program Files\\ideaIC-2025.2.4.win") // Windows 路径示例
 
 
     }
@@ -42,7 +42,7 @@ dependencies {
 //        // Add necessary plugin dependencies for compilation here, example:
 //        // bundledPlugin("com.intellij.java")
 //    }
-    implementation("io.github.ollama4j:ollama4j:1.0.100")
+    implementation("io.github.ollama4j:ollama4j:1.1.4")
     implementation("org.projectlombok:lombok:1.18.22")
 //    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
 //    implementation("cn.hutool:hutool-all:5.8.5")

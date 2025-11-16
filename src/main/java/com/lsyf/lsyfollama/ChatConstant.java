@@ -5,7 +5,7 @@ import com.intellij.ide.util.PropertiesComponent;
 public class ChatConstant {
    public  static String MY_PLUGIN_SETTING= "MY_PLUGIN_SETTING";
    public  static String MY_MODEL_SETTING= "MY_MODEL_SETTING";
-   public  static String MODEL= "qwen2.5-coder:0.5b";
+   public  static String MODEL= "qwen3:0.6b";
    public  static String API_TEST= "http://113.45.171.202:11434";
    public  static String DEV_LAN= "java";
    public  static String TXT= "txt";
@@ -25,6 +25,6 @@ public class ChatConstant {
    );
    public static String modelSetting = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_MODEL_SETTING,
-           "qwen3:0.6b" // 默认值
+           MODEL // 默认值
    );
 }

@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="fix bug">
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="fix bug thinking">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.intellijPlatform/coroutines-javaagent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/coroutines-javaagent.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ChatConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ChatConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/ApiEndpointVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/ApiEndpointVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/OllamaClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/OllamaClientUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/test/GenerateExampleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/test/GenerateExampleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="igon" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,28 +37,6 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="LsyfOllama" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="LsyfOllama" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="LsyfOllama" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="LsyfOllama" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="intellij platform" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="LsyfOllama" type="f1a62948:ProjectNode" />
-                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -89,9 +69,19 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/linlsyf/LsyfOllama.git&quot;,
-    &quot;accountId&quot;: &quot;0747d9b2-1237-4795-97bb-9405d0bda285&quot;
+    &quot;accountId&quot;: &quot;9e8708fb-98a5-4d0e-a4da-5ea5dd9a8b33&quot;
   }
 }</component>
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="D:\002soft\gradle-8.13" javaHome="C:\Users\Administrator\.jdks\jbr-17.0.14" gradleVersion="8.13">
+    <option name="jvmArguments">
+      <list>
+        <option value="-Dhttp.proxyHost=127.0.0.1" />
+        <option value="-Dhttp.proxyPort=33210" />
+        <option value="-Dhttps.proxyHost=127.0.0.1" />
+        <option value="-Dhttps.proxyPort=33210" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -105,7 +95,10 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Gradle.Build LsyfOllama.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.D:/000/LsyfOllama.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.G:/000workplace/LsyfOllama [runIde].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [:com.lsyf.lsyfollama.test.GenerateExampleTest.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [buildPlugin].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [build].executor&quot;: &quot;Run&quot;,
@@ -116,6 +109,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;G:/000workplace/LsyfOllama&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -147,7 +141,7 @@
       <command value="gradle runIde" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.G:/000workplace/LsyfOllama [runIde]">
+  <component name="RunManager" selected="Gradle.LsyfOllama [buildPlugin]">
     <configuration name="GenerateExampleTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.lsyf.lsyfollama.test.GenerateExampleTest" />
       <module name="LsyfOllama.main" />
@@ -251,21 +245,13 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.G:/000workplace/LsyfOllama [runIde]" />
-        <item itemvalue="Gradle.LsyfOllama [build]" />
         <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
-        <item itemvalue="Application.GenerateExampleTest" />
+        <item itemvalue="Gradle.G:/000workplace/LsyfOllama [runIde]" />
         <item itemvalue="Gradle.LsyfOllama [runIde]" />
+        <item itemvalue="Gradle.LsyfOllama [build]" />
+        <item itemvalue="Application.GenerateExampleTest" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.28774.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.28774.11" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -277,7 +263,7 @@
       <workItem from="1759451233322" duration="799000" />
       <workItem from="1763216871489" duration="62000" />
       <workItem from="1763260048487" duration="362000" />
-      <workItem from="1763260444669" duration="375000" />
+      <workItem from="1763260444669" duration="821000" />
     </task>
     <task id="LOCAL-00001" summary="push logigc">
       <option name="closed" value="true" />
@@ -311,11 +297,38 @@
       <option name="project" value="LOCAL" />
       <updated>1759452014907</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fix bug url">
+      <option name="closed" value="true" />
+      <created>1763260912868</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763260912868</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix bug url">
+      <option name="closed" value="true" />
+      <created>1763260927511</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1763260927511</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix bug url">
+      <option name="closed" value="true" />
+      <created>1763261112346</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1763261112346</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -333,25 +346,32 @@
     <MESSAGE value="優化代碼" />
     <MESSAGE value="resize data" />
     <MESSAGE value="fix bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix bug" />
+    <MESSAGE value="fix bug url" />
+    <MESSAGE value="fix bug thinking" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bug thinking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/OllamaClient.java</url>
-          <line>105</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/OllamaClient.java</url>
-          <line>108</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java</url>
           <line>98</line>
           <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java</url>
+          <line>163</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java</url>
+          <line>123</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java</url>
+          <line>162</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
