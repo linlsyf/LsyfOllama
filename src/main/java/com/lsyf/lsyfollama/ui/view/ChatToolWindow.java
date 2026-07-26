@@ -22,7 +22,7 @@ public class ChatToolWindow {
     private JTextArea messageArea;    // 消息显示区域
     private JButton stopButton;        // stop按钮
     private JButton cleanButton;        // stop按钮
-    InputView inputView;
+    BottomView bottomView;
     String lastRequestTxt = "";
     private Thread appThread;
 
@@ -59,20 +59,20 @@ public class ChatToolWindow {
         chatPanel.add(scrollPane, BorderLayout.CENTER);
 
 // 创建南部容器，包含标签面板和输入面板
-        inputView = new InputView();
-        chatPanel.add(inputView.getInPutView(), BorderLayout.SOUTH);
+        bottomView = new BottomView();
+        chatPanel.add(bottomView.getInPutView(), BorderLayout.SOUTH);
 
 //        // 事件监听
-        inputView.getSendButton().addActionListener(new ActionListener() {
+        bottomView.getSendButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String buttonText = inputView.getSendButton().getText();
+                String buttonText = bottomView.getSendButton().getText();
                 if (buttonText.equals(Contant.SEND)) {
-                    String prompt = inputView.getInputField().getText().trim();
-                    inputView.getSendButton().setText(Contant.STOP);
+                    String prompt = bottomView.getInputField().getText().trim();
+                    bottomView.getSendButton().setText(Contant.STOP);
                     sendMessage(prompt);
                 } else {
-                    inputView.getSendButton().setText(Contant.SEND);
+                    bottomView.getSendButton().setText(Contant.SEND);
                     appThread.interrupt();
                 }
 
@@ -88,10 +88,10 @@ public class ChatToolWindow {
             }
         });
 
-        inputView.getInputField().addActionListener(new ActionListener() { // 支持回车发送
+        bottomView.getInputField().addActionListener(new ActionListener() { // 支持回车发送
             @Override
             public void actionPerformed(ActionEvent e) {
-                String prompt = inputView.getInputField().getText().trim();
+                String prompt = bottomView.getInputField().getText().trim();
 
                 sendMessage(prompt);
             }
@@ -101,8 +101,8 @@ public class ChatToolWindow {
     // 发送消息逻辑
     public void sendMessage(String prompt) {
         messageArea.append("我: " + prompt + "\n"); // 添加消息到显示区
-        inputView.getInputField().setText("");                      // 清空输入框
-        inputView.getInputField().requestFocus();                   // 焦点回到输入框
+        bottomView.getInputField().setText("");                      // 清空输入框
+        bottomView.getInputField().requestFocus();                   // 焦点回到输入框
 
         if (!ChatConstant.apiUrl.startsWith("http")) {
             writeMsg("please  set ip and  model");
@@ -138,7 +138,7 @@ public class ChatToolWindow {
                             public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
 
                                 if (ollamaChatResponseModel.isDone()) {
-                                    inputView.getSendButton().setText(Contant.SEND);
+                                    bottomView.getSendButton().setText(Contant.SEND);
                                 } else {
 
                                     String thinking = ollamaChatResponseModel.getMessage().getThinking();

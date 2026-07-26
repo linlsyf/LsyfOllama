@@ -1,20 +1,20 @@
 package com.lsyf.lsyfollama.ui.view;
 
-import lombok.Data;
-
 import javax.swing.*;
 import java.awt.*;
 
-@Data
-public class InputView {
+//@Data
+public class BottomView {
     JPanel inputPanel;
     JTextField inputField;
-     JButton sendButton;        // 发送按钮
+    JButton sendButton;        // 发送按钮
 
-    public    JPanel  getInPutView(){
+
+    public JPanel getInPutView() {
 
         inputField = new JTextField(20);
         inputField.setText("如何记单词");
+//        sendButton.setText("send");
         sendButton = new JButton("send");
 
         // 底部输入面板
@@ -28,5 +28,17 @@ public class InputView {
         southContainer.add(TagLabelView.createFilsList(inputField), BorderLayout.NORTH);  // 标签在上方
         southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
         return southContainer;
+    }
+
+    public JPanel getInputPanel() {
+        return inputPanel;
+    }
+
+    public JTextField getInputField() {
+        return inputField;
+    }
+
+    public JButton getSendButton() {
+        return sendButton;
     }
 }
