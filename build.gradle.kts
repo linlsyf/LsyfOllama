@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
     id("org.jetbrains.intellij.platform") version "2.5.0"
     id("distribution")// 引入分发插件
+    id("io.freefair.lombok") version "8.6" // 关键点 1：引入 Lombok 插件
+
 }
 
 group = "com.lsyf"
@@ -43,7 +45,13 @@ dependencies {
 //        // bundledPlugin("com.intellij.java")
 //    }
     implementation("io.github.ollama4j:ollama4j:1.1.4")
-    implementation("org.projectlombok:lombok:1.18.22")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+
+    // 测试依赖
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+
 //    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
 //    implementation("cn.hutool:hutool-all:5.8.5")
 }

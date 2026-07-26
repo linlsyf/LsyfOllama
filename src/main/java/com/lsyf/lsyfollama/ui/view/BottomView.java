@@ -1,9 +1,11 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import lombok.Data;
+
 import javax.swing.*;
 import java.awt.*;
 
-//@Data
+@Data
 public class BottomView {
     JPanel inputPanel;
     JTextField inputField;
@@ -29,16 +31,16 @@ public class BottomView {
         southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
         return southContainer;
     }
-
-    public JPanel getInputPanel() {
-        return inputPanel;
-    }
-
-    public JTextField getInputField() {
-        return inputField;
-    }
-
-    public JButton getSendButton() {
-        return sendButton;
-    }
+//
+//    public JPanel getInputPanel() {
+//        return inputPanel;
+//    }
+//
+//    public JTextField getInputField() {
+//        return inputField;
+//    }
+//
+//    public JButton getSendButton() {
+//        return sendButton;
+//    }
 }
