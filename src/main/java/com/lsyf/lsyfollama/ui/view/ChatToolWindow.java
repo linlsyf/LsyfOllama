@@ -75,7 +75,7 @@ JPanel inputPanel;
         JPanel southContainer = new JPanel(new BorderLayout());
         southContainer.add(createFilsList(), BorderLayout.NORTH);  // 标签在上方
         southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
-        chatPanel.add(inputPanel, BorderLayout.SOUTH);
+        chatPanel.add(southContainer, BorderLayout.SOUTH);
 
 
 //        // 事件监听

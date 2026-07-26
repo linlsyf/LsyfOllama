@@ -20,7 +20,7 @@ import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.ToolWindowService;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
-import com.lsyf.lsyfollama.ui.ChatToolWindow;
+import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
 
 import static com.lsyf.lsyfollama.ChatConstant.ChatToolWindow_ID;
 
