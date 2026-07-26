@@ -64,7 +64,7 @@
         <!-- 读取当前文件 -->
         <action id="ReadCurrentFile"
                 class="com.lsyf.lsyfollama.ui.actions.ReadCurrentFileAction"
-                text="Read Current File"
+                text="lsyf Read Current File"
                 description="Read content of current open file">
             <add-to-group group-id="EditorPopupMenu"/>
             <add-to-group group-id="MainMenu" anchor="last"/>
@@ -73,7 +73,7 @@
         <!-- 读取所有打开文件 -->
         <action id="ReadAllOpenFiles"
                 class="com.lsyf.lsyfollama.ui.actions.ReadAllOpenFilesAction"
-                text="Read All Open Files"
+                text="lsyf Read All Open Files"
                 description="Read all currently open files">
             <add-to-group group-id="ToolsMenu"/>
         </action>
