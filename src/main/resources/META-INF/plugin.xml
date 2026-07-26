@@ -60,5 +60,24 @@
                 text="Parse APIs in File" description="Find all API endpoints in current file">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
+
+        <!-- 读取当前文件 -->
+        <action id="ReadCurrentFile"
+                class="com.lsyf.lsyfollama.ui.actions.ReadCurrentFileAction"
+                text="Read Current File"
+                description="Read content of current open file">
+            <add-to-group group-id="EditorPopupMenu"/>
+            <add-to-group group-id="MainMenu" anchor="last"/>
+        </action>
+
+        <!-- 读取所有打开文件 -->
+        <action id="ReadAllOpenFiles"
+                class="com.lsyf.lsyfollama.ui.actions.ReadAllOpenFilesAction"
+                text="Read All Open Files"
+                description="Read all currently open files">
+            <add-to-group group-id="ToolsMenu"/>
+        </action>
+
+        <postStartupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>
     </actions>
 </idea-plugin>
