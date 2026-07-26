@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.lsyf.lsyfollama.ToolWindowService;
-import com.lsyf.lsyfollama.ui.ChatToolWindow;
+import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

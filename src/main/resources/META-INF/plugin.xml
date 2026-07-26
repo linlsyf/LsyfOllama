@@ -77,7 +77,8 @@
                 description="Read all currently open files">
             <add-to-group group-id="ToolsMenu"/>
         </action>
+        <startupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>
 
-        <postStartupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>
     </actions>
+
 </idea-plugin>

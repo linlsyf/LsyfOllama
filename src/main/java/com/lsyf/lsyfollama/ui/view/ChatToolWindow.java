@@ -1,15 +1,21 @@
-package com.lsyf.lsyfollama.ui;
+package com.lsyf.lsyfollama.ui.view;
 
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
-import io.github.ollama4j.models.chat.*;
+import io.github.ollama4j.models.chat.OllamaChatMessage;
+import io.github.ollama4j.models.chat.OllamaChatMessageRole;
+import io.github.ollama4j.models.chat.OllamaChatRequest;
+import io.github.ollama4j.models.chat.OllamaChatResponseModel;
+import io.github.ollama4j.models.chat.OllamaChatTokenHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +68,15 @@ JPanel inputPanel;
 
         // 组装主面板
         chatPanel.add(topPanel, BorderLayout.NORTH);
-        chatPanel.add(inputPanel, BorderLayout.SOUTH);
+
         chatPanel.add(scrollPane, BorderLayout.CENTER);
+
+// 创建南部容器，包含标签面板和输入面板
+        JPanel southContainer = new JPanel(new BorderLayout());
+        southContainer.add(createFilsList(), BorderLayout.NORTH);  // 标签在上方
+        southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
+        chatPanel.add(inputPanel, BorderLayout.SOUTH);
+
 
 //        // 事件监听
         sendButton.addActionListener(new ActionListener() {
@@ -177,7 +190,72 @@ JPanel inputPanel;
 
     }
 
+   private  JScrollPane  createFilsList(){
+       JPanel tagPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+       tagPanel.setBackground(new Color(248, 249, 250));
+       tagPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(222, 226, 230)));
 
+// 预定义常用标签
+       String[] commonTags = {
+               "如何记单词", "英语语法", "口语练习", "听力技巧",
+               "阅读理解", "写作模板", "词汇积累", "发音纠正",
+               "商务英语", "旅游英语", "考试技巧", "每日一句"
+       };
+
+// 添加标签到面板
+       for (String tag : commonTags) {
+           JLabel tagLabel = createTagLabel(tag);
+           tagPanel.add(tagLabel);
+       }
+
+// 创建横向滚动面板
+       JScrollPane tagScrollPane = new JScrollPane(
+               tagPanel,
+               JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+               JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+       );
+       tagScrollPane.setPreferredSize(new Dimension(0, 45));
+       tagScrollPane.setBorder(BorderFactory.createEmptyBorder());
+       tagScrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 8));
+       tagScrollPane.getHorizontalScrollBar().setUnitIncrement(20); // 平滑滚动
+       return   tagScrollPane;
+   }
+
+
+    private JLabel createTagLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setOpaque(true);
+        label.setBackground(Color.WHITE);
+        label.setForeground(new Color(73, 80, 87));
+        label.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+        label.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(206, 212, 218), 1, true),
+                BorderFactory.createEmptyBorder(4, 10, 4, 10)
+        ));
+
+        // 鼠标悬停效果
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                label.setBackground(new Color(233, 236, 239));
+                label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                label.setBackground(Color.WHITE);
+                label.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                inputField.setText(text);
+                inputField.requestFocus(); // 焦点移到输入框
+            }
+        });
+
+        return label;
+    }
     private void writeMsg(String message) {
         SwingUtilities.invokeLater(() -> messageArea.append(message));
     }

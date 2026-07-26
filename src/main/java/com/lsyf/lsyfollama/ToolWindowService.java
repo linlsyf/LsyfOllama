@@ -2,7 +2,7 @@ package com.lsyf.lsyfollama;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.lsyf.lsyfollama.ui.ChatToolWindow;
+import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
 
 import javax.swing.*;
 
