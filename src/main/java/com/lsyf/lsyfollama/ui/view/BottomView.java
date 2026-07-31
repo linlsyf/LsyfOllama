@@ -11,7 +11,6 @@ public class BottomView {
     JTextField inputField;
     JButton sendButton;        // 发送按钮
 
-
     public JPanel getInPutView() {
 
         inputField = new JTextField(20);
@@ -31,16 +30,5 @@ public class BottomView {
         southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
         return southContainer;
     }
-//
-//    public JPanel getInputPanel() {
-//        return inputPanel;
-//    }
-//
-//    public JTextField getInputField() {
-//        return inputField;
-//    }
-//
-//    public JButton getSendButton() {
-//        return sendButton;
-//    }
+
 }

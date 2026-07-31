@@ -4,14 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="fix bug thinking">
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="@data   use">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/AmendSideAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/MyPluginCheckinHandlerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="igon" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -80,6 +91,9 @@
       </list>
     </option>
   </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -91,36 +105,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build LsyfOllama.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.D:/000/LsyfOllama.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.G:/000workplace/LsyfOllama [runIde].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [:com.lsyf.lsyfollama.test.GenerateExampleTest.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [buildPlugin].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [runIde].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Run Plugin.executor&quot;: &quot;Debug&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/000workplace/LsyfOllama&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.5427783&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build LsyfOllama.executor": "Run",
+    "Gradle.D:/000/LsyfOllama.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.G:/000workplace/LsyfOllama [runIde].executor": "Run",
+    "Gradle.LsyfOllama [:com.lsyf.lsyfollama.test.GenerateExampleTest.main()].executor": "Run",
+    "Gradle.LsyfOllama [buildPlugin].executor": "Run",
+    "Gradle.LsyfOllama [build].executor": "Run",
+    "Gradle.LsyfOllama [runIde].executor": "Run",
+    "Gradle.Run Plugin.executor": "Debug",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "G:/000workplace/LsyfOllama",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.5427783",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\000workplace\LsyfOllama" />
@@ -139,7 +157,7 @@
       <command value="gradle runIde" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.LsyfOllama [buildPlugin]">
+  <component name="RunManager" selected="Gradle.G:/000workplace/LsyfOllama [runIde]">
     <configuration name="GenerateExampleTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.lsyf.lsyfollama.test.GenerateExampleTest" />
       <module name="LsyfOllama.main" />
@@ -243,21 +261,13 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
         <item itemvalue="Gradle.G:/000workplace/LsyfOllama [runIde]" />
+        <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
         <item itemvalue="Gradle.LsyfOllama [runIde]" />
         <item itemvalue="Gradle.LsyfOllama [build]" />
         <item itemvalue="Application.GenerateExampleTest" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.28774.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.28774.11" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -274,6 +284,9 @@
       <workItem from="1763778476992" duration="250000" />
       <workItem from="1766885010324" duration="62000" />
       <workItem from="1784975142375" duration="367000" />
+      <workItem from="1785075345736" duration="4601000" />
+      <workItem from="1785417809629" duration="2486000" />
+      <workItem from="1785422457419" duration="1613000" />
     </task>
     <task id="LOCAL-00001" summary="push logigc">
       <option name="closed" value="true" />
@@ -339,7 +352,55 @@
       <option name="project" value="LOCAL" />
       <updated>1763268322443</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="ReadCurrentFile">
+      <option name="closed" value="true" />
+      <created>1785076008770</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1785076008770</updated>
+    </task>
+    <task id="LOCAL-00010" summary="ReadCurrentFile">
+      <option name="closed" value="true" />
+      <created>1785077349980</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1785077349980</updated>
+    </task>
+    <task id="LOCAL-00011" summary="createFilsList">
+      <option name="closed" value="true" />
+      <created>1785077493098</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1785077493098</updated>
+    </task>
+    <task id="LOCAL-00012" summary="view single">
+      <option name="closed" value="true" />
+      <created>1785078544246</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1785078544246</updated>
+    </task>
+    <task id="LOCAL-00013" summary="rish  update">
+      <option name="closed" value="true" />
+      <created>1785079505934</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1785079505934</updated>
+    </task>
+    <task id="LOCAL-00014" summary="@data   use">
+      <option name="closed" value="true" />
+      <created>1785079971993</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1785079971993</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -366,30 +427,45 @@
     <MESSAGE value="fix bug" />
     <MESSAGE value="fix bug url" />
     <MESSAGE value="fix bug thinking" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix bug thinking" />
+    <MESSAGE value="ReadCurrentFile" />
+    <MESSAGE value="createFilsList" />
+    <MESSAGE value="view single" />
+    <MESSAGE value="rish  update" />
+    <MESSAGE value="@data   use" />
+    <option name="LAST_COMMIT_MESSAGE" value="@data   use" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java</url>
-          <line>98</line>
+          <line>103</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java</url>
-          <line>163</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
+          <line>172</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java</url>
-          <line>123</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
+          <line>132</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/view/ChatToolWindow.java</url>
-          <line>162</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
+          <line>171</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
+          <line>62</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
+          <line>65</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

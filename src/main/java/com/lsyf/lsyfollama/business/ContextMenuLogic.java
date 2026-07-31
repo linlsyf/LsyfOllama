@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
@@ -13,14 +14,18 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.ui.EditorTextField;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.ToolWindowService;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
 import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
+
+import java.lang.reflect.Method;
 
 import static com.lsyf.lsyfollama.ChatConstant.ChatToolWindow_ID;
 
@@ -100,7 +105,37 @@ public class ContextMenuLogic {
         }
 
     }
+    public static void setCommit(AnActionEvent e) {
+        Editor editor = e.getData(CommonDataKeys.EDITOR);
+//        if (editor == null) return; // 确保编辑器存在
+        Project project = e.getProject();
+//        if (project == null) return; // 确保项目存在
+//        Document document = editor.getDocument();
+//        String fullText = document.getText(); // 读取整个文件内容
 
+// 读取选中文本（若有）
+        SelectionModel selectionModel = editor.getSelectionModel();
+        String selectedText = selectionModel.getSelectedText();
+        Messages.showInfoMessage("AmendSideAction 被点击了"+selectedText, "Debug");
+
+        Object commitMessage = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+        if (commitMessage != null) {
+            EditorTextField field = (EditorTextField) commitMessage;
+            String currentText = field.getText();
+            currentText=currentText+selectedText;
+            String finalCurrentText = currentText;
+            ApplicationManager.getApplication().invokeLater(() -> {
+                try {
+                    Method method = commitMessage.getClass().getMethod("setCommitMessage", String.class);
+
+                    method.invoke(commitMessage, finalCurrentText);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+        }
+
+    }
 
 
     private static void genCode(AnActionEvent e, AnAction action,String actionDesc) {
