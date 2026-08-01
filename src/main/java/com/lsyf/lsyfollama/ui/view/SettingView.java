@@ -3,7 +3,6 @@ package com.lsyf.lsyfollama.ui.view;
 import lombok.Data;
 
 import javax.swing.*;
-import java.awt.*;
 
 @Data
 public class SettingView {
@@ -15,20 +14,21 @@ public class SettingView {
     private JTextField commitRejectFied;
     private JTextField modelField;
 
-     public   void  init(){
-         mainPanel= new JPanel(new BorderLayout());
+    public void init() {
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-         inputField = new JTextField();
+        inputField = new JTextField();
+        modelField = new JTextField();
+        commitReceiptFied = new JTextField();
+        commitRejectFied = new JTextField();
 
-         modelField = new JTextField();
-         commitReceiptFied = new JTextField();
-         commitRejectFied = new JTextField();
-         mainPanel.add(inputField, BorderLayout.CENTER);
-         mainPanel.add(modelField, BorderLayout.SOUTH);
-         mainPanel.add(commitReceiptFied, BorderLayout.SOUTH);
-         mainPanel.add(commitRejectFied, BorderLayout.SOUTH);
-
-     }
+        // 添加组件到面板，按上下顺序排列
+        mainPanel.add(inputField);
+        mainPanel.add(modelField);
+        mainPanel.add(commitReceiptFied);
+        mainPanel.add(commitRejectFied);
+    }
 
     public JPanel getMainPanel() {
         return mainPanel;
