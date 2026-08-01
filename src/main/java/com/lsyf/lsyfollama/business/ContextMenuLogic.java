@@ -18,7 +18,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsDataKeys;
-import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -114,9 +113,7 @@ public class ContextMenuLogic {
         Project project = e.getProject();
 
 
-        String selectedText = "test";
-
-        Change[] changes = GitDiffUtil.getCommitChanges(e);
+//        Change[] changes = GitDiffUtil.getCommitChanges(e);
 //        Change[] changes = e.getData(VcsDataKeys.CHANGES);
 
 
@@ -139,7 +136,7 @@ public class ContextMenuLogic {
                         indicator.setIndeterminate(false);
 
                         // 1. 拿 diff
-                        String diff = GitDiffUtil.getStagedDiff(project, changes, indicator);
+                        String diff = GitDiffUtil.getStagedDiff(project,  indicator);
                         if (diff.isBlank()) {
 //                            notify("No staged changes found");
                             return;

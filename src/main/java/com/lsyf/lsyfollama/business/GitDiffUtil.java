@@ -14,46 +14,118 @@ import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandler;
-import git4idea.repo.GitRepository;
-import git4idea.repo.GitRepositoryManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GitDiffUtil {
 
+    private static String generateGitSummary(String diff) {
+        StringBuilder summary = new StringBuilder();
+        Set<String> addedFiles = new HashSet<>();
+        Set<String> modifiedFiles = new HashSet<>();
+        Set<String> deletedFiles = new HashSet<>();
+        Set<String> renamedFiles = new HashSet<>();
+
+        // Track change statistics
+        int linesAdded = 0;
+        int linesRemoved = 0;
+
+        String[] lines = diff.split("\n");
+        String currentFile = null;
+
+        for (String line : lines) {
+            // Detect file changes
+            if (line.startsWith("diff --git")) {
+                String[] parts = line.split(" ");
+                if (parts.length >= 3) {
+                    currentFile = parts[2].substring(2); // Remove "b/"
+                }
+            }
+            // New file
+            else if (line.startsWith("new file")) {
+                if (currentFile != null) addedFiles.add(currentFile);
+            }
+            // Deleted file
+            else if (line.startsWith("deleted file")) {
+                if (currentFile != null) deletedFiles.add(currentFile);
+            }
+            // Renamed file
+            else if (line.contains("rename from") || line.contains("rename to")) {
+                if (currentFile != null) renamedFiles.add(currentFile);
+            }
+            // Modified file (fallback)
+            else if (line.startsWith("+++") && currentFile != null &&
+                    !addedFiles.contains(currentFile) &&
+                    !deletedFiles.contains(currentFile) &&
+                    !renamedFiles.contains(currentFile)) {
+                modifiedFiles.add(currentFile);
+            }
+            // Count additions/deletions
+            else if (line.startsWith("+") && !line.startsWith("+++")) {
+                linesAdded++;
+            }
+            else if (line.startsWith("-") && !line.startsWith("---")) {
+                linesRemoved++;
+            }
+        }
+
+        // Build summary
+        if (!addedFiles.isEmpty()) {
+            summary.append("Add ").append(pluralize(addedFiles.size(), "file", "files"))
+                    .append(formatFileList(addedFiles)).append("\n");
+        }
+        if (!modifiedFiles.isEmpty()) {
+            summary.append("Update ").append(pluralize(modifiedFiles.size(), "file", "files"))
+                    .append(formatFileList(modifiedFiles)).append("\n");
+        }
+        if (!deletedFiles.isEmpty()) {
+            summary.append("Remove ").append(pluralize(deletedFiles.size(), "file", "files"))
+                    .append(formatFileList(deletedFiles)).append("\n");
+        }
+        if (!renamedFiles.isEmpty()) {
+            summary.append("Rename ").append(pluralize(renamedFiles.size(), "file", "files"))
+                    .append(formatFileList(renamedFiles)).append("\n");
+        }
+
+        // Add statistics
+        if (linesAdded > 0 || linesRemoved > 0) {
+            summary.append("\n")
+                    .append(linesAdded).append(" insertion")
+                    .append(linesAdded != 1 ? "s" : "")
+                    .append(", ")
+                    .append(linesRemoved).append(" deletion")
+                    .append(linesRemoved != 1 ? "s" : "");
+        }
+
+        // Fallback if no specific changes detected
+        if (summary.length() == 0) {
+            summary.append("Update codebase");
+        }
+
+        return summary.toString().trim();
+    }
+
+    private static String pluralize(int count, String singular, String plural) {
+        return count + " " + (count == 1 ? singular : plural);
+    }
+
+    private static String formatFileList(Set<String> files) {
+        if (files.isEmpty()) return "";
+        if (files.size() <= 3) {
+            return ": " + String.join(", ", files);
+        }
+        return ": " + String.join(", ", files.stream().limit(3).toArray(String[]::new))
+                + " and " + (files.size() - 3) + " more";
+    }
+
     public static String getStagedDiff(
             @NotNull Project project,
-            @NotNull Change[] changes,
+//            @NotNull Change[] changes,
             @NotNull ProgressIndicator indicator
     ) {
-
-        List<VirtualFile> files = Arrays.stream(changes)
-                .map(Change::getVirtualFile)
-                .filter(Objects::nonNull)
-                .toList();
-
-        if (files.isEmpty()) return "";
-
-        GitRepository repo = GitRepositoryManager.getInstance(project)
-                .getRepositoryForFileQuick(files.get(0));
-        if (repo == null) return "";
-
-        GitLineHandler handler = new GitLineHandler(
-                project,
-                repo.getRoot(),
-                GitCommand.DIFF
-        );
-
-        handler.addParameters("--cached", "--no-color", "-U10");
-
-        for (int i = 0; i < files.size(); i++) {
-            indicator.setFraction((double) i / files.size());
-            handler.addParameters(files.get(i).getPath());
-        }
 
 
         StringBuilder buffer = new StringBuilder();
@@ -75,7 +147,11 @@ public class GitDiffUtil {
                 }
             }
         }
-        return buffer.toString();
+
+        String gitmsg=buffer.toString();
+      String result=  generateGitSummary(gitmsg);
+
+        return result;
     }
 
 //
