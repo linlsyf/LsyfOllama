@@ -411,7 +411,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785570572189</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="change  msg">
+      <option name="closed" value="true" />
+      <created>1785571096219</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1785571096219</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -481,6 +489,61 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
           <line>65</line>
           <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>357</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>276</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>284</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>292</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>300</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>307</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>315</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>324</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>334</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>343</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java</url>
+          <line>352</line>
+          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
