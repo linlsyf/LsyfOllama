@@ -50,10 +50,7 @@
 
         <action id="linlsyfQuery" class="com.lsyf.lsyfollama.ui.actions.ContextMenuSearchAction" text="linlsyfQuery"
                 description="显示修复建议">
-            <action id="apiTest" class="com.lsyf.lsyfollama.ui.actions.ParseApiAction" text="apiTest"
-                    description="显示修复建议">
-                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            </action>
+
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="linlsyfRepair" class="com.lsyf.lsyfollama.ui.actions.ContextMenuRepairAction" text="linlsyfRepair"
@@ -92,7 +89,10 @@
 
                 <!--                <add-to-group group-id="MainToolbarRight" anchor="last"/>-->
             </action>
-
+        <action id="apiTest" class="com.lsyf.lsyfollama.ui.actions.ParseApiAction" text="apiTest"
+                description="显示修复建议">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
 <!--        <add-to-group group-id="MainToolBar" anchor="after"-->
 <!--                      relative-to-action="ToolbarRunGroup"/>-->
 <!--        <startupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>-->

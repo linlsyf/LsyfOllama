@@ -7,6 +7,8 @@ import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ContentRevision;
+import com.intellij.openapi.vcs.changes.LocalChangeList;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
@@ -28,7 +30,6 @@ public class GitDiffUtil {
             @NotNull Change[] changes,
             @NotNull ProgressIndicator indicator
     ) {
-//        if (!GitUtil.isUnderGit(project)) return "";
 
         List<VirtualFile> files = Arrays.stream(changes)
                 .map(Change::getVirtualFile)
@@ -54,57 +55,46 @@ public class GitDiffUtil {
             handler.addParameters(files.get(i).getPath());
         }
 
-        GitCommandResult result = Git.getInstance().runCommand(handler);
-        return result.success()
-                ? result.getOutputAsJoinedString()
-                : "";
-    }
 
+        StringBuilder buffer = new StringBuilder();
 
+        // 获取 IDEA ChangeList 中的变更，然后获取每个文件的 diff
+        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+        LocalChangeList defaultList = changeListManager.getDefaultChangeList();
 
-
-    public static String buildPromptFromChanges(Change[] changes) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Here are the code changes:\n\n");
-
-        int fileIndex = 1;
-        for (Change change : changes) {
-            String filePath = getFilePath(change);
-            sb.append("=== File ").append(fileIndex++).append(": ")
-                    .append(filePath).append(" (").append(change.getType()).append(") ===\n");
-
-            ContentRevision before = change.getBeforeRevision();
-            ContentRevision after = change.getAfterRevision();
-
-            String beforeContent = before != null ? safeGetContent(before) : "";
-            String afterContent = after != null ? safeGetContent(after) : "";
-
-            if (!beforeContent.isEmpty()) {
-                sb.append("--- BEFORE ---\n").append(beforeContent).append("\n");
+        for (Change change : defaultList.getChanges()) {
+            //            ContentRevision before = change.getBeforeRevision();
+//            String changeType = change.getType().toString(); // MODIFICATION, ADD, DELETE
+            ContentRevision afterRevision = change.getAfterRevision();
+            if (afterRevision != null) {
+                VirtualFile file = afterRevision.getFile().getVirtualFile();
+                if (file != null) {
+                    String relativePath = VfsUtilCore.getRelativePath(file, project.getBaseDir());
+                    String diff = getFileDiff(project, relativePath, "HEAD");
+                    buffer.append("Diff for ").append(relativePath).append(":\n").append(diff);
+                }
             }
-            if (!afterContent.isEmpty()) {
-                sb.append("+++ AFTER +++\n").append(afterContent).append("\n");
-            }
-            sb.append("\n");
         }
-        return sb.toString();
+        return buffer.toString();
     }
 
-    private static String getFilePath(Change change) {
-        ContentRevision rev = change.getAfterRevision() != null
-                ? change.getAfterRevision()
-                : change.getBeforeRevision();
-        return rev != null ? rev.getFile().getPath() : "unknown";
-    }
+//
+//    private static String getFilePath(Change change) {
+//        ContentRevision rev = change.getAfterRevision() != null
+//                ? change.getAfterRevision()
+//                : change.getBeforeRevision();
+//        return rev != null ? rev.getFile().getPath() : "unknown";
+//    }
+//
+//    private static String safeGetContent(ContentRevision rev) {
+//        try {
+//            String content = rev.getContent();
+//            return content != null ? content : "";
+//        } catch (Exception e) {
+//            return ""; // 二进制文件等会抛异常，直接忽略
+//        }
+//    }
 
-    private static String safeGetContent(ContentRevision rev) {
-        try {
-            String content = rev.getContent();
-            return content != null ? content : "";
-        } catch (Exception e) {
-            return ""; // 二进制文件等会抛异常，直接忽略
-        }
-    }
     public static Change[] getCommitChanges(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         if (project == null) return new Change[0];
@@ -140,6 +130,46 @@ public class GitDiffUtil {
         return new Change[0];
     }
 
+    /**
+     * 获取当前工作区与 HEAD 的差异
+     */
+    public String getDiffWithHead(Project project) {
+        return getDiff(project, "HEAD", null);
+    }
 
+    /**
+     * 获取两个提交之间的差异
+     */
+    public String getDiffBetweenCommits(Project project, String fromCommit, String toCommit) {
+        return getDiff(project, fromCommit + ".." + toCommit, null);
+    }
+
+    /**
+     * 获取指定文件的差异
+     */
+    public static String getFileDiff(Project project, String filePath, String reference) {
+        return getDiff(project, reference, filePath);
+    }
+
+    private static String getDiff(Project project, String reference, String filePath) {
+        VirtualFile root = project.getBaseDir();
+        GitLineHandler handler = new GitLineHandler(project, root, GitCommand.DIFF);
+
+        if (reference != null) {
+            handler.addParameters(reference);
+        }
+
+        if (filePath != null) {
+            handler.addParameters("--", filePath);
+        }
+
+        GitCommandResult result = Git.getInstance().runCommand(handler);
+
+        if (!result.success()) {
+            throw new RuntimeException("Git diff failed: " + result.getErrorOutput());
+        }
+
+        return String.join("\n", result.getOutput());
+    }
 
 }
