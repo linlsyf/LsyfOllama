@@ -151,6 +151,8 @@ public class ContextMenuLogic {
 //                          Thread   appThread = new Thread() {
 //                            public void run() {
 
+//                          diff.getGitmsg()
+
                               String prompt = diff.getGitmsg()+ "  根据git信息 总结修改内容。\n" +
                                   "输出格式要求：纯代码，无换行符(\\n)或描述 输入为英文内容 \n"+
                                   "git信息如下: \n";
