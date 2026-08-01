@@ -14,10 +14,11 @@ import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandler;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GitDiffUtil {
 
@@ -120,11 +121,7 @@ public class GitDiffUtil {
                 + " and " + (files.size() - 3) + " more";
     }
 
-    public static String getStagedDiff(
-            @NotNull Project project,
-//            @NotNull Change[] changes,
-            @NotNull ProgressIndicator indicator
-    ) {
+    public static String getStagedDiff(  @NotNull Project project,@NotNull ProgressIndicator indicator ) {
 
 
         StringBuilder buffer = new StringBuilder();
@@ -154,23 +151,36 @@ public class GitDiffUtil {
         return result;
     }
 
-//
-//    private static String getFilePath(Change change) {
-//        ContentRevision rev = change.getAfterRevision() != null
-//                ? change.getAfterRevision()
-//                : change.getBeforeRevision();
-//        return rev != null ? rev.getFile().getPath() : "unknown";
-//    }
-//
-//    private static String safeGetContent(ContentRevision rev) {
-//        try {
-//            String content = rev.getContent();
-//            return content != null ? content : "";
-//        } catch (Exception e) {
-//            return ""; // 二进制文件等会抛异常，直接忽略
-//        }
-//    }
 
+    // 更宽松的版本 - 适合 diff 内容
+    private static Set<String> extractMethodNamesFromDiff(String diffText) {
+        Set<String> methodNames = new LinkedHashSet<>();
+
+        // 处理 diff 格式：只关注新增的行（+ 开头）
+        String[] lines = diffText.split("\n");
+        StringBuilder codeBlock = new StringBuilder();
+
+        for (String line : lines) {
+            if (line.startsWith("+") && !line.startsWith("+++")) {
+                codeBlock.append(line.substring(1)).append("\n");
+            }
+        }
+
+        // 从新增代码中提取方法名
+        Pattern pattern = Pattern.compile(
+                "\\b(public|private|protected|static|final|synchronized|native|abstract)\\s+" +
+                        "[\\w<>\\[\\],\\s]+\\s+(\\w+)\\s*\\([^)]*\\)"
+        );
+
+        Matcher matcher = pattern.matcher(codeBlock.toString());
+        while (matcher.find()) {
+            methodNames.add(matcher.group(2));
+        }
+
+        return methodNames;
+    }
+
+    // 使用示例
     public static Change[] getCommitChanges(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         if (project == null) return new Change[0];
@@ -254,44 +264,46 @@ public class GitDiffUtil {
         // Split into lines for analysis
         String[] lines = diff.split("\n");
 
-        for (String line : lines) {
-            String trimmed = line.trim();
+//        for (String line : lines) {
+//            String trimmed = line.trim();
+//
+//            // Skip diff metadata
+//            if (trimmed.startsWith("diff --git") ||
+//                    trimmed.startsWith("index ") ||
+//                    trimmed.startsWith("@@") ||
+//                    trimmed.startsWith("+++") ||
+//                    trimmed.startsWith("---") ||
+//                    trimmed.isEmpty()) {
+//                continue;
+//            }
+//            String content = line.substring(1).toLowerCase();
+//
+//            Set<String>  result= extractMethodNamesFromDiff(content);
+//
+//
+//            // Analyze actual code changes
+////            if (line.startsWith("+") || line.startsWith("-")) {
+////                String content = line.substring(1).toLowerCase();
+////
+////                // Feature additions
+////                if (StringUtils.isNotBlank(content)&&!content.startsWith("import")){
+////                    changes.add(" "+content.replaceAll("/\\/",""));
+////                }
+////            }
+//        }
 
-            // Skip diff metadata
-            if (trimmed.startsWith("diff --git") ||
-                    trimmed.startsWith("index ") ||
-                    trimmed.startsWith("@@") ||
-                    trimmed.startsWith("+++") ||
-                    trimmed.startsWith("---") ||
-                    trimmed.isEmpty()) {
-                continue;
-            }
-
-            // Analyze actual code changes
-            if (line.startsWith("+") || line.startsWith("-")) {
-                String content = line.substring(1).toLowerCase();
-
-                // Feature additions
-                if (StringUtils.isNotBlank(content)&&!content.startsWith("import")){
-                    changes.add("change "+content);
-                }
-            }
-        }
-
-        // Return summary
-        if (changes.isEmpty()) {
-            return "Update implementation";
-        }
-
-        // Combine changes naturally
-        List<String> changeList = new ArrayList<>(changes);
-        if (changeList.size() == 1) {
-            return changeList.get(0);
-        } else if (changeList.size() == 2) {
-            return changeList.get(0) + " and " + changeList.get(1);
+        Set<String>  changedMethods = extractMethodNamesFromDiff(diff);
+        List<String> methods = new ArrayList<>(changedMethods);
+        String  summary="";
+        if (methods.size() == 1) {
+            summary = "Modify " + methods.get(0) + " method";
+        } else if (methods.size() <= 3) {
+            summary = "Modify " + String.join(", ", methods) + " methods";
         } else {
-            String last = changeList.remove(changeList.size() - 1);
-            return String.join(", ", changeList) + ", and " + last;
+            summary = "Modify " + String.join(", ", methods.subList(0, 3)) +
+                    ", and " + (methods.size() - 3) + " more methods";
         }
+        return summary;
+
     }
 }
