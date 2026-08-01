@@ -1,7 +1,6 @@
 package com.lsyf.lsyfollama.business;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.Change;
@@ -10,6 +9,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.lsyf.lsyfollama.vo.DiffMsg;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitCommandResult;
@@ -121,7 +121,7 @@ public class GitDiffUtil {
                 + " and " + (files.size() - 3) + " more";
     }
 
-    public static String getStagedDiff(  @NotNull Project project,@NotNull ProgressIndicator indicator ) {
+    public static DiffMsg getStagedDiff(  @NotNull Project project) {
 
 
         StringBuilder buffer = new StringBuilder();
@@ -143,12 +143,15 @@ public class GitDiffUtil {
                 }
             }
         }
-
+        DiffMsg  diffMsg=new DiffMsg();
         String gitmsg=buffer.toString();
-      String result=  analyzeChanges(gitmsg);
+        diffMsg.setGitmsg(gitmsg);
+      String result=  analyzeChanges(gitmsg);        diffMsg.setResult(result);
+
+
 //      String result=  generateGitSummary(gitmsg);
 
-        return result;
+        return diffMsg;
     }
 
 
@@ -296,9 +299,9 @@ public class GitDiffUtil {
         List<String> methods = new ArrayList<>(changedMethods);
         String  summary="";
         if (methods.size() == 1) {
-            summary = "Modify " + methods.get(0) + " method";
+            summary = "Modify " + methods.get(0) ;
         } else if (methods.size() <= 3) {
-            summary = "Modify " + String.join(", ", methods) + " methods";
+            summary = "Modify " + String.join(", ", methods) ;
         } else {
             summary = "Modify " + String.join(", ", methods.subList(0, 3)) +
                     ", and " + (methods.size() - 3) + " more methods";

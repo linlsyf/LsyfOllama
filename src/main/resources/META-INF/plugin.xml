@@ -37,7 +37,7 @@
                 anchor="right"
                 icon="/META-INF/pluginIcon.svg"
                 factoryClass="com.lsyf.lsyfollama.ui.toolWindowFactory.ChatWindowHomeFactory"/>
-        <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.cofig.MySettingsPanel"/>
+        <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.cofig.SettingsConfig"/>
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
         <checkinHandlerFactory
                 implementation="com.lsyf.lsyfollama.ui.actions.MyPluginCheckinHandlerFactory"/>

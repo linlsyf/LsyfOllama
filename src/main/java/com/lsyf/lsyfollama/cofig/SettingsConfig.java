@@ -9,33 +9,31 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class MySettingsPanel implements Configurable {
-//    private JPanel mainPanel;
-//
-//    private JTextField inputField;
-//    private JTextField commitReceiptFied;
-//    private JTextField commitRejectFied;
-//    private JTextField modelField;
-   SettingView settingView;
+public class SettingsConfig implements Configurable {
+
+    SettingView settingView;
+
 
     @Override
     public @Nullable JComponent createComponent() {
-//        mainPanel= new JPanel(new BorderLayout());
-//
-//        inputField = new JTextField();
-//
-//        modelField = new JTextField();
-//        commitReceiptFied = new JTextField();
-//        commitRejectFied = new JTextField();
-//        mainPanel.add(inputField, BorderLayout.CENTER);
-//        mainPanel.add(modelField, BorderLayout.SOUTH);
-//        mainPanel.add(commitReceiptFied, BorderLayout.SOUTH);
-//        mainPanel.add(commitRejectFied, BorderLayout.SOUTH);
-//        return mainPanel;
-         settingView =new SettingView();
-          settingView.init();
-          return  settingView.getMainPanel();
+
+        settingView = new SettingView();
+        settingView.init();
+        // 添加按钮点击事件
+        settingView.getToggleButton().addActionListener(e -> toggleState());
+        return settingView.getMainPanel();
     }
+
+    private void toggleState() {
+        ChatConstant.isAiModeDefault = !ChatConstant.isAiModeDefault;
+
+        // 可以添加更多状态切换逻辑
+        settingView.getToggleText();
+        PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_IS_AI_SETTING, ChatConstant.isAiModeDefault);
+
+
+    }
+
 
     @Override
     public @Nullable JComponent getPreferredFocusedComponent() {
@@ -52,20 +50,20 @@ public class MySettingsPanel implements Configurable {
     @Override
     public void apply() {
         // 保存配置到 PropertiesComponent
-        String  IP= settingView.getInputField().getText();
-        String  MODE= settingView.getModelField().getText();
-        String  commitReceipt= settingView.getCommitReceiptFied().getText();
-        String  commitReject= settingView.getCommitRejectFied().getText();
+        String IP = settingView.getInputField().getText();
+        String MODE = settingView.getModelField().getText();
+        String commitReceipt = settingView.getCommitReceiptFied().getText();
+        String commitReject = settingView.getCommitRejectFied().getText();
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_PLUGIN_SETTING, IP);
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_MODEL_SETTING, MODE);
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, commitReceipt);
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_REJECT_SETTING, commitReject);
 
 
-        ChatConstant.apiUrl =IP;
-        ChatConstant.modelSetting =MODE;
-        ChatConstant.myCommitReceiptValue =commitReceipt;
-        ChatConstant.myCommitJectValue =commitReject;
+        ChatConstant.apiUrl = IP;
+        ChatConstant.modelSetting = MODE;
+        ChatConstant.myCommitReceiptValue = commitReceipt;
+        ChatConstant.myCommitJectValue = commitReject;
     }
 
     @Override
@@ -75,10 +73,10 @@ public class MySettingsPanel implements Configurable {
         settingView.getModelField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
         settingView.getCommitReceiptFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, "提交总结内容关键字"));
         settingView.getCommitRejectFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_REJECT_SETTING, "提交总结内容关键字"));
-        ChatConstant.apiUrl =ChatConstant.apiUrl;
-        ChatConstant.modelSetting =ChatConstant.modelSetting;
-        ChatConstant.myCommitReceiptValue =ChatConstant.MY_COMMIT_RECEIPT_VALUE;
-        ChatConstant.myCommitJectValue =ChatConstant.MY_COMMIT_REJECT_VALUE;
+        ChatConstant.apiUrl = ChatConstant.apiUrl;
+        ChatConstant.modelSetting = ChatConstant.modelSetting;
+        ChatConstant.myCommitReceiptValue = ChatConstant.MY_COMMIT_RECEIPT_VALUE;
+        ChatConstant.myCommitJectValue = ChatConstant.MY_COMMIT_REJECT_VALUE;
     }
 
     @Override
@@ -94,5 +92,13 @@ public class MySettingsPanel implements Configurable {
     @Override
     public String getDisplayName() {
         return "lsyfSettings";
+    }
+
+    public void propSetValue(String key, String value) {
+        PropertiesComponent.getInstance().setValue(key, value);
+    }
+
+    public void propSetBooleanValue(String key, Boolean value) {
+        PropertiesComponent.getInstance().setValue(key, value);
     }
 }

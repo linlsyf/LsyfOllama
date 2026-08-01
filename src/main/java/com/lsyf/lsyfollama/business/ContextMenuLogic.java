@@ -29,6 +29,7 @@ import com.lsyf.lsyfollama.ToolWindowService;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
 import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
+import com.lsyf.lsyfollama.vo.DiffMsg;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lsyf.lsyfollama.ChatConstant.ChatToolWindow_ID;
@@ -136,30 +137,49 @@ public class ContextMenuLogic {
                         indicator.setIndeterminate(false);
 
                         // 1. 拿 diff
-                        String diff = GitDiffUtil.getStagedDiff(project,  indicator);
-                        if (diff.isBlank()) {
+                        DiffMsg diff = GitDiffUtil.getStagedDiff(project);
+                        if (diff.getResult().isBlank()) {
 //                            notify("No staged changes found");
                             return;
                         }
 
-                        // 2. 调用 AI
-//                        String aiMessage = callAI(diff, indicator);
 
-                        // 3. 写回提交框（切回 UI 线程）
-                        ApplicationManager.getApplication().invokeLater(() -> {
+                        if (ChatConstant.isAiModeSave) {
+                            // 2. 调用 AI
+                            String prompt = diff.getGitmsg()+ "  根据git信息 总结修改内容。\n" +
+                                    "输出格式要求：纯代码，无换行符(\\n)或描述 输入为英文内容 \n"+
+                                    "git信息如下: \n";
+
+                            prompt=prompt+prompt;
+
+                            final String newText = OllamaClientUtils.processText(prompt); // 自定义替换逻辑
+
+                            // 执行替换（线程安全）
+                            ApplicationManager.getApplication().invokeLater(() -> {
+
+                                messageUi.setText(newText);
+                            });
+                        }else{
+                            // 3. 写回提交框（切回 UI 线程）
+                            ApplicationManager.getApplication().invokeLater(() -> {
 //                            commitPanel.setCommitMessage(aiMessage);
 
 
 //                            String oldMsg = messageUi.getText();
 //                            String newMsg = oldMsg.isEmpty() ? selectedText : oldMsg + "\n" + selectedText;
-                            messageUi.setText(diff);
-                        });
+                                messageUi.setText(diff.getResult());
+                            });
+                        }
+
+
+
                     }
                 }
         );
 
 
     }
+
 
     private static CommitWorkflowUi resolveCommitWorkflowUi(AnActionEvent e) {
         CommitWorkflowUi ui = e.getData(VcsDataKeys.COMMIT_WORKFLOW_UI);
