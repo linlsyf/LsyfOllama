@@ -19,6 +19,7 @@ public class SettingsConfig implements Configurable {
 
         settingView = new SettingView();
         settingView.init();
+        initViewValue();
         // 添加按钮点击事件
         settingView.getToggleButton().addActionListener(e -> toggleState());
         return settingView.getMainPanel();
@@ -28,7 +29,7 @@ public class SettingsConfig implements Configurable {
         ChatConstant.isAiModeDefault = !ChatConstant.isAiModeDefault;
 
         // 可以添加更多状态切换逻辑
-        settingView.getToggleText();
+        initViewValue() ;
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_IS_AI_SETTING, ChatConstant.isAiModeDefault);
 
 
@@ -69,16 +70,28 @@ public class SettingsConfig implements Configurable {
     @Override
     public void reset() {
         // 重置为默认值或加载已保存的配置
-        settingView.getInputField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
-        settingView.getModelField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
-        settingView.getCommitReceiptFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, "提交总结内容关键字"));
-        settingView.getCommitRejectFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_REJECT_SETTING, "提交总结内容关键字"));
         ChatConstant.apiUrl = ChatConstant.apiUrl;
         ChatConstant.modelSetting = ChatConstant.modelSetting;
         ChatConstant.myCommitReceiptValue = ChatConstant.MY_COMMIT_RECEIPT_VALUE;
         ChatConstant.myCommitJectValue = ChatConstant.MY_COMMIT_REJECT_VALUE;
-    }
+        ChatConstant.isAiModeSave = ChatConstant.isAiModeDefault;
+        initViewValue();
 
+    }
+    public void initViewValue() {
+
+
+        settingView.getInputField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
+        settingView.getModelField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
+        settingView.getCommitReceiptFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, "提交总结内容关键字"));
+        settingView.getCommitRejectFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_REJECT_SETTING, "提交总结内容关键字"));
+
+        boolean state=PropertiesComponent.getInstance().getBoolean(ChatConstant.MY_COMMIT_IS_AI_SETTING, false);
+        String stateStr = (ChatConstant.isAiModeDefault ? "智能模式" : "本地模式");
+        settingView.getToggleButton().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_REJECT_SETTING, stateStr));
+
+
+    }
     @Override
     public void disposeUIResources() {
         Configurable.super.disposeUIResources();

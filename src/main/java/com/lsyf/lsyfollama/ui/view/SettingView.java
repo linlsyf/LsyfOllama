@@ -1,6 +1,5 @@
 package com.lsyf.lsyfollama.ui.view;
 
-import com.lsyf.lsyfollama.ChatConstant;
 import lombok.Data;
 
 import javax.swing.*;
@@ -19,48 +18,54 @@ public class SettingView {
 //    private boolean isAiMode = true; // 初始为编辑模式
   JButton toggleButton;
 
-  public void init() {
-    mainPanel = new JPanel();
-    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
-    // 创建切换按钮
-    toggleButton = new JButton();
-    getToggleText();
-    toggleButton.setAlignmentX(Component.CENTER_ALIGNMENT); // 居中对齐
-    toggleButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // 宽度撑满
-
-    // 初始化文本框
-    inputField = new JTextField();
-    modelField = new JTextField();
-    commitReceiptFied = new JTextField();
-    commitRejectFied = new JTextField();
-
-    // 设置文本框最大高度，防止被拉伸
-    Dimension textFieldSize = new Dimension(Integer.MAX_VALUE, 30);
-    inputField.setMaximumSize(textFieldSize);
-    modelField.setMaximumSize(textFieldSize);
-    commitReceiptFied.setMaximumSize(textFieldSize);
-    commitRejectFied.setMaximumSize(textFieldSize);
-
-    // 添加组件到面板，按上下顺序排列
-    mainPanel.add(toggleButton);
-    mainPanel.add(Box.createVerticalStrut(10)); // 添加10像素的垂直间距
-    mainPanel.add(inputField);
-    mainPanel.add(Box.createVerticalStrut(5));
-    mainPanel.add(modelField);
-    mainPanel.add(Box.createVerticalStrut(5));
-    mainPanel.add(commitReceiptFied);
-    mainPanel.add(Box.createVerticalStrut(5));
-    mainPanel.add(commitRejectFied);
+   public void init() {
+    initView();
 
     // 添加按钮点击事件
   }
 
-  public void getToggleText() {
-    String state = (ChatConstant.isAiModeDefault ? "智能模式" : "本地模式");
-    toggleButton.setText(state);
+  public void initView() {
+      mainPanel = new JPanel();
+      mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+      // 创建切换按钮
+      toggleButton = new JButton();
+//      getToggleText();
+      toggleButton.setAlignmentX(Component.CENTER_ALIGNMENT); // 居中对齐
+      toggleButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // 宽度撑满
+
+      // 初始化文本框
+      inputField = new JTextField();
+      modelField = new JTextField();
+      commitReceiptFied = new JTextField();
+      commitRejectFied = new JTextField();
+
+      // 设置文本框最大高度，防止被拉伸
+      Dimension textFieldSize = new Dimension(Integer.MAX_VALUE, 30);
+      inputField.setMaximumSize(textFieldSize);
+      modelField.setMaximumSize(textFieldSize);
+      commitReceiptFied.setMaximumSize(textFieldSize);
+      commitRejectFied.setMaximumSize(textFieldSize);
+
+      // 添加组件到面板，按上下顺序排列
+      mainPanel.add(toggleButton);
+      mainPanel.add(Box.createVerticalStrut(10)); // 添加10像素的垂直间距
+      mainPanel.add(inputField);
+      mainPanel.add(Box.createVerticalStrut(5));
+      mainPanel.add(modelField);
+      mainPanel.add(Box.createVerticalStrut(5));
+      mainPanel.add(commitReceiptFied);
+      mainPanel.add(Box.createVerticalStrut(5));
+      mainPanel.add(commitRejectFied);
 
   }
+
+//
+//  public void getToggleText() {
+//    String state = (ChatConstant.isAiModeDefault ? "智能模式" : "本地模式");
+//    toggleButton.setText(state);
+//
+//  }
 
   public JPanel getMainPanel() {
     return mainPanel;
