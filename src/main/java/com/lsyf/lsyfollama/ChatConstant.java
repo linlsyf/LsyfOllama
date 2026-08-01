@@ -8,9 +8,11 @@ public class ChatConstant {
    public  static String MY_COMMIT_RECEIPT_SETTING= "MY_COMMIT_RECEIPT_SETTING";
    public  static String MY_COMMIT_REJECT_SETTING = "MY_COMMIT_REJECT_SETTING";
    public  static String MY_COMMIT_IS_AI_SETTING = "MY_COMMIT_IS_AI_SETTING";
-   public  static String MODEL= "qqwen2.5-coder:0.5b";
-   public  static String API_TEST= "http://www.linlsyf.cn/";
+   public  static String MODEL= "qwen2.5-coder:0.5b";
+   public  static String API_TEST= "http://www.linlsyf.cn:11434";
    public  static String DEV_LAN= "java";
+   public  static String SETTING_RECEPT= "service,mapper,controller";
+   public  static String SETTING_RECEJCT= "@";
    public  static String TXT= "txt";
    public  static String XML= "xml";
    public  static String ChatToolWindow_ID= "LinlsyfAi";

@@ -1,10 +1,8 @@
 package com.lsyf.lsyfollama.constant;
 
-import com.intellij.openapi.ui.Messages;
 import com.lsyf.lsyfollama.ChatConstant;
 import io.github.ollama4j.Ollama;
 import io.github.ollama4j.models.chat.*;
-import io.github.ollama4j.utils.Options;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +21,12 @@ public class OllamaClientUtils {
 
         ollama.chat(request, tokenHandler);
     }
+   public  static void initOllama(){
+      if (ollama==null){
+        ollama = new Ollama(ChatConstant.apiUrl);
+      }
 
+   }
 
 
     public  static String processText(String selectedText) {
@@ -53,14 +56,12 @@ public class OllamaClientUtils {
 
                 }
             };
-
+          initOllama();
             OllamaChatResult ollamaChatResult=ollama.chat(request,tokenHandler);
             result=ollamaChatResult.getResponseModel().getMessage().getResponse();
 //            result=new String(ollamaChatResult.getResponse().getBytes());
         } catch (Exception e) {
-            Messages.showInfoMessage("repair fail ", e.getMessage());
-
-            throw new RuntimeException(e);
+          result="request ai error"+e.getMessage();
         }
 
        return result;

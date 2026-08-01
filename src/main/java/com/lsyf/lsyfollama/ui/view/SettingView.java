@@ -60,12 +60,6 @@ public class SettingView {
 
   }
 
-//
-//  public void getToggleText() {
-//    String state = (ChatConstant.isAiModeDefault ? "智能模式" : "本地模式");
-//    toggleButton.setText(state);
-//
-//  }
 
   public JPanel getMainPanel() {
     return mainPanel;
