@@ -2,73 +2,62 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
     id("org.jetbrains.intellij.platform") version "2.5.0"
-    id("distribution")// 引入分发插件
-    id("io.freefair.lombok") version "8.6" // 关键点 1：引入 Lombok 插件
-
+    id("distribution")
+    id("io.freefair.lombok") version "8.6"
 }
 
 group = "com.lsyf"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven { url = uri("https://plugins.jetbrains.com/maven") }
-    maven { url = uri("https://maven.aliyun.com/repository/public/") }
-    maven { url = uri("https://maven.aliyun.com/repository/google/") }
-    maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin/") }
-    maven { url = uri("https://maven.aliyun.com/repository/central/") }
-    // 默认仓库
-    google()
-    maven { url = uri("https://jitpack.io") } // 其他自定义仓库
-    // 默认仓库（保持兼容性）
-    gradlePluginPortal()
     mavenCentral()
+    // ✅ 关键：必须声明这个，否则 bundledPlugin 等扩展函数不可见
     intellijPlatform {
         defaultRepositories()
     }
+    // 其他仓库
+    maven { url = uri("https://plugins.jetbrains.com/maven") }
+    maven { url = uri("https://maven.aliyun.com/repository/public/") }
+    google()
+    gradlePluginPortal()
+    maven { url = uri("https://jitpack.io") }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
     intellijPlatform {
+        // ✅ 本地 IDE 实例
+        local("D:\\002soft\\ideaIC-2025.2.4.win")
 
-//        local("C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2025.1.3") // Windows 路径示例
-        local("D:\\Program Files\\ideaIC-2025.2.4.win") // Windows 路径示例
+        // ✅ bundledPlugin 必须在 intellijPlatform 块内部
+        // Git4Idea 的真实插件 ID 就是 "Git4Idea"（JetBrains 官方表格确认）
+        bundledPlugin("Git4Idea")
+        bundledPlugin("com.intellij.java")  // Java 插件（可选）
 
-
+        // 测试框架
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
-//    intellijPlatform {
-//        create("IC", "2025.1")
-//        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
-//
-//        // Add necessary plugin dependencies for compilation here, example:
-//        // bundledPlugin("com.intellij.java")
-//    }
+
+    // 普通 Maven 依赖写在外面
     implementation("io.github.ollama4j:ollama4j:1.1.4")
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
-
-    // 测试依赖
     testCompileOnly("org.projectlombok:lombok:1.18.30")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
-
-//    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
-//    implementation("cn.hutool:hutool-all:5.8.5")
 }
+
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "251"
+            sinceBuild = "252"   // ⚠️ 2025.2.4 是 252，不是 251
+            untilBuild = "252.*"
         }
-
         changeNotes = """
-      Initial version
-    """.trimIndent()
+            Initial version
+        """.trimIndent()
     }
 }
 
 tasks {
-    // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"

@@ -4,18 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="@data   use">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/AmendSideAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/MyPluginCheckinHandlerFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="@data   use&#10;test">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitActions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
-    <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="igon" />
+    <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,6 +66,8 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -81,16 +81,7 @@
     &quot;accountId&quot;: &quot;0747d9b2-1237-4795-97bb-9405d0bda285&quot;
   }
 }</component>
-  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="D:\002soft\gradle-8.13" javaHome="C:\Users\Administrator\.jdks\jbr-17.0.14" gradleVersion="8.13">
-    <option name="jvmArguments">
-      <list>
-        <option value="-Dhttp.proxyHost=127.0.0.1" />
-        <option value="-Dhttp.proxyPort=33210" />
-        <option value="-Dhttps.proxyHost=127.0.0.1" />
-        <option value="-Dhttps.proxyPort=33210" />
-      </list>
-    </option>
-  </component>
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="D:\002soft\gradle-8.13" javaHome="C:\Program Files\Java\jdk-17" gradleVersion="8.13" />
   <component name="OptimizeOnSaveOptions">
     <option name="myRunOnSave" value="true" />
   </component>
@@ -110,7 +101,7 @@
     "Gradle.Build LsyfOllama.executor": "Run",
     "Gradle.D:/000/LsyfOllama.executor": "Run",
     "Gradle.Download Sources.executor": "Run",
-    "Gradle.G:/000workplace/LsyfOllama [runIde].executor": "Run",
+    "Gradle.G:/000workplace/LsyfOllama [runIde].executor": "Debug",
     "Gradle.LsyfOllama [:com.lsyf.lsyfollama.test.GenerateExampleTest.main()].executor": "Run",
     "Gradle.LsyfOllama [buildPlugin].executor": "Run",
     "Gradle.LsyfOllama [build].executor": "Run",
@@ -123,8 +114,9 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "G:/000workplace/LsyfOllama",
+    "last_opened_file_path": "D:/000workplace/LsyfOllama",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.jshint": "true",
     "node.js.detected.package.tslint": "true",
@@ -135,7 +127,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.5427783",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -261,10 +253,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.G:/000workplace/LsyfOllama [runIde]" />
-        <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
         <item itemvalue="Gradle.LsyfOllama [runIde]" />
         <item itemvalue="Gradle.LsyfOllama [build]" />
+        <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
+        <item itemvalue="Gradle.G:/000workplace/LsyfOllama [runIde]" />
         <item itemvalue="Application.GenerateExampleTest" />
       </list>
     </recent_temporary>
@@ -432,14 +424,15 @@
     <MESSAGE value="view single" />
     <MESSAGE value="rish  update" />
     <MESSAGE value="@data   use" />
-    <option name="LAST_COMMIT_MESSAGE" value="@data   use" />
+    <MESSAGE value="repari pluin" />
+    <option name="LAST_COMMIT_MESSAGE" value="repari pluin" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java</url>
-          <line>103</line>
+          <line>109</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

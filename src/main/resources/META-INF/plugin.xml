@@ -25,6 +25,8 @@
     <depends>com.intellij.java</depends>
     <!-- 若需兼容旧版平台（≤2019.1），添加模块依赖 -->
     <depends>com.intellij.modules.java</depends>
+    <depends>Git4Idea</depends>
+
     <idea-version since-build="251.0" until-build="255.*"/>  <!-- 控制兼容的 IDE 版本范围 -->
 
     <!-- Extension points defined by the plugin.
@@ -86,12 +88,14 @@
                     text="Amend+"
                     description="在 Amend 旁执行自定义操作"
                     icon="AllIcons.Actions.Commit">
-                <add-to-group group-id="MainToolbarRight" anchor="last"/>
+                <add-to-group group-id="Vcs.MessageActionGroup" anchor="last"/>
+
+                <!--                <add-to-group group-id="MainToolbarRight" anchor="last"/>-->
             </action>
 
-        <add-to-group group-id="MainToolBar" anchor="after"
-                      relative-to-action="ToolbarRunGroup"/>
-        <startupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>
+<!--        <add-to-group group-id="MainToolBar" anchor="after"-->
+<!--                      relative-to-action="ToolbarRunGroup"/>-->
+<!--        <startupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>-->
 
     </actions>
 
