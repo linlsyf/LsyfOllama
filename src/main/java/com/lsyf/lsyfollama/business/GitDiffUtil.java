@@ -14,6 +14,7 @@ import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -26,7 +27,7 @@ public class GitDiffUtil {
         Set<String> modifiedFiles = new HashSet<>();
         Set<String> deletedFiles = new HashSet<>();
         Set<String> renamedFiles = new HashSet<>();
-
+ int i=0;
         // Track change statistics
         int linesAdded = 0;
         int linesRemoved = 0;
@@ -271,85 +272,8 @@ public class GitDiffUtil {
                 String content = line.substring(1).toLowerCase();
 
                 // Feature additions
-                if (content.contains("new") || content.contains("add") ||
-                        content.contains("implement") || content.contains("support") ||
-                        content.contains("feature") || content.contains("enable")) {
-                    changes.add("Add new functionality");
-                }
-
-                // Bug fixes
-                if (content.contains("fix") || content.contains("bug") ||
-                        content.contains("issue") || content.contains("error") ||
-                        content.contains("crash") || content.contains("null") ||
-                        content.contains("exception") || content.contains("patch")) {
-                    changes.add("Fix bugs");
-                }
-
-                // Performance improvements
-                if (content.contains("optimize") || content.contains("performance") ||
-                        content.contains("speed") || content.contains("fast") ||
-                        content.contains("slow") || content.contains("cache") ||
-                        content.contains("memory") || content.contains("leak")) {
-                    changes.add("Improve performance");
-                }
-
-                // Refactoring
-                if (content.contains("refactor") || content.contains("clean") ||
-                        content.contains("reorganize") || content.contains("restructure") ||
-                        content.contains("simplify") || content.contains("extract") ||
-                        content.contains("rename") || content.contains("move")) {
-                    changes.add("Refactor code");
-                }
-
-                // Documentation
-                if (content.contains("doc") || content.contains("comment") ||
-                        content.contains("readme") || content.contains("javadoc") ||
-                        content.contains("license") || content.contains("changelog")) {
-                    changes.add("Update documentation");
-                }
-
-                // Testing
-                if (content.contains("test") || content.contains("assert") ||
-                        content.contains("mock") || content.contains("stub") ||
-                        content.contains("spec") || content.contains("jest") ||
-                        content.contains("junit") || content.contains("pytest")) {
-                    changes.add("Update tests");
-                }
-
-                // Configuration/Dependencies
-                if (content.contains("config") || content.contains("dependency") ||
-                        content.contains("version") || content.contains("upgrade") ||
-                        content.contains("downgrade") || content.contains("package") ||
-                        content.contains("gradle") || content.contains("maven") ||
-                        content.contains("npm") || content.contains("yarn") ||
-                        content.contains("docker") || content.contains("k8s")) {
-                    changes.add("Update configuration");
-                }
-
-                // Security
-                if (content.contains("security") || content.contains("vulnerability") ||
-                        content.contains("auth") || content.contains("password") ||
-                        content.contains("token") || content.contains("encrypt") ||
-                        content.contains("decrypt") || content.contains("hash") ||
-                        content.contains("ssl") || content.contains("tls")) {
-                    changes.add("Enhance security");
-                }
-
-                // UI/UX changes
-                if (content.contains("ui") || content.contains("ux") ||
-                        content.contains("style") || content.contains("css") ||
-                        content.contains("layout") || content.contains("button") ||
-                        content.contains("color") || content.contains("theme") ||
-                        content.contains("responsive") || content.contains("mobile")) {
-                    changes.add("Update user interface");
-                }
-
-                // Logging/Monitoring
-                if (content.contains("log") || content.contains("monitor") ||
-                        content.contains("metric") || content.contains("trace") ||
-                        content.contains("debug") || content.contains("info") ||
-                        content.contains("warn") || content.contains("error")) {
-                    changes.add("Enhance logging");
+                if (StringUtils.isNotBlank(content)&&!content.startsWith("import")){
+                    changes.add("change "+content);
                 }
             }
         }
