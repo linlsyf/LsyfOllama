@@ -5,6 +5,8 @@ import com.intellij.ide.util.PropertiesComponent;
 public class ChatConstant {
    public  static String MY_PLUGIN_SETTING= "MY_PLUGIN_SETTING";
    public  static String MY_MODEL_SETTING= "MY_MODEL_SETTING";
+   public  static String MY_COMMIT_RECEIPT_SETTING= "MY_COMMIT_RECEIPT_SETTING";
+   public  static String MY_COMMIT_REJECT_SETTING = "MY_COMMIT_REJECT_SETTING";
    public  static String MODEL= "qwen3:0.6b";
    public  static String API_TEST= "http://113.45.171.202:11434";
    public  static String DEV_LAN= "java";
@@ -14,10 +16,11 @@ public class ChatConstant {
    public  static String JAVA_FILE= "java";
    public  static String PYTHON_File= "py";
    public  static String TYPE_REPAIR= "repair";
-   public  static String TYPE_repari= "repair";
    public  static String TYPE_code_generation= "code generation";
    public  static String OPEN_RIGHT_PANEL= "please  open right panel first";
    public  static String DEV_ING= "function is developing";
+   public  static String MY_COMMIT_RECEIPT_VALUE= "";
+   public  static String MY_COMMIT_REJECT_VALUE= "";
 
    public static String apiUrl = PropertiesComponent.getInstance().getValue(
            ChatConstant.MY_PLUGIN_SETTING,
@@ -27,4 +30,14 @@ public class ChatConstant {
            ChatConstant.MY_MODEL_SETTING,
            MODEL // 默认值
    );
+   public static String myCommitReceiptValue= PropertiesComponent.getInstance().getValue(
+           ChatConstant.MY_COMMIT_REJECT_SETTING,
+           MY_COMMIT_RECEIPT_VALUE // 默认值
+   );
+   public static String myCommitJectValue= PropertiesComponent.getInstance().getValue(
+           ChatConstant.MY_COMMIT_REJECT_VALUE,
+           MY_COMMIT_REJECT_VALUE // 默认值
+   );
+
+
 }

@@ -4,28 +4,37 @@ package com.lsyf.lsyfollama.cofig;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
 import com.lsyf.lsyfollama.ChatConstant;
+import com.lsyf.lsyfollama.ui.view.SettingView;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MySettingsPanel implements Configurable {
-    private JPanel mainPanel;
-
-    private JTextField inputField;
-    private JTextField modelField;
-
+//    private JPanel mainPanel;
+//
+//    private JTextField inputField;
+//    private JTextField commitReceiptFied;
+//    private JTextField commitRejectFied;
+//    private JTextField modelField;
+   SettingView settingView;
 
     @Override
     public @Nullable JComponent createComponent() {
-        mainPanel= new JPanel(new BorderLayout());
-
-        inputField = new JTextField();
-
-        modelField = new JTextField();
-        mainPanel.add(inputField, BorderLayout.CENTER);
-        mainPanel.add(modelField, BorderLayout.SOUTH);
-        return mainPanel;
+//        mainPanel= new JPanel(new BorderLayout());
+//
+//        inputField = new JTextField();
+//
+//        modelField = new JTextField();
+//        commitReceiptFied = new JTextField();
+//        commitRejectFied = new JTextField();
+//        mainPanel.add(inputField, BorderLayout.CENTER);
+//        mainPanel.add(modelField, BorderLayout.SOUTH);
+//        mainPanel.add(commitReceiptFied, BorderLayout.SOUTH);
+//        mainPanel.add(commitRejectFied, BorderLayout.SOUTH);
+//        return mainPanel;
+         settingView =new SettingView();
+          settingView.init();
+          return  settingView.getMainPanel();
     }
 
     @Override
@@ -43,23 +52,33 @@ public class MySettingsPanel implements Configurable {
     @Override
     public void apply() {
         // 保存配置到 PropertiesComponent
-        String  IP= inputField.getText();
-        String  MODE= modelField.getText();
+        String  IP= settingView.getInputField().getText();
+        String  MODE= settingView.getModelField().getText();
+        String  commitReceipt= settingView.getCommitReceiptFied().getText();
+        String  commitReject= settingView.getCommitRejectFied().getText();
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_PLUGIN_SETTING, IP);
         PropertiesComponent.getInstance().setValue(ChatConstant.MY_MODEL_SETTING, MODE);
+        PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, commitReceipt);
+        PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_REJECT_SETTING, commitReject);
 
 
         ChatConstant.apiUrl =IP;
         ChatConstant.modelSetting =MODE;
+        ChatConstant.myCommitReceiptValue =commitReceipt;
+        ChatConstant.myCommitJectValue =commitReject;
     }
 
     @Override
     public void reset() {
         // 重置为默认值或加载已保存的配置
-        inputField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
-        modelField.setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
+        settingView.getInputField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, "输入api地址端口"));
+        settingView.getModelField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_MODEL_SETTING, "输入模型"));
+        settingView.getCommitReceiptFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, "提交总结内容关键字"));
+        settingView.getCommitRejectFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_REJECT_SETTING, "提交总结内容关键字"));
         ChatConstant.apiUrl =ChatConstant.apiUrl;
         ChatConstant.modelSetting =ChatConstant.modelSetting;
+        ChatConstant.myCommitReceiptValue =ChatConstant.MY_COMMIT_RECEIPT_VALUE;
+        ChatConstant.myCommitJectValue =ChatConstant.MY_COMMIT_REJECT_VALUE;
     }
 
     @Override
