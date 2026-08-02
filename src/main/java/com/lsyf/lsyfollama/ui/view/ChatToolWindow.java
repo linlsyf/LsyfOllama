@@ -41,6 +41,10 @@ public class ChatToolWindow {
   private volatile Thread appThread;
   private volatile boolean stopFlag = false;
 
+  // ===== 新增：AI回复缓存 =====
+  private volatile String lastCompletedAIResponse = "";  // 缓存最后一条已完成的AI回复
+  private volatile String currentGeneratingContent = ""; // 当前正在生成的内容
+
   // ===== AI消息相关引用 =====
   private JTextArea currentAIResponseArea;  // 当前AI回复的文本区域
   private JPanel currentAIPanel;           // 当前AI消息面板
@@ -94,7 +98,7 @@ public class ChatToolWindow {
   }
 
   /**
-   * 初始化聊天区域 - 关键修复：使用正确的布局策略
+   * 初始化聊天区域
    */
   private void initChatArea() {
     // 聊天容器 - 使用GridBagLayout替代BoxLayout，解决宽度问题
@@ -102,18 +106,14 @@ public class ChatToolWindow {
     chatContainer.setBackground(BG_PANEL);
     chatContainer.setBorder(JBUI.Borders.empty(8));
 
-    // 滚动面板配置 - 关键设置
+    // 滚动面板配置
     scrollPane = new JScrollPane(chatContainer);
     scrollPane.setBorder(null);
     scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.getVerticalScrollBar().setUnitIncrement(16);
     scrollPane.getViewport().setBackground(BG_PANEL);
-
-    // 关键：设置视口的最小尺寸
     scrollPane.getViewport().setMinimumSize(JBUI.size(460, 200));
-
-    // 移除边框
     scrollPane.setViewportBorder(null);
 
     chatPanel.add(scrollPane, BorderLayout.CENTER);
@@ -125,12 +125,10 @@ public class ChatToolWindow {
   private void initBottomPanel() {
     bottomView = new BottomView();
 
-    // 确保底部面板宽度稳定
     JPanel bottomPanel = bottomView.getInPutView();
     bottomPanel.setBorder(JBUI.Borders.empty(8, 12, 12, 12));
     bottomPanel.setBackground(BG_PANEL);
 
-    // 调整输入框宽度 - 使用JBUI缩放
     JTextField inputField = bottomView.getInputField();
     inputField.setPreferredSize(JBUI.size(360, 32));
     inputField.setMaximumSize(JBUI.size(Integer.MAX_VALUE, 32));
@@ -142,7 +140,6 @@ public class ChatToolWindow {
     inputField.setForeground(JBColor.namedColor("TextField.foreground"));
     inputField.setCaretColor(JBColor.namedColor("TextField.caretForeground"));
 
-    // 调整按钮大小
     JButton sendButton = bottomView.getSendButton();
     sendButton.setPreferredSize(JBUI.size(80, 32));
     sendButton.setFocusPainted(false);
@@ -172,11 +169,13 @@ public class ChatToolWindow {
       }
     });
 
-    // 清空按钮
+    // 清空按钮 - 同时清空缓存
     cleanButton.addActionListener(e -> {
       chatContainer.removeAll();
       lastRequestTxt = "";
       currentPrompt = null;
+      lastCompletedAIResponse = "";  // 清空缓存
+      currentGeneratingContent = ""; // 清空当前生成内容
       chatContainer.revalidate();
       chatContainer.repaint();
     });
@@ -192,15 +191,13 @@ public class ChatToolWindow {
   }
 
   /**
-   * 创建气泡面板 - 使用GridBagLayout确保宽度正确
+   * 创建气泡面板
    */
   private JPanel createBubblePanel(String text, boolean isUser) {
-    // 外层面板
     JPanel bubblePanel = new JPanel(new GridBagLayout());
     bubblePanel.setBackground(BG_PANEL);
     bubblePanel.setOpaque(true);
 
-    // 文本区域
     JTextArea textArea = new JTextArea(text);
     textArea.setFont(JBUI.Fonts.label().deriveFont(JBUI.scaleFontSize(14f)));
     textArea.setLineWrap(true);
@@ -211,12 +208,10 @@ public class ChatToolWindow {
     textArea.setBorder(JBUI.Borders.empty(8, 12));
     textArea.setOpaque(true);
 
-    // 关键：设置首选宽度，但不限制高度
     int preferredWidth = JBUI.scale(400);
     textArea.setSize(new Dimension(preferredWidth, Short.MAX_VALUE));
     textArea.setPreferredSize(new Dimension(preferredWidth, textArea.getPreferredSize().height));
 
-    // GridBagConstraints配置
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -226,12 +221,11 @@ public class ChatToolWindow {
     gbc.insets = JBUI.insets(4, 8, 4, 8);
 
     bubblePanel.add(textArea, gbc);
-
     return bubblePanel;
   }
 
   /**
-   * 添加用户消息 - 使用GridBagConstraints确保宽度
+   * 添加用户消息
    */
   private void addUserMessage(String text) {
     SwingUtilities.invokeLater(() -> {
@@ -243,7 +237,7 @@ public class ChatToolWindow {
       gbc.anchor = GridBagConstraints.EAST;
       gbc.fill = GridBagConstraints.HORIZONTAL;
       gbc.weightx = 1.0;
-      gbc.insets = JBUI.insets(4, 60, 4, 8); // 左边距更大，使气泡靠右
+      gbc.insets = JBUI.insets(4, 60, 4, 8);
 
       chatContainer.add(bubblePanel, gbc);
       chatContainer.revalidate();
@@ -257,13 +251,12 @@ public class ChatToolWindow {
   private void addAIMessagePanel(String prompt) {
     SwingUtilities.invokeLater(() -> {
       currentPrompt = prompt;
+      currentGeneratingContent = ""; // 重置当前生成内容
 
-      // 外层面板
       JPanel aiPanel = new JPanel(new GridBagLayout());
       aiPanel.setBackground(BG_PANEL);
       aiPanel.setOpaque(true);
 
-      // AI消息气泡
       currentAIResponseArea = new JTextArea("");
       currentAIResponseArea.setFont(JBUI.Fonts.label().deriveFont(JBUI.scaleFontSize(14f)));
       currentAIResponseArea.setLineWrap(true);
@@ -274,24 +267,21 @@ public class ChatToolWindow {
       currentAIResponseArea.setBorder(JBUI.Borders.empty(8, 12));
       currentAIResponseArea.setOpaque(true);
 
-      // 关键：固定宽度
       int preferredWidth = JBUI.scale(400);
       currentAIResponseArea.setSize(new Dimension(preferredWidth, Short.MAX_VALUE));
       currentAIResponseArea.setPreferredSize(new Dimension(preferredWidth,
           currentAIResponseArea.getPreferredSize().height));
 
-      // GridBagConstraints配置
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 0;
       gbc.gridy = 0;
       gbc.anchor = GridBagConstraints.WEST;
       gbc.fill = GridBagConstraints.HORIZONTAL;
       gbc.weightx = 1.0;
-      gbc.insets = JBUI.insets(4, 8, 4, 60); // 右边距更大，使气泡靠左
+      gbc.insets = JBUI.insets(4, 8, 4, 60);
 
       aiPanel.add(currentAIResponseArea, gbc);
 
-      // 按钮面板
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, JBUI.scale(8), JBUI.scale(4)));
       buttonPanel.setBackground(BG_PANEL);
       buttonPanel.setOpaque(true);
@@ -303,24 +293,22 @@ public class ChatToolWindow {
       styleButton(acceptBtn);
       styleButton(regenerateBtn);
 
-      // 接受按钮事件
       acceptBtn.addActionListener(e -> {
 //        currentAIResponseArea.setBackground(BG_ACCEPTED);
 //        currentAIResponseArea.setBorder(JBUI.Borders.compound(
 //            JBUI.Borders.customLine(new Color(150, 220, 150), 1),
 //            JBUI.Borders.empty(8, 12)
-
-        // 获取最后一条AI回复
-
-
-        DiffPreviewUtil.show("test");
-//
 //        ));
 //        acceptBtn.setEnabled(false);
 //        regenerateBtn.setEnabled(false);
+
+        // 接受时更新缓存
+        lastCompletedAIResponse = currentAIResponseArea.getText();
+        DiffPreviewUtil.show(lastCompletedAIResponse);
+        
+
       });
 
-      // 重新生成按钮事件
       regenerateBtn.addActionListener(e -> {
         chatContainer.remove(currentAIPanel);
         chatContainer.revalidate();
@@ -333,7 +321,6 @@ public class ChatToolWindow {
       buttonPanel.add(acceptBtn);
       buttonPanel.add(regenerateBtn);
 
-      // 按钮面板的约束
       GridBagConstraints btnGbc = new GridBagConstraints();
       btnGbc.gridx = 0;
       btnGbc.gridy = 1;
@@ -346,7 +333,6 @@ public class ChatToolWindow {
 
       currentAIPanel = aiPanel;
 
-      // 将AI面板添加到聊天容器
       GridBagConstraints mainGbc = new GridBagConstraints();
       mainGbc.gridx = 0;
       mainGbc.gridy = GridBagConstraints.RELATIVE;
@@ -374,21 +360,20 @@ public class ChatToolWindow {
   }
 
   /**
-   * 追加AI回复内容 - 修复高度计算问题
+   * 追加AI回复内容
    */
   private void appendAIResponse(String text) {
     SwingUtilities.invokeLater(() -> {
       if (currentAIResponseArea != null) {
         currentAIResponseArea.append(text);
+        currentGeneratingContent += text; // 更新当前生成内容
 
-        // 关键：重新计算高度
         Dimension preferredSize = currentAIResponseArea.getPreferredSize();
         int width = currentAIResponseArea.getWidth();
         if (width <= 0) {
           width = JBUI.scale(400);
         }
 
-        // 使用FontMetrics计算正确的高度
         FontMetrics fm = currentAIResponseArea.getFontMetrics(currentAIResponseArea.getFont());
         int lineHeight = fm.getHeight();
         int lines = currentAIResponseArea.getLineCount();
@@ -397,7 +382,6 @@ public class ChatToolWindow {
         currentAIResponseArea.setPreferredSize(new Dimension(width, newHeight));
         currentAIResponseArea.setSize(width, newHeight);
 
-        // 刷新布局
         currentAIResponseArea.revalidate();
         currentAIPanel.revalidate();
         chatContainer.revalidate();
@@ -427,6 +411,10 @@ public class ChatToolWindow {
     if (appThread != null && appThread.isAlive()) {
       appThread.interrupt();
     }
+    // 停止时更新缓存
+    if (currentAIResponseArea != null) {
+      lastCompletedAIResponse = currentAIResponseArea.getText();
+    }
   }
 
   /**
@@ -436,27 +424,23 @@ public class ChatToolWindow {
     addUserMessage(prompt);
     addAIMessagePanel(prompt);
 
-    // 清空输入框
     bottomView.getInputField().setText("");
     bottomView.getInputField().requestFocus();
 
-    // 检查API配置
     if (!ChatConstant.apiUrl.startsWith("http")) {
       appendAIResponse("⚠️ 请先在设置中配置 Ollama API 地址和模型\n");
       bottomView.getSendButton().setText(Contant.SEND);
       return;
     }
 
-    // 重置停止标志
     stopFlag = false;
+    currentGeneratingContent = ""; // 重置当前生成内容
 
-    // 启动AI请求线程
     appThread = new Thread(() -> {
       try {
         OllamaChatRequest request = new OllamaChatRequest();
         List<OllamaChatMessage> messages = new ArrayList<>();
 
-        // 添加历史消息
         if (StringUtils.isNotBlank(lastRequestTxt)) {
           messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
         }
@@ -465,7 +449,6 @@ public class ChatToolWindow {
         request.setMessages(messages);
         lastRequestTxt = prompt;
 
-        // 流式请求
         OllamaClientUtils.chatStreaming(request, new OllamaChatTokenHandler() {
           @Override
           public void accept(OllamaChatResponseModel response) {
@@ -474,9 +457,13 @@ public class ChatToolWindow {
             }
 
             if (response.isDone()) {
-              SwingUtilities.invokeLater(() ->
-                  bottomView.getSendButton().setText(Contant.SEND)
-              );
+              SwingUtilities.invokeLater(() -> {
+                bottomView.getSendButton().setText(Contant.SEND);
+                // 完成时更新缓存
+                if (currentAIResponseArea != null) {
+                  lastCompletedAIResponse = currentAIResponseArea.getText();
+                }
+              });
             } else {
               String thinking = response.getMessage().getThinking();
               String content = response.getMessage().getResponse();
@@ -499,14 +486,142 @@ public class ChatToolWindow {
         if (!stopFlag) {
           appendAIResponse("\n❌ 错误: " + e.getMessage() + "\n");
         }
-        SwingUtilities.invokeLater(() ->
-            bottomView.getSendButton().setText(Contant.SEND)
-        );
+        SwingUtilities.invokeLater(() -> {
+          bottomView.getSendButton().setText(Contant.SEND);
+          // 出错时也更新缓存
+          if (currentAIResponseArea != null) {
+            lastCompletedAIResponse = currentAIResponseArea.getText();
+          }
+        });
       }
     });
 
     appThread.setDaemon(true);
     appThread.start();
+  }
+
+  // ==================== 新增：获取AI回复内容的方法 ====================
+
+  /**
+   * 获取最后一条已完成的AI回复内容
+   * @return 最后一条已完成的AI回复内容，如果没有则返回空字符串
+   */
+  public String getLastCompletedAIResponse() {
+    return lastCompletedAIResponse;
+  }
+
+  /**
+   * 获取聊天历史中最后一条AI消息内容（包括正在生成但未完成的）
+   * @return 最后一条AI消息内容，如果没有则返回空字符串
+   */
+  public String getLastAIHistoryMessage() {
+    // 从后往前遍历聊天容器
+    for (int i = chatContainer.getComponentCount() - 1; i >= 0; i--) {
+      Component comp = chatContainer.getComponent(i);
+      if (comp instanceof JPanel) {
+        JPanel panel = (JPanel) comp;
+        String aiText = findAIResponseInPanel(panel);
+        if (aiText != null && !aiText.isEmpty()) {
+          return aiText;
+        }
+      }
+    }
+    return "";
+  }
+
+  /**
+   * 从面板中查找AI回复文本
+   */
+  private String findAIResponseInPanel(JPanel panel) {
+    // 检查面板中是否包含AI消息的按钮
+    if (containsAIButtons(panel)) {
+      JTextArea textArea = findTextAreaInPanel(panel);
+      if (textArea != null) {
+        return textArea.getText();
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 检查面板是否包含AI消息的按钮
+   */
+  private boolean containsAIButtons(JPanel panel) {
+    for (Component comp : panel.getComponents()) {
+      if (comp instanceof JPanel) {
+        JPanel subPanel = (JPanel) comp;
+        int acceptCount = 0;
+        int regenerateCount = 0;
+        for (Component subComp : subPanel.getComponents()) {
+          if (subComp instanceof JButton) {
+            JButton btn = (JButton) subComp;
+            String text = btn.getText();
+            if ("✅ 接受".equals(text)) {
+              acceptCount++;
+            } else if ("🔄 重新生成".equals(text)) {
+              regenerateCount++;
+            }
+          }
+        }
+        if (acceptCount > 0 && regenerateCount > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 在面板中递归查找第一个JTextArea
+   */
+  private JTextArea findTextAreaInPanel(JPanel panel) {
+    for (Component comp : panel.getComponents()) {
+      if (comp instanceof JTextArea) {
+        return (JTextArea) comp;
+      } else if (comp instanceof JPanel) {
+        JTextArea textArea = findTextAreaInPanel((JPanel) comp);
+        if (textArea != null) {
+          return textArea;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 获取最后一条消息（用户或AI）
+   * @return 最后一条消息内容，如果没有则返回空字符串
+   */
+  public String getLastMessage() {
+    if (chatContainer.getComponentCount() == 0) {
+      return "";
+    }
+    Component lastComp = chatContainer.getComponent(chatContainer.getComponentCount() - 1);
+    if (lastComp instanceof JPanel) {
+      JPanel panel = (JPanel) lastComp;
+      JTextArea textArea = findTextAreaInPanel(panel);
+      if (textArea != null) {
+        return textArea.getText();
+      }
+    }
+    return "";
+  }
+
+  /**
+   * 获取当前正在生成的内容（流式输出时用）
+   * @return 当前已生成的AI内容，如果没有正在生成则返回空字符串
+   */
+  public String getCurrentGeneratingContent() {
+    return currentGeneratingContent;
+  }
+
+  /**
+   * 检查是否有正在生成的AI回复
+   * @return true如果有正在生成的回复
+   */
+  public boolean isGenerating() {
+    return currentAIResponseArea != null &&
+        Contant.STOP.equals(bottomView.getSendButton().getText());
   }
 
   /**
