@@ -8,6 +8,7 @@ import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.*;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -304,13 +305,19 @@ public class ChatToolWindow {
 
       // 接受按钮事件
       acceptBtn.addActionListener(e -> {
-        currentAIResponseArea.setBackground(BG_ACCEPTED);
-        currentAIResponseArea.setBorder(JBUI.Borders.compound(
-            JBUI.Borders.customLine(new Color(150, 220, 150), 1),
-            JBUI.Borders.empty(8, 12)
-        ));
-        acceptBtn.setEnabled(false);
-        regenerateBtn.setEnabled(false);
+//        currentAIResponseArea.setBackground(BG_ACCEPTED);
+//        currentAIResponseArea.setBorder(JBUI.Borders.compound(
+//            JBUI.Borders.customLine(new Color(150, 220, 150), 1),
+//            JBUI.Borders.empty(8, 12)
+
+        // 获取最后一条AI回复
+
+
+        DiffPreviewUtil.show("test");
+//
+//        ));
+//        acceptBtn.setEnabled(false);
+//        regenerateBtn.setEnabled(false);
       });
 
       // 重新生成按钮事件
