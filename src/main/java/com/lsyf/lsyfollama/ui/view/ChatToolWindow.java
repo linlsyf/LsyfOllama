@@ -294,13 +294,6 @@ public class ChatToolWindow {
       styleButton(regenerateBtn);
 
       acceptBtn.addActionListener(e -> {
-//        currentAIResponseArea.setBackground(BG_ACCEPTED);
-//        currentAIResponseArea.setBorder(JBUI.Borders.compound(
-//            JBUI.Borders.customLine(new Color(150, 220, 150), 1),
-//            JBUI.Borders.empty(8, 12)
-//        ));
-//        acceptBtn.setEnabled(false);
-//        regenerateBtn.setEnabled(false);
 
         // 接受时更新缓存
         lastCompletedAIResponse = currentAIResponseArea.getText();
