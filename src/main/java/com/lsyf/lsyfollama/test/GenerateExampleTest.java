@@ -7,7 +7,6 @@ import io.github.ollama4j.models.generate.OllamaGenerateRequest;
 import io.github.ollama4j.models.generate.OllamaGenerateStreamObserver;
 import io.github.ollama4j.models.generate.OllamaGenerateTokenHandler;
 import io.github.ollama4j.models.response.OllamaResult;
-import io.github.ollama4j.utils.Options;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +15,9 @@ import java.util.Map;
 
 public class GenerateExampleTest {
 
+  private static void testError() throws Exception {
+    int i=10/0;
+  }
 
 
     private static void extracted() throws Exception {
