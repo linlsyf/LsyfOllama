@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify getGitmsg, setGitmsg, getResult, and 19 more methods">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/CodeGen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/ContextMenuLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/cofig/SettingsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/cofig/SettingsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/home.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/SettingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/SettingView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/vo/DiffMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/vo/DiffMsg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/AmendSideAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/AmendSideAction.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
