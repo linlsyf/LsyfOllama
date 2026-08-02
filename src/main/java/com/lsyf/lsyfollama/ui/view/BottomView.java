@@ -26,7 +26,7 @@ public class BottomView {
     inputPanel.add(sendButton, BorderLayout.EAST);
 
     JPanel southContainer = new JPanel(new BorderLayout());
-    southContainer.add(TagLabelView.createFilsList(inputField), BorderLayout.NORTH);  // 标签在上方
+//    southContainer.add(TagLabelView.createFilsList(inputField), BorderLayout.NORTH);  // 标签在上方
     southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
     return southContainer;
   }
