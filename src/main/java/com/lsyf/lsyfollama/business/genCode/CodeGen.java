@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 
 public class CodeGen {
 
@@ -44,11 +45,27 @@ public class CodeGen {
     final String newText = OllamaClientUtils.processText(prompt); // 自定义替换逻辑
     int endOffset = selectionModel.getSelectionEnd();
     int lineEndOffset = document.getLineEndOffset(document.getLineNumber(endOffset));
-    // 执行替换（线程安全）
-    WriteCommandAction.runWriteCommandAction(project, () -> {
-      document.insertString(lineEndOffset, "\n" + newText); // 插入下一行[6](@ref)
+//    // 执行替换（线程安全）
+//    WriteCommandAction.runWriteCommandAction(project, () -> {
+//      document.insertString(lineEndOffset, "\n" + newText); // 插入下一行[6](@ref)
+//
+//    });
 
-    });
+    DiffPreviewUtil.showDiffPreview(
+        project,
+        "Code Generation Preview",
+        "Original",
+        "Generated",
+        selectedText,
+        newText,
+        finalText -> {
+          WriteCommandAction.runWriteCommandAction(project, () -> {
+            int insertPos = document.getLineEndOffset(
+                document.getLineNumber(Math.min(lineEndOffset, document.getTextLength())));
+            document.insertString(insertPos, "\n" + finalText);
+          });
+        }
+    );
 
   }
 }

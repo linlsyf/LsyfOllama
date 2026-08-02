@@ -1,16 +1,9 @@
 package com.lsyf.lsyfollama.business;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-
 public class ApiTestLogic {
+    public void init(){
+      int i=10/0;
+    }
 //
 //
 //    public static void actionPerformed(@NotNull AnActionEvent e) {
