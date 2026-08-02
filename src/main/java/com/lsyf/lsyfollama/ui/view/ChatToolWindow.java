@@ -1,13 +1,13 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.Project;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
-import io.github.ollama4j.models.chat.OllamaChatMessage;
-import io.github.ollama4j.models.chat.OllamaChatMessageRole;
-import io.github.ollama4j.models.chat.OllamaChatRequest;
-import io.github.ollama4j.models.chat.OllamaChatResponseModel;
-import io.github.ollama4j.models.chat.OllamaChatTokenHandler;
+import io.github.ollama4j.models.chat.*;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -17,108 +17,109 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class ChatToolWindow {
-    private JPanel chatPanel;          // 主面板
-    private JTextArea messageArea;    // 消息显示区域
-    private JButton stopButton;        // stop按钮
-    private JButton cleanButton;        // stop按钮
-    BottomView bottomView;
-    String lastRequestTxt = "";
-    private Thread appThread;
+  private JPanel chatPanel;          // 主面板
+  private JTextArea messageArea;    // 消息显示区域
+  private JButton stopButton;        // stop按钮
+  private JButton cleanButton;        // stop按钮
+  BottomView bottomView;
+  String lastRequestTxt = "";
+  private Thread appThread;
+  Project project;
+  public ChatToolWindow() {
+    // 初始化组件
+    chatPanel = new JPanel(new BorderLayout());
+    messageArea = new JTextArea() {
+      @Override
+      public void paintComponent(Graphics g) {
+        // 启用双缓冲
+        super.paintComponent(g);
+      }
+    };
 
-    public ChatToolWindow() {
-        // 初始化组件
-        chatPanel = new JPanel(new BorderLayout());
-        messageArea = new JTextArea() {
-            @Override
-            public void paintComponent(Graphics g) {
-                // 启用双缓冲
-                super.paintComponent(g);
-            }
-        };
+    stopButton = new JButton("stop");
+    cleanButton = new JButton("clean");
+    // 底部输入面板
+    JPanel topPanel = new JPanel(new BorderLayout());
+    topPanel.add(cleanButton, BorderLayout.EAST);
+    // 消息区域设置
+    messageArea.setEditable(false); // 禁止编辑
+    messageArea.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+    messageArea.setLineWrap(true);      // 启用自动换行
+    messageArea.setWrapStyleWord(true); // 按单词边界换行（避免截断单词）
+    JScrollPane scrollPane = new JScrollPane(
+        messageArea,
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    );
 
-        stopButton = new JButton("stop");
-        cleanButton = new JButton("clean");
-        // 底部输入面板
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(cleanButton, BorderLayout.EAST);
-        // 消息区域设置
-        messageArea.setEditable(false); // 禁止编辑
-        messageArea.setFont(new Font("微软雅黑", Font.PLAIN, 14));
-        messageArea.setLineWrap(true);      // 启用自动换行
-        messageArea.setWrapStyleWord(true); // 按单词边界换行（避免截断单词）
-        JScrollPane scrollPane = new JScrollPane(
-                messageArea,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-        );
+    // 组装主面板
+    chatPanel.add(topPanel, BorderLayout.NORTH);
 
-        // 组装主面板
-        chatPanel.add(topPanel, BorderLayout.NORTH);
-
-        chatPanel.add(scrollPane, BorderLayout.CENTER);
+    chatPanel.add(scrollPane, BorderLayout.CENTER);
 
 // 创建南部容器，包含标签面板和输入面板
-        bottomView = new BottomView();
-        chatPanel.add(bottomView.getInPutView(), BorderLayout.SOUTH);
+    bottomView = new BottomView();
+    chatPanel.add(bottomView.getInPutView(), BorderLayout.SOUTH);
 
 //        // 事件监听
-        bottomView.getSendButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String buttonText = bottomView.getSendButton().getText();
-                if (buttonText.equals(Contant.SEND)) {
-                    String prompt = bottomView.getInputField().getText().trim();
-                    bottomView.getSendButton().setText(Contant.STOP);
-                    sendMessage(prompt);
-                } else {
-                    bottomView.getSendButton().setText(Contant.SEND);
-                    appThread.interrupt();
-                }
-
-            }
-        });
-
-        cleanButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                SwingUtilities.invokeLater(() -> messageArea.setText("")); //
-
-            }
-        });
-
-        bottomView.getInputField().addActionListener(new ActionListener() { // 支持回车发送
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String prompt = bottomView.getInputField().getText().trim();
-
-                sendMessage(prompt);
-            }
-        });
-    }
-
-    // 发送消息逻辑
-    public void sendMessage(String prompt) {
-        messageArea.append("我: " + prompt + "\n"); // 添加消息到显示区
-        bottomView.getInputField().setText("");                      // 清空输入框
-        bottomView.getInputField().requestFocus();                   // 焦点回到输入框
-
-        if (!ChatConstant.apiUrl.startsWith("http")) {
-            writeMsg("please  set ip and  model");
+    bottomView.getSendButton().addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String buttonText = bottomView.getSendButton().getText();
+        if (buttonText.equals(Contant.SEND)) {
+          String prompt = bottomView.getInputField().getText().trim();
+          bottomView.getSendButton().setText(Contant.STOP);
+          sendMessage(prompt);
+        } else {
+          bottomView.getSendButton().setText(Contant.SEND);
+          appThread.interrupt();
         }
 
-        try {
+      }
+    });
 
-            appThread = new Thread() {
-                public void run() {
-                    OllamaChatRequest request = new OllamaChatRequest();
-                    List<OllamaChatMessage> messages = new ArrayList<>();
+    cleanButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
 
-                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
-                    messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
-                    request.setMessages(messages); // 必须包含消息列表
-                    lastRequestTxt = prompt;
+        SwingUtilities.invokeLater(() -> messageArea.setText("")); //
+
+      }
+    });
+
+    bottomView.getInputField().addActionListener(new ActionListener() { // 支持回车发送
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String prompt = bottomView.getInputField().getText().trim();
+
+        sendMessage(prompt);
+      }
+    });
+  }
+
+  // 发送消息逻辑
+  public void sendMessage(String prompt) {
+    messageArea.append("我: " + prompt + "\n"); // 添加消息到显示区
+    bottomView.getInputField().setText("");                      // 清空输入框
+    bottomView.getInputField().requestFocus();                   // 焦点回到输入框
+
+    if (!ChatConstant.apiUrl.startsWith("http")) {
+      writeMsg("please  set ip and  model");
+    }
+
+    try {
+
+      appThread = new Thread() {
+        public void run() {
+          OllamaChatRequest request = new OllamaChatRequest();
+          List<OllamaChatMessage> messages = new ArrayList<>();
+
+          messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
+          messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
+          request.setMessages(messages); // 必须包含消息列表
+          lastRequestTxt = prompt;
 
 //                    OllamaChatOptions options = OllamaChatOptions.create()
 //                            .withTemperature(0.4)
@@ -132,52 +133,61 @@ public class ChatToolWindow {
 //		];
 //
 //		/ollama/stream
-                    try {
-                        OllamaClientUtils.chatStreaming(request, new OllamaChatTokenHandler() {
-                            @Override
-                            public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
+          try {
+            OllamaClientUtils.chatStreaming(request, new OllamaChatTokenHandler() {
+              @Override
+              public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
 
-                                if (ollamaChatResponseModel.isDone()) {
-                                    bottomView.getSendButton().setText(Contant.SEND);
-                                } else {
+                if (ollamaChatResponseModel.isDone()) {
+                  bottomView.getSendButton().setText(Contant.SEND);
+                } else {
 
-                                    String thinking = ollamaChatResponseModel.getMessage().getThinking();
-                                    String response = ollamaChatResponseModel.getMessage().getResponse();
-                                    String writeText;
-                                    if (StringUtils.isNoneBlank(thinking)) {
-                                        writeText = thinking;
-                                    } else {
-                                        writeText = response;
-                                    }
-                                    writeMsg(writeText);
+                  String thinking = ollamaChatResponseModel.getMessage().getThinking();
+                  String response = ollamaChatResponseModel.getMessage().getResponse();
+                  String writeText;
+                  if (StringUtils.isNoneBlank(thinking)) {
+                    writeText = thinking;
+                  } else {
+                    writeText = response;
+                  }
+                  writeMsg(writeText);
 
-                                    System.out.println(writeText);
-                                }
-                            }
-
-                        });
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-
+                  System.out.println(writeText);
                 }
-            };
-            appThread.start();
+              }
 
-        } catch (Exception e) {
-            writeMsg(e.getMessage() + "\n"); // 添加消息到显示区
-//            throw new RuntimeException(e);
+            });
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+
         }
+      };
+      appThread.start();
 
+    } catch (Exception e) {
+      writeMsg(e.getMessage() + "\n"); // 添加消息到显示区
+//            throw new RuntimeException(e);
     }
 
-    private void writeMsg(String message) {
-        SwingUtilities.invokeLater(() -> messageArea.append(message));
-    }
+  }
+  private void getActiveEditor() {
+    // 方式一：获取当前激活的编辑器（推荐）
+    Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
 
-    // 返回主面板（供IDEA插件集成）
-    public JPanel getContent() {
-        return chatPanel;
+    // 方式二：获取选中的编辑器
+    // Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+
+    if (editor != null) {
+      System.out.println("Editor found: " + editor.getDocument().getText());
+      // 使用 editor
+    } else {
+      System.out.println("No active editor");
     }
+  }
+  private void writeMsg(String message) {
+    SwingUtilities.invokeLater(() -> messageArea.append(message));
+  }
+
 
 }

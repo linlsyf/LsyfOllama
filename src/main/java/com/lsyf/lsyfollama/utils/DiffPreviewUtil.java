@@ -6,18 +6,22 @@ import com.intellij.diff.DiffRequestPanel;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.*;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.text.StringUtil;
+import com.lsyf.lsyfollama.constant.ProjectInitData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public final class DiffPreviewUtil {
 
-  private DiffPreviewUtil() {}
+  private DiffPreviewUtil() {
+  }
 
   public interface OnApplyCallback {
     void onApply(@NotNull String finalText);
@@ -87,5 +91,54 @@ public final class DiffPreviewUtil {
       Disposer.dispose(disposable);
       throw e;
     }
+  }
+
+  public static void show(String newText) {
+    Project project = ProjectInitData.getInstance().getProject();
+
+    // 1. 获取当前编辑器
+    Editor editor = FileEditorManager.getInstance(project)
+        .getSelectedTextEditor();
+    if (editor == null) {
+      return;
+    }
+
+    // 2. 获取 Document（关键）
+    Document document = editor.getDocument();
+
+    // 3. 获取选中位置（用于插入）
+    SelectionModel selectionModel = editor.getSelectionModel();
+    String selectedText = selectionModel.getSelectedText();
+    int lineEndOffset;
+    if (StringUtil.isEmpty(selectedText)) {
+      CaretModel caretModel = editor.getCaretModel(); // 获取光标模型
+
+      int caretOffset = caretModel.getOffset(); // 光标在文档中的偏移量
+
+      int lineNumber = document.getLineNumber(caretOffset); // 当前行号（从0开始）
+      int lineStartOffset = document.getLineStartOffset(lineNumber); // 行起始偏移量
+      lineEndOffset = document.getLineEndOffset(lineNumber); // 行结束偏移量
+      selectedText = document.getText().substring(lineStartOffset, lineEndOffset); // 当前行文本
+    } else {
+      lineEndOffset = 0;
+    }
+
+    DiffPreviewUtil.showDiffPreview(
+        project,
+        "Code Generation Preview",
+        "Original",
+        "Generated",
+        selectedText,
+        newText,
+        finalText -> {
+          WriteCommandAction.runWriteCommandAction(project, () -> {
+            int lineNumber = document.getLineNumber(
+                Math.min(lineEndOffset, document.getTextLength())
+            );
+            int insertPos = document.getLineEndOffset(lineNumber);
+            document.insertString(insertPos, "\n" + finalText);
+          });
+        }
+    );
   }
 }

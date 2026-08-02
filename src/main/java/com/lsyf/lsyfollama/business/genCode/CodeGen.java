@@ -45,11 +45,7 @@ public class CodeGen {
     final String newText = OllamaClientUtils.processText(prompt); // 自定义替换逻辑
     int endOffset = selectionModel.getSelectionEnd();
     int lineEndOffset = document.getLineEndOffset(document.getLineNumber(endOffset));
-//    // 执行替换（线程安全）
-//    WriteCommandAction.runWriteCommandAction(project, () -> {
-//      document.insertString(lineEndOffset, "\n" + newText); // 插入下一行[6](@ref)
-//
-//    });
+
 
     DiffPreviewUtil.showDiffPreview(
         project,

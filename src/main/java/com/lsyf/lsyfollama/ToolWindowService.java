@@ -20,7 +20,7 @@ public class ToolWindowService {
 
     // 返回主面板（供IDEA插件集成）
     public JPanel getContent() {
-        return customPanel.getContent();
+        return customPanel.getChatPanel();
     }
 
     public ChatToolWindow getCustomPanel() {

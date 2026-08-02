@@ -41,8 +41,13 @@
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
         <checkinHandlerFactory
                 implementation="com.lsyf.lsyfollama.ui.actions.MyPluginCheckinHandlerFactory"/>
+<!--        <projectService-->
+<!--                serviceImplementation=" com.lsyf.lsyfollama.broadCast.MyViewListener"/>-->
     </extensions>
-
+    <projectListeners>
+        <listener class="com.lsyf.lsyfollama.broadCast.MyViewListener"
+                  topic="com.lsyf.lsyfollama.business.MyViewNotifier$MY_VIEW_TOPIC"/>
+    </projectListeners>
     <actions>
 
 
