@@ -18,7 +18,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsDataKeys;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiFile;
@@ -135,18 +134,11 @@ public class ContextMenuLogic {
             // 1. 拿 diff
             DiffMsg diff = GitDiffUtil.getStagedDiff(project);
             if (diff.getResult().isBlank()) {
-//                            notify("No staged changes found");
               return;
             }
 
             if (ChatConstant.isAiModeSave) {
               // 2. 调用 AI
-
-//
-//                          Thread   appThread = new Thread() {
-//                            public void run() {
-
-//                          diff.getGitmsg()
 
               String prompt = diff.getGitmsg() + "  根据git信息 总结修改内容。\n" +
                   "输出格式要求：纯代码，无换行符(\\n)或描述 输入为英文内容 \n" +
@@ -160,12 +152,6 @@ public class ContextMenuLogic {
 
                 messageUi.setText(newText);
               });
-
-//                            }
-//                            };
-//
-//
-//                    appThread.start();
 
             } else {
               // 3. 写回提交框（切回 UI 线程）
@@ -182,38 +168,6 @@ public class ContextMenuLogic {
         }
     );
 
-  }
-
-  private static CommitWorkflowUi resolveCommitWorkflowUi(AnActionEvent e) {
-    CommitWorkflowUi ui = e.getData(VcsDataKeys.COMMIT_WORKFLOW_UI);
-    if (ui != null) return ui;
-
-//         2. Handler（公开接口，非 Abstract）
-//        Object handler = e.getData(VcsDataKeys.COMMIT_WORKFLOW_HANDLER);
-//        if (handler instanceof CommitWorkflowHandler) {
-//            ui = ((CommitWorkflowHandler) handler).getAmendCommitHandler();
-//            if (ui != null) return ui;
-//        }
-
-    // 3. Editor 反推（2025.2 Non-Modal 唯一可靠路径）
-//        Editor editor = e.getData(CommonDataKeys.EDITOR);
-//        if (editor != null && isCommitMessageEditor(editor)) {
-//            ui = editor.getUserData(VcsDataKeys.COMMIT_WORKFLOW_UI_KEY);
-//            if (ui != null) return ui;
-//
-//            // 尝试从 Project 找（兜底）
-//            Project project = e.getProject();
-//            if (project != null) {
-//                return project.getUserData(COMMIT_WORKFLOW_UI_KEY);
-//            }
-//        }
-
-    return null;
-  }
-
-  private static boolean isCommitMessageEditor(@NotNull Editor editor) {
-    VirtualFile file = editor.getVirtualFile();
-    return file != null && "commit-message.txt".equals(file.getName());
   }
 
   private static void genCode(AnActionEvent e, AnAction action, String actionDesc) {

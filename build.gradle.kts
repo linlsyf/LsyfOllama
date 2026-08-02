@@ -11,11 +11,9 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    // ✅ 关键：必须声明这个，否则 bundledPlugin 等扩展函数不可见
     intellijPlatform {
         defaultRepositories()
     }
-    // 其他仓库
     maven { url = uri("https://plugins.jetbrains.com/maven") }
     maven { url = uri("https://maven.aliyun.com/repository/public/") }
     google()
@@ -25,35 +23,33 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        // ✅ 本地 IDE 实例
         local("D:\\002soft\\ideaIC-2025.2.4.win")
 
-        // ✅ bundledPlugin 必须在 intellijPlatform 块内部
-        // Git4Idea 的真实插件 ID 就是 "Git4Idea"（JetBrains 官方表格确认）
         bundledPlugin("Git4Idea")
-        bundledPlugin("com.intellij.java")  // Java 插件（可选）
+        bundledPlugin("com.intellij.java")
 
-        // 测试框架
+        // ✅ 关键：添加 Lombok 插件（运行时依赖）
+//        plugin("org.projectlombok.lombok-plugin:1.18.30")
+
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
 
-    // 普通 Maven 依赖写在外面
     implementation("io.github.ollama4j:ollama4j:1.1.4")
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
-    testCompileOnly("org.projectlombok:lombok:1.18.30")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+
+    // ✅ 删除下面这 4 行（freefair 会自动处理）
+    // compileOnly("org.projectlombok:lombok:1.18.30")
+    // annotationProcessor("org.projectlombok:lombok:1.18.30")
+    // testCompileOnly("org.projectlombok:lombok:1.18.30")
+    // testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "252"   // ⚠️ 2025.2.4 是 252，不是 251
+            sinceBuild = "252"
             untilBuild = "252.*"
         }
-        changeNotes = """
-            Initial version
-        """.trimIndent()
+        changeNotes = "Initial version"
     }
 }
 
@@ -61,6 +57,7 @@ tasks {
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"
+        // ✅ freefair 会自动设置 annotationProcessorPath
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"

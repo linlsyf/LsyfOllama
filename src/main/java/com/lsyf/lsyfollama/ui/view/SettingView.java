@@ -60,28 +60,11 @@ public class SettingView {
 
   }
 
+  public String getIsAiDesc(boolean stateCurrent){
+    String stateStr = (stateCurrent ? "智能模式" : "本地模式");
+    return stateStr ;
 
-  public JPanel getMainPanel() {
-    return mainPanel;
   }
 
-  public JTextField getInputField() {
-    return inputField;
-  }
 
-  public JTextField getCommitReceiptFied() {
-    return commitReceiptFied;
-  }
-
-  public JTextField getCommitRejectFied() {
-    return commitRejectFied;
-  }
-
-  public JTextField getModelField() {
-    return modelField;
-  }
-
-  public JButton getToggleButton() {
-    return toggleButton;
-  }
 }

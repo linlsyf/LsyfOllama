@@ -26,7 +26,7 @@
     <!-- 若需兼容旧版平台（≤2019.1），添加模块依赖 -->
     <depends>com.intellij.modules.java</depends>
     <depends>Git4Idea</depends>
-
+<!--    <depends>org.projectlombok.lombok-plugin</depends>-->
     <idea-version since-build="251.0" until-build="255.*"/>  <!-- 控制兼容的 IDE 版本范围 -->
 
     <!-- Extension points defined by the plugin.
@@ -44,9 +44,7 @@
     </extensions>
 
     <actions>
-        <!--        <action id="ollamakit" class="com.lsyf.lsyfollama.ui.home" text="linOllama">-->
-        <!--            <add-to-group group-id="ToolsMenu" anchor="first"/>-->
-        <!--        </action>-->
+
 
         <action id="linlsyfQuery" class="com.lsyf.lsyfollama.ui.actions.ContextMenuSearchAction" text="linlsyfQuery"
                 description="显示修复建议">
