@@ -4,24 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="优化代码结构">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/broadCast/MyBroadcastService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/broadCast/MyViewListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyBroadcastListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyBroadcastReceiver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyBroadcaster.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyTopics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyViewNotifier.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/ProjectInitData.java" afterDir="false" />
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="test topic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ToolWindowService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ToolWindowService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/CodeGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/CodeGen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/toolWindowFactory/ChatWindowHomeFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/toolWindowFactory/ChatWindowHomeFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/broadCast/MyViewListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/broadCast/MyViewListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/DiffPreviewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/DiffPreviewUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -530,7 +516,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785638133983</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="test topic">
+      <option name="closed" value="true" />
+      <created>1785641914727</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1785641914727</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -571,7 +565,8 @@
     <MESSAGE value="Modify getGitmsg, setGitmsg, getResult, and 19 more methods" />
     <MESSAGE value="优化代码结构" />
     <MESSAGE value="添加对比框" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加对比框" />
+    <MESSAGE value="test topic" />
+    <option name="LAST_COMMIT_MESSAGE" value="test topic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -590,11 +585,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java</url>
           <line>133</line>
           <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/broadCast/MyViewListener.java</url>
-          <line>24</line>
-          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

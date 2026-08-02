@@ -1,7 +1,6 @@
 package com.lsyf.lsyfollama.ui.view;
 
-import com.lsyf.lsyfollama.business.MyViewNotifier;
-import com.lsyf.lsyfollama.constant.ProjectInitData;
+import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,11 +69,17 @@ public class TagLabelView {
       public void mouseClicked(MouseEvent e) {
 
         if (text.equals("accept code")){
+          DiffPreviewUtil.show("test");
 
-          MyViewNotifier publisher = ProjectInitData.getInstance().getProject().getMessageBus()
-              .syncPublisher(MyViewNotifier.MY_VIEW_TOPIC);
+
+//          MyViewNotifier publisher = ProjectInitData.getInstance().getProject().getMessageBus()
 //              .syncPublisher(MyViewNotifier.MY_VIEW_TOPIC);
-          publisher.onViewMessage("Hello from View!", ProjectInitData.getInstance().getProject());
+////              .syncPublisher(MyViewNotifier.MY_VIEW_TOPIC);
+//          publisher.onViewMessage("Hello from View!", ProjectInitData.getInstance().getProject());
+
+//          ProjectInitData.getInstance().getProject().getMessageBus()
+//              .syncPublisher(MyViewNotifier.MY_VIEW_TOPIC)
+//              .onViewMessage("test", ProjectInitData.getInstance().getProject());
         }
       }
     });
