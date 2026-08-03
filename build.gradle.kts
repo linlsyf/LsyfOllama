@@ -36,11 +36,7 @@ dependencies {
 
     implementation("io.github.ollama4j:ollama4j:1.1.4")
 
-    // ✅ 删除下面这 4 行（freefair 会自动处理）
-    // compileOnly("org.projectlombok:lombok:1.18.30")
-    // annotationProcessor("org.projectlombok:lombok:1.18.30")
-    // testCompileOnly("org.projectlombok:lombok:1.18.30")
-    // testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+
 }
 
 intellijPlatform {

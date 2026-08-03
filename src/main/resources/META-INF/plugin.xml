@@ -27,7 +27,7 @@
     <depends>com.intellij.modules.java</depends>
     <depends>Git4Idea</depends>
 <!--    <depends>org.projectlombok.lombok-plugin</depends>-->
-    <idea-version since-build="251.0" until-build="255.*"/>  <!-- 控制兼容的 IDE 版本范围 -->
+    <idea-version since-build="252.27397"/>  <!-- 控制兼容的 IDE 版本范围 -->
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
