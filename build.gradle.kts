@@ -9,6 +9,13 @@ plugins {
 group = "com.lsyf"
 version = "1.0-SNAPSHOT"
 
+// ✅ 关键修复：强制指定 JDK 21（IntelliJ Platform Plugin 2.x 必须）
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 repositories {
     mavenCentral()
     intellijPlatform {
@@ -23,39 +30,33 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        local("D:\\002soft\\ideaIC-2025.2.4.win")
+        local("D:\\002soft\\idea-2026.1.2.win")
 
         bundledPlugin("Git4Idea")
         bundledPlugin("com.intellij.java")
-
-        // ✅ 关键：添加 Lombok 插件（运行时依赖）
-//        plugin("org.projectlombok.lombok-plugin:1.18.30")
-
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
 
     implementation("io.github.ollama4j:ollama4j:1.1.4")
-
-
 }
 
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "252"
-            untilBuild = "252.*"
+            sinceBuild = "261"
+            untilBuild = "261.*"
         }
         changeNotes = "Initial version"
     }
 }
 
-tasks {
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-        // ✅ freefair 会自动设置 annotationProcessorPath
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
-    }
-}
+//tasks {
+//    withType(JavaCompile) {
+//        sourceCompatibility = "21"
+//        targetCompatibility = "21"
+//        options.encoding = "UTF-8"
+//    }
+//    withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+//        kotlinOptions.jvmTarget = "21"
+//    }
+//}
