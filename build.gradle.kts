@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.lsyf"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 
 // ✅ 关键修复：强制指定 JDK 21（IntelliJ Platform Plugin 2.x 必须）
 java {
@@ -50,13 +50,6 @@ intellijPlatform {
     }
 }
 
-//tasks {
-//    withType(JavaCompile) {
-//        sourceCompatibility = "21"
-//        targetCompatibility = "21"
-//        options.encoding = "UTF-8"
-//    }
-//    withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-//        kotlinOptions.jvmTarget = "21"
-//    }
-//}
+tasks.buildPlugin {
+    archiveFileName.set("LsyfOllama-${version}.zip")
+}

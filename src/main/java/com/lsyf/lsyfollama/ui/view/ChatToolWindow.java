@@ -1,7 +1,10 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
@@ -86,10 +89,26 @@ public class ChatToolWindow {
     topPanel.setBackground(BG_PANEL);
     topPanel.setBorder(JBUI.Borders.empty(8, 12, 8, 12));
 
+    // ===== 左侧：标题 + 版本号 =====
+    JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    leftPanel.setBackground(BG_PANEL);
+    leftPanel.setOpaque(true);
+
+    // 原有的标题
     JLabel titleLabel = new JLabel("AI 聊天助手");
     titleLabel.setFont(JBUI.Fonts.label().deriveFont(Font.BOLD, JBUI.scaleFontSize(14f)));
     titleLabel.setForeground(TEXT_COLOR);
-    topPanel.add(titleLabel, BorderLayout.WEST);
+    leftPanel.add(titleLabel);
+
+    // ✅ 新增：版本号标签
+    String version = getPluginVersion();
+    JLabel versionLabel = new JLabel(" v" + version);
+    versionLabel.setFont(JBUI.Fonts.smallFont());
+    versionLabel.setForeground(JBColor.GRAY);
+    versionLabel.setBorder(JBUI.Borders.emptyLeft(4));
+    leftPanel.add(versionLabel);
+
+    topPanel.add(leftPanel, BorderLayout.WEST);
 
     // 右侧按钮容器
     JPanel rightButtonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, JBUI.scale(8), 0));
@@ -722,5 +741,22 @@ public class ChatToolWindow {
    */
   public void setProject(Project project) {
     this.project = project;
+  }
+
+
+  /**
+   * 获取插件版本号
+   */
+  private String getPluginVersion() {
+    try {
+      PluginId pluginId = PluginId.getId("com.lsyf.LsyfOllama");
+      IdeaPluginDescriptor plugin = PluginManagerCore.getPlugin(pluginId);
+      if (plugin != null) {
+        return plugin.getVersion();
+      }
+    } catch (Exception e) {
+      // 忽略异常，返回默认值
+    }
+    return "version code"; // 默认版本号
   }
 }
