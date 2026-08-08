@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.lsyf.lsyfollama.utils.ProjectUtils;
 import com.lsyf.lsyfollama.vo.DiffMsg;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
@@ -138,7 +139,7 @@ public class GitDiffUtil {
       if (afterRevision != null) {
         VirtualFile file = afterRevision.getFile().getVirtualFile();
         if (file != null) {
-          String relativePath = VfsUtilCore.getRelativePath(file, project.getBaseDir());
+          String relativePath = VfsUtilCore.getRelativePath(file, ProjectUtils.getProjectDir(project));
           String diff = getFileDiff(project, relativePath, "HEAD");
           buffer.append("Diff for ").append(relativePath).append(":\n").append(diff);
         }
@@ -263,7 +264,7 @@ public class GitDiffUtil {
   }
 
   private static String getDiff(Project project, String reference, String filePath) {
-    VirtualFile root = project.getBaseDir();
+    VirtualFile root = ProjectUtils.getProjectDir(project);
     GitLineHandler handler = new GitLineHandler(project, root, GitCommand.DIFF);
 
     if (reference != null) {

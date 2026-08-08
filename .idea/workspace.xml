@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify openSettings, checkOllamaConfiguration">
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify getPluginVersion">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/ProjectUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatToolWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/GitDiffUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/actions/MyPluginCheckinHandlerFactory.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
@@ -181,7 +181,7 @@
       <command value="gradle buildPlugin" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.LsyfOllama [clean]">
+  <component name="RunManager" selected="Gradle.Run Plugin">
     <configuration name="LsyfOllama [buildPlugin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -233,6 +233,7 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
         <item itemvalue="Gradle.LsyfOllama [clean]" />
         <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
         <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
@@ -540,7 +541,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786180079800</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Modify getPluginVersion">
+      <option name="closed" value="true" />
+      <created>1786181587979</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1786181587979</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +570,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix bug url" />
     <MESSAGE value="fix bug thinking" />
     <MESSAGE value="ReadCurrentFile" />
     <MESSAGE value="createFilsList" />
@@ -586,7 +594,8 @@
     <MESSAGE value="Modify getDefaultChangeList" />
     <MESSAGE value="21" />
     <MESSAGE value="Modify openSettings, checkOllamaConfiguration" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modify openSettings, checkOllamaConfiguration" />
+    <MESSAGE value="Modify getPluginVersion" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify getPluginVersion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
