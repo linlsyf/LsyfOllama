@@ -1,11 +1,15 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.ChatConstant;
+import com.lsyf.lsyfollama.cofig.SettingsConfig;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
@@ -34,6 +38,7 @@ public class ChatToolWindow {
   private JPanel chatContainer;             // 聊天消息容器
   private JScrollPane scrollPane;           // 滚动面板
   private JButton cleanButton;              // 清空按钮
+  private JButton settingsButton;           // 新增：设置按钮
   private BottomView bottomView;            // 底部输入视图
 
   // ===== 状态变量 =====
@@ -74,7 +79,7 @@ public class ChatToolWindow {
   }
 
   /**
-   * 初始化顶部面板
+   * 初始化顶部面板 - 新增设置按钮
    */
   private void initTopPanel() {
     JPanel topPanel = new JPanel(new BorderLayout());
@@ -86,13 +91,32 @@ public class ChatToolWindow {
     titleLabel.setForeground(TEXT_COLOR);
     topPanel.add(titleLabel, BorderLayout.WEST);
 
+    // 右侧按钮容器
+    JPanel rightButtonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, JBUI.scale(8), 0));
+    rightButtonsPanel.setBackground(BG_PANEL);
+    rightButtonsPanel.setOpaque(true);
+
+    // 设置按钮
+    settingsButton = new JButton("⚙️ 设置");
+    settingsButton.setFont(JBUI.Fonts.smallFont());
+    settingsButton.setFocusPainted(false);
+    settingsButton.setBorder(JBUI.Borders.empty(4, 12));
+    settingsButton.setBackground(JBColor.namedColor("Button.background"));
+    settingsButton.setForeground(JBColor.namedColor("Button.foreground"));
+    settingsButton.setToolTipText("打开 Ollama 设置");
+
+    // 清空按钮
     cleanButton = new JButton("清空对话");
     cleanButton.setFont(JBUI.Fonts.smallFont());
     cleanButton.setFocusPainted(false);
     cleanButton.setBorder(JBUI.Borders.empty(4, 12));
     cleanButton.setBackground(JBColor.namedColor("Button.background"));
     cleanButton.setForeground(JBColor.namedColor("Button.foreground"));
-    topPanel.add(cleanButton, BorderLayout.EAST);
+
+    rightButtonsPanel.add(settingsButton);
+    rightButtonsPanel.add(cleanButton);
+
+    topPanel.add(rightButtonsPanel, BorderLayout.EAST);
 
     chatPanel.add(topPanel, BorderLayout.NORTH);
   }
@@ -151,7 +175,7 @@ public class ChatToolWindow {
   }
 
   /**
-   * 初始化事件监听器
+   * 初始化事件监听器 - 新增设置按钮监听
    */
   private void initListeners() {
     // 发送按钮
@@ -180,6 +204,9 @@ public class ChatToolWindow {
       chatContainer.repaint();
     });
 
+    // 设置按钮 - 打开设置界面
+    settingsButton.addActionListener(e -> openSettings());
+
     // 回车发送
     bottomView.getInputField().addActionListener(e -> {
       String prompt = bottomView.getInputField().getText().trim();
@@ -188,6 +215,59 @@ public class ChatToolWindow {
         sendMessage(prompt);
       }
     });
+  }
+
+  /**
+   * 打开 IDEA 设置界面
+   */
+  private void openSettings() {
+    if (project == null) {
+      Messages.showErrorDialog("无法打开设置：项目未初始化", "错误");
+      return;
+    }
+
+    ApplicationManager.getApplication().invokeLater(() -> {
+      try {
+        // 方式一：直接打开 Ollama 设置页面（推荐）
+        ShowSettingsUtil.getInstance().showSettingsDialog(
+            project,
+            SettingsConfig.class
+        );
+
+        // 方式二：打开通用设置，然后导航到 Ollama（备选）
+        // ShowSettingsUtil.getInstance().showSettingsDialog(project, "Ollama");
+
+        // 方式三：打开所有设置，用户手动找到 Ollama
+        // ShowSettingsUtil.getInstance().showSettingsDialog(project);
+
+      } catch (Exception e) {
+        // 如果找不到 OllamaSettingsConfigurable，则打开通用设置
+        ShowSettingsUtil.getInstance().showSettingsDialog(project);
+      }
+    });
+  }
+
+  /**
+   * 检查 Ollama 配置是否有效
+   */
+  private boolean checkOllamaConfiguration() {
+    if (!ChatConstant.apiUrl.startsWith("http")) {
+      // 提示用户去设置
+      int result = Messages.showYesNoDialog(
+          project,
+          "Ollama API 地址未配置或配置无效。\n是否现在打开设置？",
+          "配置缺失",
+          "打开设置",
+          "取消",
+          Messages.getWarningIcon()
+      );
+
+      if (result == Messages.YES) {
+        openSettings();
+      }
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -294,12 +374,9 @@ public class ChatToolWindow {
       styleButton(regenerateBtn);
 
       acceptBtn.addActionListener(e -> {
-
         // 接受时更新缓存
         lastCompletedAIResponse = currentAIResponseArea.getText();
         DiffPreviewUtil.show(lastCompletedAIResponse);
-        
-
       });
 
       regenerateBtn.addActionListener(e -> {
@@ -411,7 +488,7 @@ public class ChatToolWindow {
   }
 
   /**
-   * 发送消息
+   * 发送消息 - 添加配置检查
    */
   public void sendMessage(String prompt) {
     addUserMessage(prompt);
