@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.lsyf.lsyfollama.utils.ProjectUtils;
 import com.lsyf.lsyfollama.vo.DiffMsg;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
@@ -16,189 +17,211 @@ import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GitDiffUtil {
 
-    private static String generateGitSummary(String diff) {
-        StringBuilder summary = new StringBuilder();
-        Set<String> addedFiles = new HashSet<>();
-        Set<String> modifiedFiles = new HashSet<>();
-        Set<String> deletedFiles = new HashSet<>();
-        Set<String> renamedFiles = new HashSet<>();
- int i=0;
-        // Track change statistics
-        int linesAdded = 0;
-        int linesRemoved = 0;
+  private static String generateGitSummary(String diff) {
+    StringBuilder summary = new StringBuilder();
+    Set<String> addedFiles = new HashSet<>();
+    Set<String> modifiedFiles = new HashSet<>();
+    Set<String> deletedFiles = new HashSet<>();
+    Set<String> renamedFiles = new HashSet<>();
+    int i = 0;
+    // Track change statistics
+    int linesAdded = 0;
+    int linesRemoved = 0;
 
-        String[] lines = diff.split("\n");
-        String currentFile = null;
+    String[] lines = diff.split("\n");
+    String currentFile = null;
 
-        for (String line : lines) {
-            // Detect file changes
-            if (line.startsWith("diff --git")) {
-                String[] parts = line.split(" ");
-                if (parts.length >= 3) {
-                    currentFile = parts[2].substring(2); // Remove "b/"
-                }
-            }
-            // New file
-            else if (line.startsWith("new file")) {
-                if (currentFile != null) addedFiles.add(currentFile);
-            }
-            // Deleted file
-            else if (line.startsWith("deleted file")) {
-                if (currentFile != null) deletedFiles.add(currentFile);
-            }
-            // Renamed file
-            else if (line.contains("rename from") || line.contains("rename to")) {
-                if (currentFile != null) renamedFiles.add(currentFile);
-            }
-            // Modified file (fallback)
-            else if (line.startsWith("+++") && currentFile != null &&
-                    !addedFiles.contains(currentFile) &&
-                    !deletedFiles.contains(currentFile) &&
-                    !renamedFiles.contains(currentFile)) {
-                modifiedFiles.add(currentFile);
-            }
-            // Count additions/deletions
-            else if (line.startsWith("+") && !line.startsWith("+++")) {
-                linesAdded++;
-            }
-            else if (line.startsWith("-") && !line.startsWith("---")) {
-                linesRemoved++;
-            }
+    for (String line : lines) {
+      // Detect file changes
+      if (line.startsWith("diff --git")) {
+        String[] parts = line.split(" ");
+        if (parts.length >= 3) {
+          currentFile = parts[2].substring(2); // Remove "b/"
         }
-
-        // Build summary
-        if (!addedFiles.isEmpty()) {
-            summary.append("Add ").append(pluralize(addedFiles.size(), "file", "files"))
-                    .append(formatFileList(addedFiles)).append("\n");
-        }
-        if (!modifiedFiles.isEmpty()) {
-            summary.append("Update ").append(pluralize(modifiedFiles.size(), "file", "files"))
-                    .append(formatFileList(modifiedFiles)).append("\n");
-        }
-        if (!deletedFiles.isEmpty()) {
-            summary.append("Remove ").append(pluralize(deletedFiles.size(), "file", "files"))
-                    .append(formatFileList(deletedFiles)).append("\n");
-        }
-        if (!renamedFiles.isEmpty()) {
-            summary.append("Rename ").append(pluralize(renamedFiles.size(), "file", "files"))
-                    .append(formatFileList(renamedFiles)).append("\n");
-        }
-
-        // Add statistics
-        if (linesAdded > 0 || linesRemoved > 0) {
-            summary.append("\n")
-                    .append(linesAdded).append(" insertion")
-                    .append(linesAdded != 1 ? "s" : "")
-                    .append(", ")
-                    .append(linesRemoved).append(" deletion")
-                    .append(linesRemoved != 1 ? "s" : "");
-        }
-
-        // Fallback if no specific changes detected
-        if (summary.length() == 0) {
-            summary.append("Update codebase");
-        }
-
-        return summary.toString().trim();
+      }
+      // New file
+      else if (line.startsWith("new file")) {
+        if (currentFile != null) addedFiles.add(currentFile);
+      }
+      // Deleted file
+      else if (line.startsWith("deleted file")) {
+        if (currentFile != null) deletedFiles.add(currentFile);
+      }
+      // Renamed file
+      else if (line.contains("rename from") || line.contains("rename to")) {
+        if (currentFile != null) renamedFiles.add(currentFile);
+      }
+      // Modified file (fallback)
+      else if (line.startsWith("+++") && currentFile != null &&
+          !addedFiles.contains(currentFile) &&
+          !deletedFiles.contains(currentFile) &&
+          !renamedFiles.contains(currentFile)) {
+        modifiedFiles.add(currentFile);
+      }
+      // Count additions/deletions
+      else if (line.startsWith("+") && !line.startsWith("+++")) {
+        linesAdded++;
+      } else if (line.startsWith("-") && !line.startsWith("---")) {
+        linesRemoved++;
+      }
     }
 
-    private static String pluralize(int count, String singular, String plural) {
-        return count + " " + (count == 1 ? singular : plural);
+    // Build summary
+    if (!addedFiles.isEmpty()) {
+      summary.append("Add ").append(pluralize(addedFiles.size(), "file", "files"))
+          .append(formatFileList(addedFiles)).append("\n");
+    }
+    if (!modifiedFiles.isEmpty()) {
+      summary.append("Update ").append(pluralize(modifiedFiles.size(), "file", "files"))
+          .append(formatFileList(modifiedFiles)).append("\n");
+    }
+    if (!deletedFiles.isEmpty()) {
+      summary.append("Remove ").append(pluralize(deletedFiles.size(), "file", "files"))
+          .append(formatFileList(deletedFiles)).append("\n");
+    }
+    if (!renamedFiles.isEmpty()) {
+      summary.append("Rename ").append(pluralize(renamedFiles.size(), "file", "files"))
+          .append(formatFileList(renamedFiles)).append("\n");
     }
 
-    private static String formatFileList(Set<String> files) {
-        if (files.isEmpty()) return "";
-        if (files.size() <= 3) {
-            return ": " + String.join(", ", files);
-        }
-        return ": " + String.join(", ", files.stream().limit(3).toArray(String[]::new))
-                + " and " + (files.size() - 3) + " more";
+    // Add statistics
+    if (linesAdded > 0 || linesRemoved > 0) {
+      summary.append("\n")
+          .append(linesAdded).append(" insertion")
+          .append(linesAdded != 1 ? "s" : "")
+          .append(", ")
+          .append(linesRemoved).append(" deletion")
+          .append(linesRemoved != 1 ? "s" : "");
     }
 
-    public static DiffMsg getStagedDiff(  @NotNull Project project) {
+    // Fallback if no specific changes detected
+    if (summary.length() == 0) {
+      summary.append("Update codebase");
+    }
 
+    return summary.toString().trim();
+  }
 
-        StringBuilder buffer = new StringBuilder();
+  private static String pluralize(int count, String singular, String plural) {
+    return count + " " + (count == 1 ? singular : plural);
+  }
 
-        // 获取 IDEA ChangeList 中的变更，然后获取每个文件的 diff
-        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-        LocalChangeList defaultList = changeListManager.getDefaultChangeList();
+  private static String formatFileList(Set<String> files) {
+    if (files.isEmpty()) return "";
+    if (files.size() <= 3) {
+      return ": " + String.join(", ", files);
+    }
+    return ": " + String.join(", ", files.stream().limit(3).toArray(String[]::new))
+        + " and " + (files.size() - 3) + " more";
+  }
 
-        for (Change change : defaultList.getChanges()) {
-            //            ContentRevision before = change.getBeforeRevision();
+  public static DiffMsg getStagedDiff(@NotNull Project project) {
+
+    StringBuilder buffer = new StringBuilder();
+
+    // 获取 IDEA ChangeList 中的变更，然后获取每个文件的 diff
+//        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+//        LocalChangeList defaultList = changeListManager.getDefaultChangeList();
+
+    LocalChangeList changeList = getDefaultChangeList(project);
+
+    for (Change change : changeList.getChanges()) {
+      //            ContentRevision before = change.getBeforeRevision();
 //            String changeType = change.getType().toString(); // MODIFICATION, ADD, DELETE
-            ContentRevision afterRevision = change.getAfterRevision();
-            if (afterRevision != null) {
-                VirtualFile file = afterRevision.getFile().getVirtualFile();
-                if (file != null) {
-                    String relativePath = VfsUtilCore.getRelativePath(file, project.getBaseDir());
-                    String diff = getFileDiff(project, relativePath, "HEAD");
-                    buffer.append("Diff for ").append(relativePath).append(":\n").append(diff);
-                }
-            }
+      ContentRevision afterRevision = change.getAfterRevision();
+      if (afterRevision != null) {
+        VirtualFile file = afterRevision.getFile().getVirtualFile();
+        if (file != null) {
+          String relativePath = VfsUtilCore.getRelativePath(file, ProjectUtils.getProjectDir(project));
+          String diff = getFileDiff(project, relativePath, "HEAD");
+          buffer.append("Diff for ").append(relativePath).append(":\n").append(diff);
         }
-        DiffMsg  diffMsg=new DiffMsg();
-        String gitmsg=buffer.toString();
-        diffMsg.setGitmsg(gitmsg);
-      String result=  analyzeChanges(gitmsg);        diffMsg.setResult(result);
-
+      }
+    }
+    DiffMsg diffMsg = new DiffMsg();
+    String gitmsg = buffer.toString();
+    diffMsg.setGitmsg(gitmsg);
+    String result = analyzeChanges(gitmsg);
+    diffMsg.setResult(result);
 
 //      String result=  generateGitSummary(gitmsg);
 
-        return diffMsg;
+    return diffMsg;
+  }
+
+  public static LocalChangeList getDefaultChangeList(Project project) {
+    ChangeListManager manager = ChangeListManager.getInstance(project);
+
+    // 尝试新方法（2026.1+）
+    try {
+      for (LocalChangeList list : manager.getChangeLists()) {
+        if (list.isDefault()) {
+          return list;
+        }
+      }
+    } catch (Throwable ignored) {
+      // 回退到旧方法（老版本）
+      try {
+        Method oldMethod = manager.getClass().getMethod("getDefaultChangeList");
+        return (LocalChangeList) oldMethod.invoke(manager);
+      } catch (Exception e) {
+        // 处理异常
+      }
+    }
+    return null;
+  }
+
+  // 更宽松的版本 - 适合 diff 内容
+  private static Set<String> extractMethodNamesFromDiff(String diffText) {
+    Set<String> methodNames = new LinkedHashSet<>();
+
+    // 处理 diff 格式：只关注新增的行（+ 开头）
+    String[] lines = diffText.split("\n");
+    StringBuilder codeBlock = new StringBuilder();
+
+    for (String line : lines) {
+      if (line.startsWith("+") && !line.startsWith("+++")) {
+        codeBlock.append(line.substring(1)).append("\n");
+      }
     }
 
+    // 从新增代码中提取方法名
+    Pattern pattern = Pattern.compile(
+        "\\b(public|private|protected|static|final|synchronized|native|abstract)\\s+" +
+            "[\\w<>\\[\\],\\s]+\\s+(\\w+)\\s*\\([^)]*\\)"
+    );
 
-    // 更宽松的版本 - 适合 diff 内容
-    private static Set<String> extractMethodNamesFromDiff(String diffText) {
-        Set<String> methodNames = new LinkedHashSet<>();
-
-        // 处理 diff 格式：只关注新增的行（+ 开头）
-        String[] lines = diffText.split("\n");
-        StringBuilder codeBlock = new StringBuilder();
-
-        for (String line : lines) {
-            if (line.startsWith("+") && !line.startsWith("+++")) {
-                codeBlock.append(line.substring(1)).append("\n");
-            }
-        }
-
-        // 从新增代码中提取方法名
-        Pattern pattern = Pattern.compile(
-                "\\b(public|private|protected|static|final|synchronized|native|abstract)\\s+" +
-                        "[\\w<>\\[\\],\\s]+\\s+(\\w+)\\s*\\([^)]*\\)"
-        );
-
-        Matcher matcher = pattern.matcher(codeBlock.toString());
-        while (matcher.find()) {
-            methodNames.add(matcher.group(2));
-        }
-
-        return methodNames;
+    Matcher matcher = pattern.matcher(codeBlock.toString());
+    while (matcher.find()) {
+      methodNames.add(matcher.group(2));
     }
 
-    // 使用示例
-    public static Change[] getCommitChanges(@NotNull AnActionEvent e) {
-        Project project = e.getProject();
-        if (project == null) return new Change[0];
+    return methodNames;
+  }
 
-        // ✅ 1. SELECTED_CHANGES（新 UI 最稳）
-        Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
-        if (changes != null && changes.length > 0) {
-            return changes;
-        }
+  // 使用示例
+  public static Change[] getCommitChanges(@NotNull AnActionEvent e) {
+    Project project = e.getProject();
+    if (project == null) return new Change[0];
 
-        // ✅ 2. CHANGES（兜底）
-        changes = e.getData(VcsDataKeys.CHANGES);
-        if (changes != null && changes.length > 0) {
-            return changes;
-        }
+    // ✅ 1. SELECTED_CHANGES（新 UI 最稳）
+    Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
+    if (changes != null && changes.length > 0) {
+      return changes;
+    }
+
+    // ✅ 2. CHANGES（兜底）
+    changes = e.getData(VcsDataKeys.CHANGES);
+    if (changes != null && changes.length > 0) {
+      return changes;
+    }
 
 //        // ✅ 3. CheckinProjectPanel（模态提交框）
 //        CheckinProjectPanel panel = e.getData(CheckinProjectPanel.PANEL);
@@ -209,63 +232,63 @@ public class GitDiffUtil {
 //            }
 //        }
 
-        // ✅ 4. 全局 Default Changelist（最后兜底）
-        ChangeListManager manager = ChangeListManager.getInstance(project);
-        Collection<Change> defaultChanges = manager.getDefaultChangeList().getChanges();
-        if (!defaultChanges.isEmpty()) {
-            return defaultChanges.toArray(new Change[0]);
-        }
-
-        return new Change[0];
+    // ✅ 4. 全局 Default Changelist（最后兜底）
+    ChangeListManager manager = ChangeListManager.getInstance(project);
+    Collection<Change> defaultChanges = manager.getDefaultChangeList().getChanges();
+    if (!defaultChanges.isEmpty()) {
+      return defaultChanges.toArray(new Change[0]);
     }
 
-    /**
-     * 获取当前工作区与 HEAD 的差异
-     */
-    public String getDiffWithHead(Project project) {
-        return getDiff(project, "HEAD", null);
+    return new Change[0];
+  }
+
+  /**
+   * 获取当前工作区与 HEAD 的差异
+   */
+  public String getDiffWithHead(Project project) {
+    return getDiff(project, "HEAD", null);
+  }
+
+  /**
+   * 获取两个提交之间的差异
+   */
+  public String getDiffBetweenCommits(Project project, String fromCommit, String toCommit) {
+    return getDiff(project, fromCommit + ".." + toCommit, null);
+  }
+
+  /**
+   * 获取指定文件的差异
+   */
+  public static String getFileDiff(Project project, String filePath, String reference) {
+    return getDiff(project, reference, filePath);
+  }
+
+  private static String getDiff(Project project, String reference, String filePath) {
+    VirtualFile root = ProjectUtils.getProjectDir(project);
+    GitLineHandler handler = new GitLineHandler(project, root, GitCommand.DIFF);
+
+    if (reference != null) {
+      handler.addParameters(reference);
     }
 
-    /**
-     * 获取两个提交之间的差异
-     */
-    public String getDiffBetweenCommits(Project project, String fromCommit, String toCommit) {
-        return getDiff(project, fromCommit + ".." + toCommit, null);
+    if (filePath != null) {
+      handler.addParameters("--", filePath);
     }
 
-    /**
-     * 获取指定文件的差异
-     */
-    public static String getFileDiff(Project project, String filePath, String reference) {
-        return getDiff(project, reference, filePath);
+    GitCommandResult result = Git.getInstance().runCommand(handler);
+
+    if (!result.success()) {
+      throw new RuntimeException("Git diff failed: " + result.getErrorOutput());
     }
 
-    private static String getDiff(Project project, String reference, String filePath) {
-        VirtualFile root = project.getBaseDir();
-        GitLineHandler handler = new GitLineHandler(project, root, GitCommand.DIFF);
+    return String.join("\n", result.getOutput());
+  }
 
-        if (reference != null) {
-            handler.addParameters(reference);
-        }
+  private static String analyzeChanges(String diff) {
+    Set<String> changes = new LinkedHashSet<>();
 
-        if (filePath != null) {
-            handler.addParameters("--", filePath);
-        }
-
-        GitCommandResult result = Git.getInstance().runCommand(handler);
-
-        if (!result.success()) {
-            throw new RuntimeException("Git diff failed: " + result.getErrorOutput());
-        }
-
-        return String.join("\n", result.getOutput());
-    }
-
-    private static String analyzeChanges(String diff) {
-        Set<String> changes = new LinkedHashSet<>();
-
-        // Split into lines for analysis
-        String[] lines = diff.split("\n");
+    // Split into lines for analysis
+    String[] lines = diff.split("\n");
 
 //        for (String line : lines) {
 //            String trimmed = line.trim();
@@ -295,18 +318,18 @@ public class GitDiffUtil {
 ////            }
 //        }
 
-        Set<String>  changedMethods = extractMethodNamesFromDiff(diff);
-        List<String> methods = new ArrayList<>(changedMethods);
-        String  summary="";
-        if (methods.size() == 1) {
-            summary = "Modify " + methods.get(0) ;
-        } else if (methods.size() <= 3) {
-            summary = "Modify " + String.join(", ", methods) ;
-        } else {
-            summary = "Modify " + String.join(", ", methods.subList(0, 3)) +
-                    ", and " + (methods.size() - 3) + " more methods";
-        }
-        return summary;
-
+    Set<String> changedMethods = extractMethodNamesFromDiff(diff);
+    List<String> methods = new ArrayList<>(changedMethods);
+    String summary = "";
+    if (methods.size() == 1) {
+      summary = "Modify " + methods.get(0);
+    } else if (methods.size() <= 3) {
+      summary = "Modify " + String.join(", ", methods);
+    } else {
+      summary = "Modify " + String.join(", ", methods.subList(0, 3)) +
+          ", and " + (methods.size() - 3) + " more methods";
     }
+    return summary;
+
+  }
 }
