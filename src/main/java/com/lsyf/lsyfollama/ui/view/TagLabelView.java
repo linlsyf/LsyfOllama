@@ -70,6 +70,7 @@ public class TagLabelView extends JPanel {
       public void onContentChanged(FileContentChangeEvent event) {
 //        monitorPanel.updateContent(event.getFilePath(), event.getContent());
      String str=event.getFilePath()+(event.getContent());
+        System.out.println("select change ========"+str+"====================");
         // 预定义常用标签
         commonTags = new String[]{str};
         initScrooller();
