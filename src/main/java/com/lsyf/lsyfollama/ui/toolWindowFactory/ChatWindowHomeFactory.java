@@ -5,7 +5,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.lsyf.lsyfollama.ToolWindowService;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
-import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
+import com.lsyf.lsyfollama.ui.view.ChatRootView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import javax.swing.*;
 public class ChatWindowHomeFactory implements ToolWindowFactory {
   @Override
   public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-    ChatToolWindow chatTool = new ChatToolWindow();
+    ChatRootView chatTool = new ChatRootView(project);
     chatTool.setProject(project);
     ProjectInitData.getInstance().setProject(project);
 
@@ -21,10 +21,12 @@ public class ChatWindowHomeFactory implements ToolWindowFactory {
     ToolWindowService service = project.getService(ToolWindowService.class);
     service.registerPanel(chatTool);
 
-    JPanel panel = chatTool.getChatPanel();
-    toolWindow.getComponent().add(panel);
-    panel.revalidate(); // 强制刷新布局
+    JPanel contentRootPanl = chatTool.getChatPanel();
+    toolWindow.getComponent().add(contentRootPanl);
+    contentRootPanl.revalidate(); // 强制刷新布局
     toolWindow.show(); // 显示窗口
+
+
 
   }
 }

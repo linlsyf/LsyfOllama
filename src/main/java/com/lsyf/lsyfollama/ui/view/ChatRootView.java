@@ -9,12 +9,16 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.cofig.SettingsConfig;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import com.lsyf.lsyfollama.evenbus.FileContentChangeEvent;
+import com.lsyf.lsyfollama.evenbus.FileContentChangeListener;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.*;
 import lombok.Data;
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ChatToolWindow {
+public class ChatRootView {
 
   // ===== 使用IntelliJ标准颜色 =====
   private static final Color BG_PANEL = JBColor.namedColor("Panel.background", Color.WHITE);
@@ -60,12 +64,41 @@ public class ChatToolWindow {
 
   private Project project;
 
-  public ChatToolWindow() {
+  public ChatRootView(Project project) {
+    this.project = project;
+    initView();
+    initListener();
+
+  }
+
+  public void initView() {
     initMainPanel();
     initTopPanel();
     initChatArea();
     initBottomPanel();
     initListeners();
+
+  }
+
+  private void initListener() {
+    // 订阅消息
+    MessageBusConnection connection = project.getMessageBus().connect();
+
+    connection.subscribe(FileContentChangeListener.TOPIC, new FileContentChangeListener() {
+      @Override
+      public void onContentChanged(FileContentChangeEvent event) {
+//        monitorPanel.updateContent(event.getFilePath(), event.getContent());
+      }
+    });
+    // 项目关闭时自动断开连接
+    Disposer.register(project, connection);
+
+  }
+
+  private void updateUIWithContent(String content) {
+    // 更新你的 Swing 组件
+//    myTextArea.setText(content);
+//    myLabel.setText("字符数: " + content.length());
   }
 
   /**
@@ -593,6 +626,7 @@ public class ChatToolWindow {
 
   /**
    * 获取最后一条已完成的AI回复内容
+   *
    * @return 最后一条已完成的AI回复内容，如果没有则返回空字符串
    */
   public String getLastCompletedAIResponse() {
@@ -601,6 +635,7 @@ public class ChatToolWindow {
 
   /**
    * 获取聊天历史中最后一条AI消息内容（包括正在生成但未完成的）
+   *
    * @return 最后一条AI消息内容，如果没有则返回空字符串
    */
   public String getLastAIHistoryMessage() {
@@ -679,6 +714,7 @@ public class ChatToolWindow {
 
   /**
    * 获取最后一条消息（用户或AI）
+   *
    * @return 最后一条消息内容，如果没有则返回空字符串
    */
   public String getLastMessage() {
@@ -698,6 +734,7 @@ public class ChatToolWindow {
 
   /**
    * 获取当前正在生成的内容（流式输出时用）
+   *
    * @return 当前已生成的AI内容，如果没有正在生成则返回空字符串
    */
   public String getCurrentGeneratingContent() {
@@ -706,6 +743,7 @@ public class ChatToolWindow {
 
   /**
    * 检查是否有正在生成的AI回复
+   *
    * @return true如果有正在生成的回复
    */
   public boolean isGenerating() {
@@ -742,7 +780,6 @@ public class ChatToolWindow {
   public void setProject(Project project) {
     this.project = project;
   }
-
 
   /**
    * 获取插件版本号

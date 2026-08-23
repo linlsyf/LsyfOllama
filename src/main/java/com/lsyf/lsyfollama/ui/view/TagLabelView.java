@@ -1,16 +1,22 @@
 package com.lsyf.lsyfollama.ui.view;
 
-
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class TagLabelView {
+@Data
+@EqualsAndHashCode(callSuper = false)  // ← 明确忽略父类字段
+public class TagLabelView extends JPanel {
+  JScrollPane jScrollPane;
 
-  public static JScrollPane createFilsList(JTextField inputField) {
+
+  public JScrollPane createFilsList(JTextField inputField) {
+
     JPanel tagPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
     tagPanel.setBackground(new Color(248, 249, 250));
     tagPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(222, 226, 230)));
@@ -38,7 +44,15 @@ public class TagLabelView {
     tagScrollPane.setBorder(BorderFactory.createEmptyBorder());
     tagScrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 8));
     tagScrollPane.getHorizontalScrollBar().setUnitIncrement(20); // 平滑滚动
+
+
     return tagScrollPane;
+  }
+
+  private void updateUIWithContent(String content) {
+    // 更新你的 Swing 组件
+//    myTextArea.setText(content);
+//    myLabel.setText("字符数: " + content.length());
   }
 
   public static JLabel createTagLabel(String text, JTextField inputField) {
@@ -69,9 +83,8 @@ public class TagLabelView {
       @Override
       public void mouseClicked(MouseEvent e) {
 
-        if (text.equals("accept code")){
+        if (text.equals("accept code")) {
           DiffPreviewUtil.show("test");
-
 
 //          MyViewNotifier publisher = ProjectInitData.getInstance().getProject().getMessageBus()
 //              .syncPublisher(MyViewNotifier.MY_VIEW_TOPIC);
@@ -87,8 +100,5 @@ public class TagLabelView {
 
     return label;
   }
-
-
-
 
 }

@@ -14,7 +14,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.ToolWindowService;
-import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
+import com.lsyf.lsyfollama.ui.view.ChatRootView;
 
 import static com.lsyf.lsyfollama.ChatConstant.ChatToolWindow_ID;
 
@@ -45,7 +45,7 @@ public class CodeQuery {
     String prompt = "解释以下" + ChatConstant.DEV_LAN + "代码：" + selectedText + "\n ";
 
     ToolWindowService service = project.getService(ToolWindowService.class);
-    ChatToolWindow chatTool = service.getCustomPanel();
+    ChatRootView chatTool = service.getCustomPanel();
     if (null == chatTool) {
 
       ToolWindowManager manager = ToolWindowManager.getInstance(project);

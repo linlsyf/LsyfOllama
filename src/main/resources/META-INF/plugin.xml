@@ -38,6 +38,7 @@
                 factoryClass="com.lsyf.lsyfollama.ui.toolWindowFactory.ChatWindowHomeFactory"/>
         <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.cofig.SettingsConfig"/>
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
+        <fileEditorManagerListener implementation="com.lsyf.lsyfollama.broadCast.MyFileEditorManagerListener"/>
 
 
     </extensions>

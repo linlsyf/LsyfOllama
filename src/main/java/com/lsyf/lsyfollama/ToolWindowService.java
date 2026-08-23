@@ -2,19 +2,19 @@ package com.lsyf.lsyfollama;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.lsyf.lsyfollama.ui.view.ChatToolWindow;
+import com.lsyf.lsyfollama.ui.view.ChatRootView;
 
 import javax.swing.*;
 
 public class ToolWindowService {
     private final Project project;
-    private ChatToolWindow customPanel;
+    private ChatRootView customPanel;
 
     public ToolWindowService(Project project) {
         this.project = project;
     }
 
-    public void registerPanel(ChatToolWindow panel) {
+    public void registerPanel(ChatRootView panel) {
         this.customPanel = panel; // 注册组件
     }
 
@@ -23,7 +23,7 @@ public class ToolWindowService {
         return customPanel.getChatPanel();
     }
 
-    public ChatToolWindow getCustomPanel() {
+    public ChatRootView getCustomPanel() {
         return customPanel;
     }
 
