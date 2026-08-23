@@ -9,16 +9,12 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
-import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.cofig.SettingsConfig;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
-import com.lsyf.lsyfollama.evenbus.FileContentChangeEvent;
-import com.lsyf.lsyfollama.evenbus.FileContentChangeListener;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.*;
 import lombok.Data;
@@ -67,7 +63,7 @@ public class ChatRootView {
   public ChatRootView(Project project) {
     this.project = project;
     initView();
-    initListener();
+//    initListener();
 
   }
 
@@ -79,21 +75,21 @@ public class ChatRootView {
     initListeners();
 
   }
-
-  private void initListener() {
-    // 订阅消息
-    MessageBusConnection connection = project.getMessageBus().connect();
-
-    connection.subscribe(FileContentChangeListener.TOPIC, new FileContentChangeListener() {
-      @Override
-      public void onContentChanged(FileContentChangeEvent event) {
-//        monitorPanel.updateContent(event.getFilePath(), event.getContent());
-      }
-    });
-    // 项目关闭时自动断开连接
-    Disposer.register(project, connection);
-
-  }
+//
+//  private void initListener() {
+//    // 订阅消息
+//    MessageBusConnection connection = project.getMessageBus().connect();
+//
+//    connection.subscribe(FileContentChangeListener.TOPIC, new FileContentChangeListener() {
+//      @Override
+//      public void onContentChanged(FileContentChangeEvent event) {
+////        monitorPanel.updateContent(event.getFilePath(), event.getContent());
+//      }
+//    });
+//    // 项目关闭时自动断开连接
+//    Disposer.register(project, connection);
+//
+//  }
 
   private void updateUIWithContent(String content) {
     // 更新你的 Swing 组件

@@ -13,9 +13,9 @@ import javax.swing.*;
 public class ChatWindowHomeFactory implements ToolWindowFactory {
   @Override
   public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+    ProjectInitData.getInstance().setProject(project);
     ChatRootView chatTool = new ChatRootView(project);
     chatTool.setProject(project);
-    ProjectInitData.getInstance().setProject(project);
 
     // 注册到服务
     ToolWindowService service = project.getService(ToolWindowService.class);

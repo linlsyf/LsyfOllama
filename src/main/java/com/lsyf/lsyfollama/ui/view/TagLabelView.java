@@ -1,5 +1,10 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.openapi.util.Disposer;
+import com.intellij.util.messages.MessageBusConnection;
+import com.lsyf.lsyfollama.constant.ProjectInitData;
+import com.lsyf.lsyfollama.evenbus.FileContentChangeEvent;
+import com.lsyf.lsyfollama.evenbus.FileContentChangeListener;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,19 +19,27 @@ import java.awt.event.MouseEvent;
 public class TagLabelView extends JPanel {
   JScrollPane jScrollPane;
 
-
+  JScrollPane tagScrollPane;
+  JTextField inputField;
+  String[] commonTags = {
+      "accept code", "repair code", "口语练习", "听力技巧",
+      "阅读理解", "写作模板", "词汇积累", "发音纠正",
+      "商务英语", "旅游英语", "考试技巧", "每日一句"
+  };
   public JScrollPane createFilsList(JTextField inputField) {
+    this.inputField = inputField;
+    tagScrollPane = initScrooller();
+    initListener();
 
+    return tagScrollPane;
+  }
+
+  public JScrollPane initScrooller() {
     JPanel tagPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
     tagPanel.setBackground(new Color(248, 249, 250));
     tagPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(222, 226, 230)));
 
-// 预定义常用标签
-    String[] commonTags = {
-        "accept code", "repair code", "口语练习", "听力技巧",
-        "阅读理解", "写作模板", "词汇积累", "发音纠正",
-        "商务英语", "旅游英语", "考试技巧", "每日一句"
-    };
+
 
 // 添加标签到面板
     for (String tag : commonTags) {
@@ -44,15 +57,29 @@ public class TagLabelView extends JPanel {
     tagScrollPane.setBorder(BorderFactory.createEmptyBorder());
     tagScrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 8));
     tagScrollPane.getHorizontalScrollBar().setUnitIncrement(20); // 平滑滚动
-
-
+    this.tagScrollPane = tagScrollPane;
     return tagScrollPane;
   }
 
-  private void updateUIWithContent(String content) {
-    // 更新你的 Swing 组件
-//    myTextArea.setText(content);
-//    myLabel.setText("字符数: " + content.length());
+  private void initListener() {
+    // 订阅消息
+    MessageBusConnection connection = ProjectInitData.getInstance().getProject().getMessageBus().connect();
+
+    connection.subscribe(FileContentChangeListener.TOPIC, new FileContentChangeListener() {
+      @Override
+      public void onContentChanged(FileContentChangeEvent event) {
+//        monitorPanel.updateContent(event.getFilePath(), event.getContent());
+     String str=event.getFilePath()+(event.getContent());
+        // 预定义常用标签
+        commonTags = new String[]{str};
+        initScrooller();
+        tagScrollPane.revalidate();
+        tagScrollPane.repaint();
+      }
+    });
+    // 项目关闭时自动断开连接
+    Disposer.register(ProjectInitData.getInstance().getProject(), connection);
+
   }
 
   public static JLabel createTagLabel(String text, JTextField inputField) {

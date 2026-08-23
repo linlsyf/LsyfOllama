@@ -31,6 +31,10 @@ public class BottomView {
     selectScroolPanel = tagLabelView.createFilsList(inputField);
     southContainer.add(selectScroolPanel, BorderLayout.NORTH);  // 标签在上方
     southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
+
+
+
+
     return southContainer;
   }
 
