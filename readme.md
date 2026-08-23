@@ -6,4 +6,4 @@
 
 ./gradlew build  顯示出打包項目
 服务提供  用
-git config --global http.proxy http://127.0.0.1:33210
+git config --global http.proxy http://127.0.0.1:15490

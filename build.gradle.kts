@@ -26,6 +26,8 @@ repositories {
     google()
     gradlePluginPortal()
     maven { url = uri("https://jitpack.io") }
+    // 关键：注册 JetBrains 的 IDE 仓库，Verifier 才能下载对应 IDE 构建
+
 }
 
 dependencies {
@@ -43,7 +45,7 @@ dependencies {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "261"
+            sinceBuild = "252"
             untilBuild = "261.*"
         }
         changeNotes = "Initial version"
