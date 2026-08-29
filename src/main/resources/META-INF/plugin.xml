@@ -40,7 +40,7 @@
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
         <fileEditorManagerListener implementation="com.lsyf.lsyfollama.broadCast.MyFileEditorManagerListener"/>
 
-
+        <postStartupActivity implementation="com.lsyf.lsyfollama.evenbus.MyStartupActivity"/>
     </extensions>
     <projectListeners>
         <listener class="com.lsyf.lsyfollama.broadCast.MyViewListener"

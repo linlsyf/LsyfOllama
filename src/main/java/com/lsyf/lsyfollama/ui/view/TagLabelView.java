@@ -1,10 +1,14 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
-import com.lsyf.lsyfollama.evenbus.FileContentChangeEvent;
-import com.lsyf.lsyfollama.evenbus.FileContentChangeListener;
+import com.lsyf.lsyfollama.evenbus.BusMessage;
+import com.lsyf.lsyfollama.evenbus.FileSelectChangeListener;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +30,7 @@ public class TagLabelView extends JPanel {
       "阅读理解", "写作模板", "词汇积累", "发音纠正",
       "商务英语", "旅游英语", "考试技巧", "每日一句"
   };
+
   public JScrollPane createFilsList(JTextField inputField) {
     this.inputField = inputField;
     tagScrollPane = initScrooller();
@@ -33,49 +38,61 @@ public class TagLabelView extends JPanel {
 
     return tagScrollPane;
   }
-
   public JScrollPane initScrooller() {
+    // 创建内容面板
     JPanel tagPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
     tagPanel.setBackground(new Color(248, 249, 250));
     tagPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(222, 226, 230)));
 
-
-
-// 添加标签到面板
+    // 添加标签
     for (String tag : commonTags) {
       JLabel tagLabel = TagLabelView.createTagLabel(tag, inputField);
       tagPanel.add(tagLabel);
     }
 
-// 创建横向滚动面板
-    JScrollPane tagScrollPane = new JScrollPane(
-        tagPanel,
-        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-    );
-    tagScrollPane.setPreferredSize(new Dimension(0, 45));
-    tagScrollPane.setBorder(BorderFactory.createEmptyBorder());
-    tagScrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 8));
-    tagScrollPane.getHorizontalScrollBar().setUnitIncrement(20); // 平滑滚动
-    this.tagScrollPane = tagScrollPane;
-    return tagScrollPane;
+    if (tagScrollPane == null) {
+      // ★ 第一次：创建
+      tagScrollPane = new JScrollPane(
+          tagPanel,
+          JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+      );
+      tagScrollPane.setPreferredSize(new Dimension(0, 45));
+      tagScrollPane.setBorder(BorderFactory.createEmptyBorder());
+      tagScrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 8));
+      tagScrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+    } else {
+      // ★ 后续更新：只换内容，不碰 JScrollPane 本身
+      tagScrollPane.setViewportView(tagPanel);
+    }
+    return  tagScrollPane;
   }
 
   private void initListener() {
     // 订阅消息
     MessageBusConnection connection = ProjectInitData.getInstance().getProject().getMessageBus().connect();
 
-    connection.subscribe(FileContentChangeListener.TOPIC, new FileContentChangeListener() {
+    connection.subscribe(FileSelectChangeListener.TOPIC, new FileSelectChangeListener() {
       @Override
-      public void onContentChanged(FileContentChangeEvent event) {
+      public void onMessage(BusMessage busMessage ) {
+        VirtualFile virtualFile=busMessage.getVirtualFile();
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(virtualFile);
+        String str = currentDocument.getText();
+//        String str = currentDocument.getText();
+        String fileName = virtualFile.getName();
+
 //        monitorPanel.updateContent(event.getFilePath(), event.getContent());
-     String str=event.getFilePath()+(event.getContent());
-        System.out.println("select change ========"+str+"====================");
+//     String str=event.getFilePath()+(event.getContent());
+        System.out.println("select change2 ========" + str + "====================");
         // 预定义常用标签
-        commonTags = new String[]{str};
-        initScrooller();
-        tagScrollPane.revalidate();
-        tagScrollPane.repaint();
+
+        ApplicationManager.getApplication().invokeLater(() -> {
+          commonTags = new String[]{virtualFile.getName(),busMessage.getLine()+"行"};
+//          commonTags = new String[]{str};
+          initScrooller();              // 重新创建/填充内部组件
+          tagScrollPane.revalidate();   // 通知布局管理器重新布局
+          tagScrollPane.repaint();      // 触发重绘
+        });
       }
     });
     // 项目关闭时自动断开连接
