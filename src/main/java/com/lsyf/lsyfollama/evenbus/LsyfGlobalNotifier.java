@@ -2,11 +2,11 @@ package com.lsyf.lsyfollama.evenbus;
 
 import com.intellij.util.messages.Topic;
 
-public interface MyGlobalNotifier {
+public interface LsyfGlobalNotifier {
   // 应用级 topic：用 @Topic.AppLevel 标注，displayName 随便起
   @Topic.AppLevel
-  Topic<MyGlobalNotifier> TOPIC =
-      Topic.create("my.plugin.global.events", MyGlobalNotifier.class);
+  Topic<LsyfGlobalNotifier> TOPIC =
+      Topic.create("linlsyf.plugin.global.events", LsyfGlobalNotifier.class);
 
   void onDatasChanged(BusMessage busMessage);
 

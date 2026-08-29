@@ -3,9 +3,7 @@ package com.lsyf.lsyfollama.ui.view;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -17,8 +15,9 @@ import com.lsyf.lsyfollama.cofig.SettingsConfig;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.EvenBusContants;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.evenbus.BusMessage;
-import com.lsyf.lsyfollama.evenbus.MyGlobalNotifier;
+import com.lsyf.lsyfollama.evenbus.LsyfGlobalNotifier;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.*;
 import lombok.Data;
@@ -79,21 +78,6 @@ public class ChatRootView {
     initListeners();
 
   }
-//
-//  private void initListener() {
-//    // 订阅消息
-//    MessageBusConnection connection = project.getMessageBus().connect();
-//
-//    connection.subscribe(FileContentChangeListener.TOPIC, new FileContentChangeListener() {
-//      @Override
-//      public void onContentChanged(FileContentChangeEvent event) {
-////        monitorPanel.updateContent(event.getFilePath(), event.getContent());
-//      }
-//    });
-//    // 项目关闭时自动断开连接
-//    Disposer.register(project, connection);
-//
-//  }
 
   private void updateUIWithContent(String content) {
     // 更新你的 Swing 组件
@@ -216,7 +200,6 @@ public class ChatRootView {
     inputField.setForeground(JBColor.namedColor("TextField.foreground"));
     inputField.setCaretColor(JBColor.namedColor("TextField.caretForeground"));
 
-
     chatPanel.add(bottomPanel, BorderLayout.SOUTH);
   }
 
@@ -224,20 +207,6 @@ public class ChatRootView {
    * 初始化事件监听器 - 新增设置按钮监听
    */
   private void initListeners() {
-//    // 发送按钮
-//    bottomView.getSendButton().addActionListener(e -> {
-//      String buttonText = bottomView.getSendButton().getText();
-//      if (buttonText.equals(Contant.SEND)) {
-//        String prompt = bottomView.getInputField().getText().trim();
-//        if (!prompt.isEmpty()) {
-//          bottomView.getSendButton().setText(Contant.STOP);
-//          sendMessage(prompt);
-//        }
-//      } else {
-//        bottomView.getSendButton().setText(Contant.SEND);
-//        stopGeneration();
-//      }
-//    });
 
     // 清空按钮 - 同时清空缓存
     cleanButton.addActionListener(e -> {
@@ -262,22 +231,18 @@ public class ChatRootView {
       }
     });
 
-
-
-
     MessageBusConnection conn = ApplicationManager.getApplication()
         .getMessageBus().connect();
 
-    conn.subscribe(MyGlobalNotifier.TOPIC, new MyGlobalNotifier() {
+    conn.subscribe(LsyfGlobalNotifier.TOPIC, new LsyfGlobalNotifier() {
       @Override
       public void onDatasChanged(BusMessage busMessage) {
-          if (EvenBusContants.SEND_MESSAGE.equals(busMessage.getKey())){
-            String prompt=busMessage.getValue().toString();
-            sendMessage(prompt);
-          }
-          else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())){
-            stopGeneration();
-          }
+        if (EvenBusContants.SEND_MESSAGE.equals(busMessage.getKey())) {
+          String prompt = busMessage.getValue().toString();
+          sendMessage(prompt);
+        } else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())) {
+          stopGeneration();
+        }
 
       }
 
@@ -584,6 +549,13 @@ public class ChatRootView {
         if (StringUtils.isNotBlank(lastRequestTxt)) {
           messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
         }
+
+       String codeContext= ProjectInitData.getInstance().getDocumentContent();
+        String openfileContent=
+            "你是一个Java代码助手。以下是用户当前打开的文件代码，请基于它回答问题：\n\n" +
+                "```java\n" + codeContext + "\n```";
+
+        messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, openfileContent));
         messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
 
         request.setMessages(messages);
@@ -750,40 +722,7 @@ public class ChatRootView {
     return "";
   }
 
-  /**
-   * 获取当前正在生成的内容（流式输出时用）
-   *
-   * @return 当前已生成的AI内容，如果没有正在生成则返回空字符串
-   */
-  public String getCurrentGeneratingContent() {
-    return currentGeneratingContent;
-  }
 
-  /**
-   * 检查是否有正在生成的AI回复
-   *
-   * @return true如果有正在生成的回复
-   */
-  public boolean isGenerating() {
-    return currentAIResponseArea != null &&
-        Contant.STOP.equals(bottomView.getSendButton().getText());
-  }
-
-  /**
-   * 获取当前激活的编辑器
-   */
-  private void getActiveEditor() {
-    if (project == null) return;
-
-    Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-    if (editor != null) {
-      String selectedText = editor.getSelectionModel().getSelectedText();
-      if (StringUtils.isNotBlank(selectedText)) {
-        bottomView.getInputField().setText(selectedText);
-        bottomView.getInputField().requestFocus();
-      }
-    }
-  }
 
   /**
    * 获取主面板（供ToolWindow注册使用）

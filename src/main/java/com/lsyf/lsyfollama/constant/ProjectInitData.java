@@ -8,6 +8,7 @@ public class ProjectInitData {
   Project project;
   static ProjectInitData instance;
 
+   String documentContent;
   public  static ProjectInitData  getInstance(){
     if (instance==null){
       instance=new ProjectInitData();

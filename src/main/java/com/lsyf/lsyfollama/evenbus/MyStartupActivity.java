@@ -14,6 +14,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.lsyf.lsyfollama.constant.ProjectInitData;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
@@ -94,6 +95,7 @@ public class MyStartupActivity implements ProjectActivity {
 
         String selectedText = selectionModel.getSelectedText();
 
+
         if (selectionModel.hasSelection()) {
           int start = selectionModel.getSelectionStart();
           int end = selectionModel.getSelectionEnd();
@@ -117,6 +119,11 @@ public class MyStartupActivity implements ProjectActivity {
         busMessage.setEditor(event.getEditor());
 
         Document currentDocument = FileDocumentManager.getInstance().getDocument(virtualFile);
+
+        String fullText = editor.getDocument().getText();
+        ProjectInitData.getInstance().setDocumentContent(fullText);
+
+
         busMessage.setCurrentDocument(currentDocument);
 
         // 发布消息到 MessageBus

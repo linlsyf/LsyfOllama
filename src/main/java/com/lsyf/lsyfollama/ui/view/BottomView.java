@@ -7,7 +7,7 @@ import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.EvenBusContants;
 import com.lsyf.lsyfollama.evenbus.BusMessage;
-import com.lsyf.lsyfollama.evenbus.MyGlobalNotifier;
+import com.lsyf.lsyfollama.evenbus.LsyfGlobalNotifier;
 import lombok.Data;
 
 import javax.swing.*;
@@ -67,7 +67,7 @@ public class BottomView {
           sendButton.setText(Contant.STOP);
 //          sendMessage(prompt);
 
-          MyGlobalNotifier publisher = bus.syncPublisher(MyGlobalNotifier.TOPIC);
+          LsyfGlobalNotifier publisher = bus.syncPublisher(LsyfGlobalNotifier.TOPIC);
           BusMessage busMessage=new BusMessage();
           busMessage.setKey(EvenBusContants.SEND_MESSAGE);
           busMessage.setValue(prompt);
@@ -77,7 +77,7 @@ public class BottomView {
       } else {
         sendButton.setText(Contant.SEND);
 //        stopGeneration();
-        MyGlobalNotifier publisher = bus.syncPublisher(MyGlobalNotifier.TOPIC);
+        LsyfGlobalNotifier publisher = bus.syncPublisher(LsyfGlobalNotifier.TOPIC);
         BusMessage busMessage=new BusMessage();
         busMessage.setKey(EvenBusContants.STOP_MESSAGE);
         busMessage.setMessageType(TYPE_BUSINESS);
