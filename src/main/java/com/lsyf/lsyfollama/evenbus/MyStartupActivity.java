@@ -1,7 +1,9 @@
 package com.lsyf.lsyfollama.evenbus;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
@@ -19,11 +21,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class MyStartupActivity implements ProjectActivity {
 
-
-
   private DocumentListener currentDocumentListener;
   private Document currentDocument;
-
 
   @Nullable
   @Override
@@ -48,6 +47,7 @@ public class MyStartupActivity implements ProjectActivity {
                                      @NotNull com.intellij.openapi.vfs.VirtualFile file) {
                 System.out.println("=== [Bus] 文件关闭: " + file.getName() + " ===");
               }
+
               @Override
               public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 System.out.println("selectionChanged");
@@ -64,144 +64,80 @@ public class MyStartupActivity implements ProjectActivity {
     System.out.println("=== MessageBus 监听器已注册到项目: " + project.getName() + " ===");
     return Unit.INSTANCE;
   }
-//
-//  private void registerDocumentListener(Project project, VirtualFile file) {
-//    // 移除旧文件的监听，防止内存泄漏
-//    unregisterPreviousListener();
-//
-//    // 在这里给 Document 注册监听，才能感知内容变化
-//    currentDocument= FileDocumentManager.getInstance().getDocument(file);
-//
-//    // 注册内容变化监听
-//    currentDocumentListener = new DocumentListener() {
-//      @Override
-//      public void documentChanged(@NotNull DocumentEvent event) {
-//        String newContent = currentDocument.getText();
-//        System.out.println("文件内容变为: " + newContent);
-//
-//        VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(currentDocument);
-//        if (virtualFile != null) {
-//          System.out.println("选中文件: " + virtualFile.getName());
-//          System.out.println("选中文件: " + virtualFile.getPath());
-//        }
-//    Messages.showInfoMessage("selection ", newContent);
-//
-//    // 发布消息到 MessageBus
-//        ApplicationManager.getApplication()
-//            .getMessageBus()
-//            .syncPublisher(FileSelectChangeListener.TOPIC)
-//            .onMessage(virtualFile);
-//
-//      }
-//    };
-//    currentDocument.addDocumentListener(currentDocumentListener);
-//  }
 
 
 
-
-  private void unregisterPreviousListener() {
-    if (currentDocument != null && currentDocumentListener != null) {
-      currentDocument.removeDocumentListener(currentDocumentListener);
-      currentDocument = null;
-      currentDocumentListener = null;
-    }
-  }
   public static void install() {
-//    EditorFactory.getInstance().getEventMulticaster().addDocumentListener(new DocumentListener() {
-//      @Override
-//      public void documentChanged(@NotNull DocumentEvent event) {
-//        VirtualFile file = FileDocumentManager.getInstance().getFile(event.getDocument());
-//        if (file == null) return;
-//
-//        // 只关心 java 和 kt 文件
-//        if (!"java".equals(file.getExtension()) && !"kt".equals(file.getExtension())) return;
-//        Document currentDocument= FileDocumentManager.getInstance().getDocument(file);
-//
-//        // 这里写你的逻辑
-//        System.out.println("File changed: " + file.getPath());
-//        String newContent = currentDocument.getText();
-//        System.out.println("文件内容变为: " + newContent);
-//
-//        VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(currentDocument);
-//        if (virtualFile != null) {
-//          System.out.println("选中文件: " + virtualFile.getName());
-//          System.out.println("选中文件: " + virtualFile.getPath());
-//        }
-//        Messages.showInfoMessage("selection ", newContent);
-//
-//        // 发布消息到 MessageBus
-//        ApplicationManager.getApplication()
-//            .getMessageBus()
-//            .syncPublisher(FileContentChangeListener.TOPIC)
-//            .onContentChanged(new FileContentChangeEvent(
-//                virtualFile != null ? virtualFile.getName() : "unknown",
-//                newContent
-//            ));
-//
-//      }
-//    });
 
+    EditorFactory.getInstance().getEventMulticaster().addCaretListener(new CaretListener() {
 
-        EditorFactory.getInstance().getEventMulticaster().addCaretListener(new CaretListener() {
+      @Override
+      public void caretPositionChanged(@NotNull CaretEvent event) {
+        // 光标移动时触发（打字、方向键、鼠标点击都会触发）
+        Editor editor = event.getEditor();
 
-          @Override
-          public void caretPositionChanged(@NotNull CaretEvent event) {
-            // 光标移动时触发（打字、方向键、鼠标点击都会触发）
-            if (event.getEditor() == null) return;
+        if (event.getEditor() == null) return;
+        // ✅ 需要 ReadAction 来访问 FileDocumentManager
+        VirtualFile virtualFile = ReadAction.compute(() ->
+            FileDocumentManager.getInstance().getFile(editor.getDocument())
+        );
+        if (virtualFile == null) return;
 
-            VirtualFile virtualFile = FileDocumentManager.getInstance()
-                .getFile(event.getEditor().getDocument());
-            if (virtualFile == null) return;
+        // 当前光标位置
+        int offset = event.getEditor().getCaretModel().getOffset();
+        int line = event.getEditor().getCaretModel().getLogicalPosition().line;
+        int column = event.getEditor().getCaretModel().getLogicalPosition().column;
 
-            // 当前光标位置
-            int offset = event.getEditor().getCaretModel().getOffset();
-            int line = event.getEditor().getCaretModel().getLogicalPosition().line;
-            int column = event.getEditor().getCaretModel().getLogicalPosition().column;
+        System.out.println("Cursor moved -> " + virtualFile.getName() + ":" + line + ":" + column);
 
-            System.out.println("Cursor moved -> " + virtualFile.getName() + ":" + line + ":" + column);
+        var selectionModel = event.getEditor().getSelectionModel();
 
-            Document currentDocument= FileDocumentManager.getInstance().getDocument(virtualFile);
+        String selectedText = selectionModel.getSelectedText();
 
-            // 这里写你的逻辑
-//            System.out.println("File changed: " + file.getPath());
-            String newContent = currentDocument.getText();
-//            System.out.println("文件内容变为: " + newContent);
+        if (selectionModel.hasSelection()) {
+          int start = selectionModel.getSelectionStart();
+          int end = selectionModel.getSelectionEnd();
+          int startLine = editor.getDocument().getLineNumber(start);
+          int endLine = editor.getDocument().getLineNumber(end);
+          System.out.println("选中: 第" + (startLine+1) + "行 到 第" + (endLine+1) + "行");
+        } else {
+          // 无选区 → 单纯光标移动
+           line = editor.getCaretModel().getLogicalPosition().line;
+          System.out.println("光标移到第" + (line+1) + "行");
+        }
+        if (virtualFile != null) {
+          System.out.println("选中文件: " + virtualFile.getName());
+          System.out.println("选中文件: " + virtualFile.getPath());
+        }
 
-//            VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(currentDocument);
-            if (virtualFile != null) {
-              System.out.println("选中文件: " + virtualFile.getName());
-              System.out.println("选中文件: " + virtualFile.getPath());
-            }
-//            Messages.showInfoMessage("selection ", line+"");
+        BusMessage busMessage = new BusMessage();
+        busMessage.setOffset(offset);
+        busMessage.setLine(line);
+        busMessage.setVirtualFile(virtualFile);
+        busMessage.setEditor(event.getEditor());
 
-            BusMessage busMessage=new BusMessage();
-            busMessage.setOffset(offset);
-            busMessage.setLine(line);
-            busMessage.setVirtualFile(virtualFile);
-            // 发布消息到 MessageBus
-            ApplicationManager.getApplication()
-                .getMessageBus()
-                .syncPublisher(FileSelectChangeListener.TOPIC)
-                .onMessage(busMessage);
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(virtualFile);
+        busMessage.setCurrentDocument(currentDocument);
 
+        // 发布消息到 MessageBus
+        ApplicationManager.getApplication()
+            .getMessageBus()
+            .syncPublisher(FileSelectChangeListener.TOPIC)
+            .onMessage(busMessage);
 
+      }
 
-          }
+      @Override
+      public void caretAdded(@NotNull CaretEvent event) {
+        // 多光标：新增了一个光标
+      }
 
-          @Override
-          public void caretAdded(@NotNull CaretEvent event) {
-            // 多光标：新增了一个光标
-          }
-
-          @Override
-          public void caretRemoved(@NotNull CaretEvent event) {
-            // 多光标：移除了一个光标
-          }
-        });
-
+      @Override
+      public void caretRemoved(@NotNull CaretEvent event) {
+        // 多光标：移除了一个光标
+      }
+    });
 
   }
-
 
 }

@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify initListener, onContentChanged, initScrooller">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/BusMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/MyStartupActivity.java" afterDir="false" />
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="adding listener  select">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/broadCast/MyFileEditorManagerListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/FileContentChangeListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/FileSelectChangeListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/BusMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/BusMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/MyStartupActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/MyStartupActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -120,51 +116,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build LsyfOllama.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.D:/000/LsyfOllama.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.G:/000workplace/LsyfOllama [runIde].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.LsyfOllama [:com.lsyf.lsyfollama.test.GenerateExampleTest.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [assemble].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [buildDependents].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [buildKotlinToolingMetadata].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [buildPlugin].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [compileJava].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.LsyfOllama [runIde].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [stop].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [verifyPlugin].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Run Plugin.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Shell Script.push.executor&quot;: &quot;Run&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/000workplace/LsyfOllama&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.5427783&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build LsyfOllama.executor": "Run",
+    "Gradle.D:/000/LsyfOllama.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.G:/000workplace/LsyfOllama [runIde].executor": "Debug",
+    "Gradle.LsyfOllama [:com.lsyf.lsyfollama.test.GenerateExampleTest.main()].executor": "Run",
+    "Gradle.LsyfOllama [assemble].executor": "Run",
+    "Gradle.LsyfOllama [buildDependents].executor": "Run",
+    "Gradle.LsyfOllama [buildKotlinToolingMetadata].executor": "Run",
+    "Gradle.LsyfOllama [buildPlugin].executor": "Run",
+    "Gradle.LsyfOllama [build].executor": "Run",
+    "Gradle.LsyfOllama [clean].executor": "Run",
+    "Gradle.LsyfOllama [compileJava].executor": "Debug",
+    "Gradle.LsyfOllama [runIde].executor": "Run",
+    "Gradle.LsyfOllama [stop].executor": "Run",
+    "Gradle.LsyfOllama [verifyPlugin].executor": "Run",
+    "Gradle.Run Plugin.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Shell Script.push.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "develop",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/000workplace/LsyfOllama",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.5427783",
+    "settings.editor.selected.configurable": "MyPlugin.Settings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\000workplace\LsyfOllama" />
@@ -187,6 +183,7 @@
       <command value="gradle buildPlugin" />
       <command value="gradle  verifyPlugin" />
       <command value="gradle  stop" />
+      <command value="gradle clean" />
     </option>
   </component>
   <component name="RunDashboard">
@@ -624,7 +621,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787497008288</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="adding listener  select">
+      <option name="closed" value="true" />
+      <created>1787996105218</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1787996105218</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -645,7 +650,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix bug" />
     <MESSAGE value="fix bug url" />
     <MESSAGE value="fix bug thinking" />
     <MESSAGE value="ReadCurrentFile" />
@@ -670,7 +674,8 @@
     <MESSAGE value="优化代码结构" />
     <MESSAGE value="chat content" />
     <MESSAGE value="Modify initListener, onContentChanged, initScrooller" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modify initListener, onContentChanged, initScrooller" />
+    <MESSAGE value="adding listener  select" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding listener  select" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -682,7 +687,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java</url>
-          <line>137</line>
+          <line>164</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
