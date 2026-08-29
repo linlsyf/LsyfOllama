@@ -10,11 +10,15 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.cofig.SettingsConfig;
 import com.lsyf.lsyfollama.constant.Contant;
+import com.lsyf.lsyfollama.constant.EvenBusContants;
 import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import com.lsyf.lsyfollama.evenbus.BusMessage;
+import com.lsyf.lsyfollama.evenbus.MyGlobalNotifier;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.*;
 import lombok.Data;
@@ -212,12 +216,6 @@ public class ChatRootView {
     inputField.setForeground(JBColor.namedColor("TextField.foreground"));
     inputField.setCaretColor(JBColor.namedColor("TextField.caretForeground"));
 
-    JButton sendButton = bottomView.getSendButton();
-    sendButton.setPreferredSize(JBUI.size(80, 32));
-    sendButton.setFocusPainted(false);
-    sendButton.setBackground(JBColor.namedColor("Button.background"));
-    sendButton.setForeground(JBColor.namedColor("Button.foreground"));
-    sendButton.setBorder(JBUI.Borders.empty(4, 12));
 
     chatPanel.add(bottomPanel, BorderLayout.SOUTH);
   }
@@ -226,20 +224,20 @@ public class ChatRootView {
    * 初始化事件监听器 - 新增设置按钮监听
    */
   private void initListeners() {
-    // 发送按钮
-    bottomView.getSendButton().addActionListener(e -> {
-      String buttonText = bottomView.getSendButton().getText();
-      if (buttonText.equals(Contant.SEND)) {
-        String prompt = bottomView.getInputField().getText().trim();
-        if (!prompt.isEmpty()) {
-          bottomView.getSendButton().setText(Contant.STOP);
-          sendMessage(prompt);
-        }
-      } else {
-        bottomView.getSendButton().setText(Contant.SEND);
-        stopGeneration();
-      }
-    });
+//    // 发送按钮
+//    bottomView.getSendButton().addActionListener(e -> {
+//      String buttonText = bottomView.getSendButton().getText();
+//      if (buttonText.equals(Contant.SEND)) {
+//        String prompt = bottomView.getInputField().getText().trim();
+//        if (!prompt.isEmpty()) {
+//          bottomView.getSendButton().setText(Contant.STOP);
+//          sendMessage(prompt);
+//        }
+//      } else {
+//        bottomView.getSendButton().setText(Contant.SEND);
+//        stopGeneration();
+//      }
+//    });
 
     // 清空按钮 - 同时清空缓存
     cleanButton.addActionListener(e -> {
@@ -263,6 +261,30 @@ public class ChatRootView {
         sendMessage(prompt);
       }
     });
+
+
+
+
+    MessageBusConnection conn = ApplicationManager.getApplication()
+        .getMessageBus().connect();
+
+    conn.subscribe(MyGlobalNotifier.TOPIC, new MyGlobalNotifier() {
+      @Override
+      public void onDatasChanged(BusMessage busMessage) {
+          if (EvenBusContants.SEND_MESSAGE.equals(busMessage.getKey())){
+            String prompt=busMessage.getValue().toString();
+            sendMessage(prompt);
+          }
+          else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())){
+            stopGeneration();
+          }
+
+      }
+
+    });
+
+// 不用时释放，或挂到某个 Disposable 上自动释放
+// conn.disconnect();
   }
 
   /**

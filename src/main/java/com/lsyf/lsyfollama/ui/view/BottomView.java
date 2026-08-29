@@ -1,9 +1,19 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.ui.JBColor;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.ui.JBUI;
+import com.lsyf.lsyfollama.constant.Contant;
+import com.lsyf.lsyfollama.constant.EvenBusContants;
+import com.lsyf.lsyfollama.evenbus.BusMessage;
+import com.lsyf.lsyfollama.evenbus.MyGlobalNotifier;
 import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.lsyf.lsyfollama.constant.EvenBusContants.TYPE_BUSINESS;
 
 @Data
 public class BottomView {
@@ -32,10 +42,51 @@ public class BottomView {
     southContainer.add(selectScroolPanel, BorderLayout.NORTH);  // 标签在上方
     southContainer.add(inputPanel, BorderLayout.CENTER);    // 输入框在下方
 
-
-
+    initListener();
 
     return southContainer;
+  }
+
+  public void initListener() {
+
+    sendButton.setPreferredSize(JBUI.size(80, 32));
+    sendButton.setFocusPainted(false);
+    sendButton.setBackground(JBColor.namedColor("Button.background"));
+    sendButton.setForeground(JBColor.namedColor("Button.foreground"));
+    sendButton.setBorder(JBUI.Borders.empty(4, 12));
+
+    MessageBus bus = ApplicationManager.getApplication().getMessageBus();
+
+
+
+    sendButton.addActionListener(e -> {
+      String buttonText =sendButton.getText();
+      if (buttonText.equals(Contant.SEND)) {
+        String prompt = inputField.getText().trim();
+        if (!prompt.isEmpty()) {
+          sendButton.setText(Contant.STOP);
+//          sendMessage(prompt);
+
+          MyGlobalNotifier publisher = bus.syncPublisher(MyGlobalNotifier.TOPIC);
+          BusMessage busMessage=new BusMessage();
+          busMessage.setKey(EvenBusContants.SEND_MESSAGE);
+          busMessage.setValue(prompt);
+          busMessage.setMessageType(TYPE_BUSINESS);
+          publisher.onDatasChanged(busMessage);
+        }
+      } else {
+        sendButton.setText(Contant.SEND);
+//        stopGeneration();
+        MyGlobalNotifier publisher = bus.syncPublisher(MyGlobalNotifier.TOPIC);
+        BusMessage busMessage=new BusMessage();
+        busMessage.setKey(EvenBusContants.STOP_MESSAGE);
+        busMessage.setMessageType(TYPE_BUSINESS);
+
+        publisher.onDatasChanged(busMessage);
+      }
+
+
+    });
   }
 
 }

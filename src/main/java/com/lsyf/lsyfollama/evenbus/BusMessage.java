@@ -12,4 +12,8 @@ public class BusMessage {
   int line;
   Editor editor;
   Document currentDocument;
+
+  String key;
+  Object value;
+  String messageType;
 }
