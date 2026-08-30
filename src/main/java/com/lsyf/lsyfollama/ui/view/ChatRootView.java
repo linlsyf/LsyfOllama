@@ -237,6 +237,10 @@ public class ChatRootView {
     conn.subscribe(LsyfGlobalNotifier.TOPIC, new LsyfGlobalNotifier() {
       @Override
       public void onDatasChanged(BusMessage busMessage) {
+        if (!EvenBusContants.TYPE_BUSINESS.equals(busMessage.getMessageType())) {
+          return;
+        }
+
         if (EvenBusContants.SEND_MESSAGE.equals(busMessage.getKey())) {
           String prompt = busMessage.getValue().toString();
           sendMessage(prompt);
@@ -248,8 +252,6 @@ public class ChatRootView {
 
     });
 
-// 不用时释放，或挂到某个 Disposable 上自动释放
-// conn.disconnect();
   }
 
   /**
@@ -268,12 +270,6 @@ public class ChatRootView {
             project,
             SettingsConfig.class
         );
-
-        // 方式二：打开通用设置，然后导航到 Ollama（备选）
-        // ShowSettingsUtil.getInstance().showSettingsDialog(project, "Ollama");
-
-        // 方式三：打开所有设置，用户手动找到 Ollama
-        // ShowSettingsUtil.getInstance().showSettingsDialog(project);
 
       } catch (Exception e) {
         // 如果找不到 OllamaSettingsConfigurable，则打开通用设置
@@ -550,8 +546,8 @@ public class ChatRootView {
           messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
         }
 
-       String codeContext= ProjectInitData.getInstance().getDocumentContent();
-        String openfileContent=
+        String codeContext = ProjectInitData.getInstance().getDocumentContent();
+        String openfileContent =
             "你是一个Java代码助手。以下是用户当前打开的文件代码，请基于它回答问题：\n\n" +
                 "```java\n" + codeContext + "\n```";
 
@@ -721,8 +717,6 @@ public class ChatRootView {
     }
     return "";
   }
-
-
 
   /**
    * 获取主面板（供ToolWindow注册使用）

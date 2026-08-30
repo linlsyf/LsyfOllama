@@ -32,7 +32,7 @@ public class SettingsConfig implements Configurable {
     // 可以添加更多状态切换逻辑
 //    initViewValue();
     PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_IS_AI_SETTING, stateCurrent);
-     stateCurrent = PropertiesComponent.getInstance().getBoolean(ChatConstant.MY_COMMIT_IS_AI_SETTING, false);
+    stateCurrent = PropertiesComponent.getInstance().getBoolean(ChatConstant.MY_COMMIT_IS_AI_SETTING, false);
     String stateStr = settingView.getIsAiDesc(stateCurrent);
     settingView.getToggleButton().setText(stateStr);
   }
@@ -106,6 +106,5 @@ public class SettingsConfig implements Configurable {
   public String getDisplayName() {
     return "lsyfSettings";
   }
-
 
 }

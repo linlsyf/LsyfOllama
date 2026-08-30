@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.lsyf"
-version = "0.0.2"
+version = "0.0.3"
 
 // ✅ 关键修复：强制指定 JDK 21（IntelliJ Platform Plugin 2.x 必须）
 java {

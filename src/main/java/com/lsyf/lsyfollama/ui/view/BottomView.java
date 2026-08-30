@@ -57,18 +57,15 @@ public class BottomView {
 
     MessageBus bus = ApplicationManager.getApplication().getMessageBus();
 
-
-
     sendButton.addActionListener(e -> {
-      String buttonText =sendButton.getText();
+      String buttonText = sendButton.getText();
       if (buttonText.equals(Contant.SEND)) {
         String prompt = inputField.getText().trim();
         if (!prompt.isEmpty()) {
           sendButton.setText(Contant.STOP);
-//          sendMessage(prompt);
 
           LsyfGlobalNotifier publisher = bus.syncPublisher(LsyfGlobalNotifier.TOPIC);
-          BusMessage busMessage=new BusMessage();
+          BusMessage busMessage = new BusMessage();
           busMessage.setKey(EvenBusContants.SEND_MESSAGE);
           busMessage.setValue(prompt);
           busMessage.setMessageType(TYPE_BUSINESS);
@@ -76,15 +73,13 @@ public class BottomView {
         }
       } else {
         sendButton.setText(Contant.SEND);
-//        stopGeneration();
         LsyfGlobalNotifier publisher = bus.syncPublisher(LsyfGlobalNotifier.TOPIC);
-        BusMessage busMessage=new BusMessage();
+        BusMessage busMessage = new BusMessage();
         busMessage.setKey(EvenBusContants.STOP_MESSAGE);
         busMessage.setMessageType(TYPE_BUSINESS);
 
         publisher.onDatasChanged(busMessage);
       }
-
 
     });
   }
