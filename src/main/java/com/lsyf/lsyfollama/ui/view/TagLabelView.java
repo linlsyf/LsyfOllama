@@ -32,11 +32,7 @@ public class TagLabelView extends JPanel {
   List<String> commonTags;
 
   public JScrollPane createFilsList(JTextField inputField) {
-    commonTags = Arrays.asList(
-        "accept code", "repair code", "口语练习", "听力技巧",
-        "阅读理解", "写作模板", "词汇积累", "发音纠正",
-        "商务英语", "旅游英语", "考试技巧", "每日一句"
-    );
+    commonTags = Arrays.asList( );
     this.inputField = inputField;
     tagScrollPane = initScrooller();
     initListener();

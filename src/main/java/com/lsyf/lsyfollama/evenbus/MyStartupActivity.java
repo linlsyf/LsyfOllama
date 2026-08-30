@@ -66,9 +66,18 @@ public class MyStartupActivity implements ProjectActivity {
     return Unit.INSTANCE;
   }
 
-
-
   public static void install() {
+
+//    Project project=ProjectInitData.getInstance().getProject();
+//    Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+//    if (editor != null) {
+//      editor.getCaretModel().addCaretListener(new CaretListener() {
+//        @Override
+//        public void caretPositionChanged(@NotNull CaretEvent e) {
+//          // e.getCaret(), e.getEditor()
+//        }
+//      }, ApplicationManager.getApplication().getDisposed());
+//    }
 
     EditorFactory.getInstance().getEventMulticaster().addCaretListener(new CaretListener() {
 
@@ -93,19 +102,18 @@ public class MyStartupActivity implements ProjectActivity {
 
         var selectionModel = event.getEditor().getSelectionModel();
 
-        String selectedText = selectionModel.getSelectedText();
-
+//        String selectedText = selectionModel.getSelectedText();
 
         if (selectionModel.hasSelection()) {
           int start = selectionModel.getSelectionStart();
           int end = selectionModel.getSelectionEnd();
           int startLine = editor.getDocument().getLineNumber(start);
           int endLine = editor.getDocument().getLineNumber(end);
-          System.out.println("选中: 第" + (startLine+1) + "行 到 第" + (endLine+1) + "行");
+          System.out.println("选中: 第" + (startLine + 1) + "行 到 第" + (endLine + 1) + "行");
         } else {
           // 无选区 → 单纯光标移动
-           line = editor.getCaretModel().getLogicalPosition().line;
-          System.out.println("光标移到第" + (line+1) + "行");
+          line = editor.getCaretModel().getLogicalPosition().line;
+          System.out.println("光标移到第" + (line + 1) + "行");
         }
         if (virtualFile != null) {
           System.out.println("选中文件: " + virtualFile.getName());
@@ -122,7 +130,6 @@ public class MyStartupActivity implements ProjectActivity {
 
         String fullText = editor.getDocument().getText();
         ProjectInitData.getInstance().setDocumentContent(fullText);
-
 
         busMessage.setCurrentDocument(currentDocument);
 

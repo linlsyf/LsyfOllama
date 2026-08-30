@@ -110,18 +110,20 @@ public final class DiffPreviewUtil {
     SelectionModel selectionModel = editor.getSelectionModel();
     String selectedText = selectionModel.getSelectedText();
     int lineEndOffset;
-    int lineNumber=0;
-    if (StringUtil.isNotEmpty(selectedText)) {
+    int lineNumber = 0;
+    if (StringUtil.isNotEmpty(selectedText) && StringUtil.isNotEmpty(document.getText())) {
       CaretModel caretModel = editor.getCaretModel(); // 获取光标模型
 
       int caretOffset = caretModel.getOffset(); // 光标在文档中的偏移量
 
-       lineNumber = document.getLineNumber(caretOffset); // 当前行号（从0开始）
+      lineNumber = document.getLineNumber(caretOffset); // 当前行号（从0开始）
       int lineStartOffset = document.getLineStartOffset(lineNumber); // 行起始偏移量
       lineEndOffset = document.getLineEndOffset(lineNumber); // 行结束偏移量
+
       selectedText = document.getText().substring(lineStartOffset, lineEndOffset); // 当前行文本
     } else {
       lineEndOffset = 0;
+      selectedText = document.getText();
     }
 
     DiffPreviewUtil.showDiffPreview(
@@ -133,6 +135,9 @@ public final class DiffPreviewUtil {
         newText,
         finalText -> {
           WriteCommandAction.runWriteCommandAction(project, () -> {
+            if (lineEndOffset == 0) {
+              document.setText(""); // 清空所有内容
+            }
 
             int insertPos = document.getLineEndOffset(
                 document.getLineNumber(Math.min(lineEndOffset, document.getTextLength())));

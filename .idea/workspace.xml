@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="listener for all">
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="实现打开监听文件">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/ProjectInitData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/ProjectInitData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/MyGlobalNotifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/LsyfGlobalNotifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/MyStartupActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/evenbus/MyStartupActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/BottomView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/DiffPreviewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/DiffPreviewUtil.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -102,6 +101,7 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.ollama4j/ollama4j/1.1.4/b19a9d05e5819302a13837f2381baea6679c1a5f/ollama4j-1.1.4-sources.jar!/io/github/ollama4j/models/chat/OllamaChatMessage.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f41b66af9925b6476e18c77d476f905710ee8488/lombok-1.18.30-sources.jar!/lombok/Data.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -159,7 +159,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.5427783&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MyPlugin.Settings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -195,7 +195,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.Run Plugin">
+  <component name="RunManager" selected="Gradle.LsyfOllama [buildPlugin]">
     <configuration name="LsyfOllama [buildPlugin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -315,20 +315,20 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Gradle.Run Plugin" />
+      <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
       <item itemvalue="Gradle.LsyfOllama [clean]" />
       <item itemvalue="Gradle.LsyfOllama [stop]" />
-      <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
       <item itemvalue="Gradle.LsyfOllama [verifyPlugin]" />
       <item itemvalue="Shell Script.buildPlugin" />
       <item itemvalue="Shell Script.push" />
+      <item itemvalue="Gradle.Run Plugin" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.LsyfOllama [clean]" />
-        <item itemvalue="Gradle.LsyfOllama [stop]" />
         <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
+        <item itemvalue="Gradle.LsyfOllama [clean]" />
         <item itemvalue="Gradle.LsyfOllama [verifyPlugin]" />
+        <item itemvalue="Gradle.LsyfOllama [stop]" />
       </list>
     </recent_temporary>
   </component>
@@ -639,7 +639,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788015008013</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="实现打开监听文件">
+      <option name="closed" value="true" />
+      <created>1788016263679</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1788016263679</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -660,7 +668,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix bug thinking" />
     <MESSAGE value="ReadCurrentFile" />
     <MESSAGE value="createFilsList" />
     <MESSAGE value="view single" />
@@ -685,7 +692,8 @@
     <MESSAGE value="Modify initListener, onContentChanged, initScrooller" />
     <MESSAGE value="adding listener  select" />
     <MESSAGE value="listener for all" />
-    <option name="LAST_COMMIT_MESSAGE" value="listener for all" />
+    <MESSAGE value="实现打开监听文件" />
+    <option name="LAST_COMMIT_MESSAGE" value="实现打开监听文件" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -697,7 +705,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java</url>
-          <line>164</line>
+          <line>160</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
