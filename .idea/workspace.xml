@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify local">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/LlmContant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ModelRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ChatConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ChatConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/SettingsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/SettingsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyBroadcastListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/MyTopics.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/GitMsgCommit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/GitMsgCommit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/OllamaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/OllamaConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -120,6 +118,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.ollama4j/ollama4j/1.1.4/b19a9d05e5819302a13837f2381baea6679c1a5f/ollama4j-1.1.4-sources.jar!/io/github/ollama4j/models/chat/OllamaChatMessage.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.ollama4j/ollama4j/1.1.4/b19a9d05e5819302a13837f2381baea6679c1a5f/ollama4j-1.1.4-sources.jar!/io/github/ollama4j/models/chat/OllamaChatMessageRole.java" root0="SKIP_INSPECTION" />
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f41b66af9925b6476e18c77d476f905710ee8488/lombok-1.18.30-sources.jar!/lombok/Data.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -333,13 +332,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Gradle.Run Plugin" />
       <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
       <item itemvalue="Gradle.LsyfOllama [clean]" />
       <item itemvalue="Gradle.LsyfOllama [stop]" />
       <item itemvalue="Gradle.LsyfOllama [verifyPlugin]" />
       <item itemvalue="Shell Script.buildPlugin" />
       <item itemvalue="Shell Script.push" />
-      <item itemvalue="Gradle.Run Plugin" />
     </list>
     <recent_temporary>
       <list>
@@ -788,18 +787,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>62</line>
+          <line>64</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>117</line>
+          <line>116</line>
           <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>102</line>
-          <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/GitMsgCommit.java</url>

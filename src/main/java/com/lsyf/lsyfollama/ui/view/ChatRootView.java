@@ -18,10 +18,10 @@ import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.EvenBusContants;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.llm.ChatClient;
+import com.lsyf.lsyfollama.llm.ModelRequest;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
-import io.github.ollama4j.models.chat.OllamaChatRequest;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -79,12 +79,6 @@ public class ChatRootView {
     initBottomPanel();
     initListeners();
 
-  }
-
-  private void updateUIWithContent(String content) {
-    // 更新你的 Swing 组件
-//    myTextArea.setText(content);
-//    myLabel.setText("字符数: " + content.length());
   }
 
   /**
@@ -541,7 +535,7 @@ public class ChatRootView {
 
     appThread = new Thread(() -> {
       try {
-        OllamaChatRequest request = new OllamaChatRequest();
+//        OllamaChatRequest request = new OllamaChatRequest();
         List<OllamaChatMessage> messages = new ArrayList<>();
 
         if (StringUtils.isNotBlank(lastRequestTxt)) {
@@ -549,17 +543,12 @@ public class ChatRootView {
         }
 
         String codeContext = ProjectInitData.getInstance().getDocumentContent();
-        String openfileContent =
-            "你是一个Java代码助手。以下是用户当前打开的文件代码，请参考：\n\n" +
-                "```java\n" + codeContext + "\n```";
 
-        messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, openfileContent));
-        messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
-
-        request.setMessages(messages);
         lastRequestTxt = prompt;
-
-        ChatClient.chatStreaming(openfileContent, new ChatClient.StreamCallback() {
+          ModelRequest modelRequest=new ModelRequest();
+          modelRequest.setContent(prompt);
+          modelRequest.setContext(codeContext);
+        ChatClient.chatStreaming(modelRequest, new ChatClient.StreamCallback() {
           @Override
           public void onToken(String token) {
 
