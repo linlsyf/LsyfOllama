@@ -4,10 +4,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.JBColor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.ui.JBUI;
+import com.lsyf.lsyfollama.broadCast.evenbus.BusMessage;
+import com.lsyf.lsyfollama.broadCast.evenbus.LsyfGlobalNotifier;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.EvenBusContants;
-import com.lsyf.lsyfollama.evenbus.BusMessage;
-import com.lsyf.lsyfollama.evenbus.LsyfGlobalNotifier;
 import lombok.Data;
 
 import javax.swing.*;

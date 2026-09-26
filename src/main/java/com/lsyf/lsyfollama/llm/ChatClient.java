@@ -75,8 +75,8 @@ public class ChatClient {
           "stream", true,
           "messages", List.of(
               Map.of("role", "system", "content",
-                  "你是一个开发专家，直接回答问题,不要任何解释"),
-//                  "你是一个" + ChatConstant.DEV_LAN + "专家，仅输出代码，不要任何解释"),
+//                  "你是一个开发专家，直接回答问题,不要任何解释"),
+                  "你是一个" + ChatConstant.DEV_LAN + "专家，仅输出代码，不要任何解释"),
               Map.of("role", "user", "content", selectedText)
           )
       ));

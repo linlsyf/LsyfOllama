@@ -1,4 +1,4 @@
-package com.lsyf.lsyfollama.ui.Activity;
+package com.lsyf.lsyfollama.ui.activity;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerListener;

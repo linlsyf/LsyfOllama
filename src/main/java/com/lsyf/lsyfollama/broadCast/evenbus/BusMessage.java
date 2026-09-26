@@ -1,4 +1,4 @@
-package com.lsyf.lsyfollama.evenbus;
+package com.lsyf.lsyfollama.broadCast.evenbus;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;

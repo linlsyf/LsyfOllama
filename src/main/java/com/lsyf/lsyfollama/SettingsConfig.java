@@ -1,8 +1,7 @@
-package com.lsyf.lsyfollama.config;
+package com.lsyf.lsyfollama;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
-import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.ui.view.SettingView;
 import org.jetbrains.annotations.Nullable;

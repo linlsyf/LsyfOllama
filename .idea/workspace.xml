@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="http request- testing">
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/CodeGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/CodeGen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/GitMsgCommit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/business/genCode/GitMsgCommit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/OllamaClientHolder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/OllamaClientUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/SSLUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" afterDir="false" />
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify client">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -681,7 +674,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790394092386</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Modify client">
+      <option name="closed" value="true" />
+      <created>1790401127611</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1790401127611</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -702,7 +703,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="view single" />
     <MESSAGE value="rish  update" />
     <MESSAGE value="@data   use" />
     <MESSAGE value="repari pluin" />
@@ -727,7 +727,8 @@
     <MESSAGE value="实现打开监听文件" />
     <MESSAGE value="code format" />
     <MESSAGE value="http request- testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="http request- testing" />
+    <MESSAGE value="Modify client" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify client" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -774,13 +775,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>88</line>
-          <option name="timeStamp" value="56" />
+          <line>102</line>
+          <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>102</line>
-          <option name="timeStamp" value="60" />
+          <line>89</line>
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,4 +1,4 @@
-package com.lsyf.lsyfollama.ui.actions;
+package com.lsyf.lsyfollama.business.actions;
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;

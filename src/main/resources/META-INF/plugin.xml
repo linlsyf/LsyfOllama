@@ -36,11 +36,11 @@
                 anchor="right"
                 icon="/META-INF/pluginIcon.svg"
                 factoryClass="com.lsyf.lsyfollama.ui.toolWindowFactory.ChatWindowHomeFactory"/>
-        <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.config.SettingsConfig"/>
+        <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.SettingsConfig"/>
         <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
         <fileEditorManagerListener implementation="com.lsyf.lsyfollama.broadCast.MyFileEditorManagerListener"/>
 
-        <postStartupActivity implementation="com.lsyf.lsyfollama.evenbus.MyStartupActivity"/>
+        <postStartupActivity implementation="com.lsyf.lsyfollama.broadCast.evenbus.MyStartupActivity"/>
     </extensions>
     <projectListeners>
         <listener class="com.lsyf.lsyfollama.broadCast.MyViewListener"
@@ -49,23 +49,23 @@
     <actions>
 
 
-        <action id="linlsyfQuery" class="com.lsyf.lsyfollama.ui.actions.ContextMenuSearchAction" text="linlsyfQuery"
+        <action id="linlsyfQuery" class="com.lsyf.lsyfollama.business.actions.ContextMenuSearchAction" text="linlsyfQuery"
                 description="显示修复建议">
 
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="linlsyfRepair" class="com.lsyf.lsyfollama.ui.actions.ContextMenuRepairAction" text="linlsyfRepair"
+        <action id="linlsyfRepair" class="com.lsyf.lsyfollama.business.actions.ContextMenuRepairAction" text="linlsyfRepair"
                 description="立即修复">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
-        <action id="ApiTester.ParseCurrentFile" class="com.lsyf.lsyfollama.ui.actions.ParseApiAction"
+        <action id="ApiTester.ParseCurrentFile" class="com.lsyf.lsyfollama.business.actions.ParseApiAction"
                 text="Parse APIs in File" description="Find all API endpoints in current file">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
 
         <!-- 读取当前文件 -->
         <action id="ReadCurrentFile"
-                class="com.lsyf.lsyfollama.ui.actions.ReadCurrentFileAction"
+                class="com.lsyf.lsyfollama.business.actions.ReadCurrentFileAction"
                 text="lsyf Read Current File"
                 description="Read content of current open file">
             <add-to-group group-id="EditorPopupMenu"/>
@@ -74,7 +74,7 @@
 
         <!-- 读取所有打开文件 -->
         <action id="ReadAllOpenFiles"
-                class="com.lsyf.lsyfollama.ui.actions.ReadAllOpenFilesAction"
+                class="com.lsyf.lsyfollama.business.actions.ReadAllOpenFilesAction"
                 text="lsyf Read All Open Files"
                 description="Read all currently open files">
             <add-to-group group-id="ToolsMenu"/>
@@ -82,7 +82,7 @@
 
 
             <action id="com.example.AmendSideAction"
-                    class="com.lsyf.lsyfollama.ui.actions.AmendSideAction"
+                    class="com.lsyf.lsyfollama.business.actions.AmendSideAction"
                     text="Amend+"
                     description="在 Amend 旁执行自定义操作"
                     icon="AllIcons.Actions.Commit">
@@ -90,13 +90,13 @@
 
                 <!--                <add-to-group group-id="MainToolbarRight" anchor="last"/>-->
             </action>
-        <action id="apiTest" class="com.lsyf.lsyfollama.ui.actions.ParseApiAction" text="apiTest"
+        <action id="apiTest" class="com.lsyf.lsyfollama.business.actions.ParseApiAction" text="apiTest"
                 description="显示修复建议">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
 <!--        <add-to-group group-id="MainToolBar" anchor="after"-->
 <!--                      relative-to-action="ToolbarRunGroup"/>-->
-<!--        <startupActivity implementation="com.lsyf.lsyfollama.ui.Activity.MyPluginStartupActivity"/>-->
+<!--        <startupActivity implementation="com.lsyf.lsyfollama.ui.activity.MyPluginStartupActivity"/>-->
 
     </actions>
 
