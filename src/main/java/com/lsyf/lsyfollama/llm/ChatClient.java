@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class OllamaClientUtils {
+public class ChatClient {
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static OkHttpClient HTTP_CLIENT;
@@ -29,14 +29,18 @@ public class OllamaClientUtils {
   @FunctionalInterface
   public interface StreamCallback {
     void onToken(String token);
-    default void onDone() {}
-    default void onError(String msg) {}
+
+    default void onDone() {
+    }
+
+    default void onError(String msg) {
+    }
   }
 
   /* ==================== 非流式 ==================== */
 
   public static String processText(String selectedText) {
-    OllamaConfig cfg= ProjectInitData.getCfgInstance();
+    OllamaConfig cfg = ProjectInitData.getCfgInstance();
     try {
       String body = MAPPER.writeValueAsString(Map.of(
           "model", ChatConstant.modelSetting,
@@ -63,7 +67,7 @@ public class OllamaClientUtils {
   /* ==================== 流式 ==================== */
 
   public static void chatStreaming(String selectedText, StreamCallback cb) {
-    OllamaConfig cfg= ProjectInitData.getCfgInstance();
+    OllamaConfig cfg = ProjectInitData.getCfgInstance();
 
     try {
       String body = MAPPER.writeValueAsString(Map.of(
@@ -71,7 +75,8 @@ public class OllamaClientUtils {
           "stream", true,
           "messages", List.of(
               Map.of("role", "system", "content",
-                  "你是一个" + ChatConstant.DEV_LAN + "专家，仅输出代码，不要任何解释"),
+                  "你是一个开发专家，直接回答问题,不要任何解释"),
+//                  "你是一个" + ChatConstant.DEV_LAN + "专家，仅输出代码，不要任何解释"),
               Map.of("role", "user", "content", selectedText)
           )
       ));
@@ -90,18 +95,16 @@ public class OllamaClientUtils {
             new InputStreamReader(resp.body().byteStream(), StandardCharsets.UTF_8)
         );
 
-        StringBuilder fullResponse = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
           if (line.isBlank()) {
             continue;
           }
-
           // 提取增量 token
           String token = ResponseParser.extractOllamaStreamToken(line);
           if (!token.isEmpty()) {
-            fullResponse.append(token);
-            cb.onToken(token);   // 写入 IDEA Editor
+//            fullResponse.append(token);
+            cb.onToken(token.replace("", ""));   // 写入 IDEA Editor
           }
 
           // 检查结束
@@ -149,7 +152,8 @@ public class OllamaClientUtils {
   }
 
   private static Request.Builder baseRequest(OllamaConfig cfg, String body) {
-    String url = cfg.getBaseUrl().replaceAll("/$", "") + "/api/chat";;
+    String url = cfg.getBaseUrl().replaceAll("/$", "") + "/api/chat";
+    ;
 // 结果必须是：http://127.0.0.1:11434/api/chat
     return new Request.Builder()
         .url(url)
@@ -173,6 +177,7 @@ public class OllamaClientUtils {
     ctx.init(null, tmf.getTrustManagers(), null);
     return ctx.getSocketFactory();
   }
+
   private static X509TrustManager trustAll() {
     return new X509TrustManager() {
       @Override

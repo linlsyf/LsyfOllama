@@ -12,7 +12,7 @@ import com.intellij.vcs.commit.CommitMessageUi;
 import com.intellij.vcs.commit.CommitWorkflowUi;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.business.GitDiffUtil;
-import com.lsyf.lsyfollama.llm.OllamaClientUtils;
+import com.lsyf.lsyfollama.llm.ChatClient;
 import com.lsyf.lsyfollama.vo.DiffMsg;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,7 @@ public class GitMsgCommit {
 
               prompt = prompt + prompt;
 
-              final String newText = OllamaClientUtils.processText(prompt); // 自定义替换逻辑
+              final String newText = ChatClient.processText(prompt); // 自定义替换逻辑
 
               // 执行替换（线程安全）
               ApplicationManager.getApplication().invokeLater(() -> {

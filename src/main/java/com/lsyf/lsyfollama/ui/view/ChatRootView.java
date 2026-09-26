@@ -17,7 +17,7 @@ import com.lsyf.lsyfollama.constant.EvenBusContants;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.evenbus.BusMessage;
 import com.lsyf.lsyfollama.evenbus.LsyfGlobalNotifier;
-import com.lsyf.lsyfollama.llm.OllamaClientUtils;
+import com.lsyf.lsyfollama.llm.ChatClient;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
@@ -114,7 +114,7 @@ public class ChatRootView {
     leftPanel.setOpaque(true);
 
     // 原有的标题
-    JLabel titleLabel = new JLabel("AI 聊天助手");
+    JLabel titleLabel = new JLabel("AI助手");
     titleLabel.setFont(JBUI.Fonts.label().deriveFont(Font.BOLD, JBUI.scaleFontSize(14f)));
     titleLabel.setForeground(TEXT_COLOR);
     leftPanel.add(titleLabel);
@@ -550,7 +550,7 @@ public class ChatRootView {
 
         String codeContext = ProjectInitData.getInstance().getDocumentContent();
         String openfileContent =
-            "你是一个Java代码助手。以下是用户当前打开的文件代码，请基于它回答问题：\n\n" +
+            "你是一个Java代码助手。以下是用户当前打开的文件代码，请参考：\n\n" +
                 "```java\n" + codeContext + "\n```";
 
         messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, openfileContent));
@@ -559,18 +559,9 @@ public class ChatRootView {
         request.setMessages(messages);
         lastRequestTxt = prompt;
 
-        OllamaClientUtils.chatStreaming(openfileContent, new OllamaClientUtils.StreamCallback() {
+        ChatClient.chatStreaming(openfileContent, new ChatClient.StreamCallback() {
           @Override
           public void onToken(String token) {
-//              String thinking = response.getMessage().getThinking();
-//              String content = response.getMessage().getResponse();
-//
-//              String textToAppend;
-//              if (StringUtils.isNotBlank(thinking)) {
-//                textToAppend = thinking;
-//              } else {
-//                textToAppend = content;
-//              }
 
             if (StringUtils.isNotBlank(token)) {
               appendAIResponse(token);
@@ -579,7 +570,7 @@ public class ChatRootView {
 
           @Override
           public void onDone() {
-            OllamaClientUtils.StreamCallback.super.onDone();
+            ChatClient.StreamCallback.super.onDone();
             SwingUtilities.invokeLater(() -> {
               bottomView.getSendButton().setText(Contant.SEND);
               // 完成时更新缓存
@@ -591,7 +582,7 @@ public class ChatRootView {
 
           @Override
           public void onError(String msg) {
-            OllamaClientUtils.StreamCallback.super.onError(msg);
+            ChatClient.StreamCallback.super.onError(msg);
           }
         });
 
