@@ -1,8 +1,9 @@
-package com.lsyf.lsyfollama.cofig;
+package com.lsyf.lsyfollama.config;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.Configurable;
 import com.lsyf.lsyfollama.ChatConstant;
+import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.ui.view.SettingView;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,6 +66,10 @@ public class SettingsConfig implements Configurable {
     ChatConstant.modelSetting = MODE;
     ChatConstant.myCommitReceiptValue = commitReceipt;
     ChatConstant.myCommitJectValue = commitReject;
+
+    initModeSetting();
+
+
   }
 
   @Override
@@ -76,9 +81,17 @@ public class SettingsConfig implements Configurable {
     ChatConstant.myCommitJectValue = ChatConstant.MY_COMMIT_REJECT_VALUE;
     ChatConstant.isAiModeSave = ChatConstant.isAiModeDefault;
     initViewValue();
-
+    initModeSetting();
   }
 
+
+  public void initModeSetting() {
+
+    ProjectInitData.getCfgInstance().setBaseUrl(ChatConstant.apiUrl);
+    ProjectInitData.getCfgInstance().setModelSetting(ChatConstant.modelSetting);
+//    ProjectInitData.getCfgInstance().setApiKey(ChatConstant.apiUrl);
+//    ProjectInitData.getCfgInstance().setCaCertPath(ChatConstant.apiUrl);
+  }
   public void initViewValue() {
 
     settingView.getInputField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, ChatConstant.API_TEST));

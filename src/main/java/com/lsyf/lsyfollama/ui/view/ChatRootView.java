@@ -11,15 +11,17 @@ import com.intellij.ui.JBColor;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.JBUI;
 import com.lsyf.lsyfollama.ChatConstant;
-import com.lsyf.lsyfollama.cofig.SettingsConfig;
+import com.lsyf.lsyfollama.config.SettingsConfig;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.EvenBusContants;
-import com.lsyf.lsyfollama.constant.OllamaClientUtils;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.evenbus.BusMessage;
 import com.lsyf.lsyfollama.evenbus.LsyfGlobalNotifier;
+import com.lsyf.lsyfollama.llm.OllamaClientUtils;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
-import io.github.ollama4j.models.chat.*;
+import io.github.ollama4j.models.chat.OllamaChatMessage;
+import io.github.ollama4j.models.chat.OllamaChatMessageRole;
+import io.github.ollama4j.models.chat.OllamaChatRequest;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -557,39 +559,76 @@ public class ChatRootView {
         request.setMessages(messages);
         lastRequestTxt = prompt;
 
-        OllamaClientUtils.chatStreaming(request, new OllamaChatTokenHandler() {
+        OllamaClientUtils.chatStreaming(openfileContent, new OllamaClientUtils.StreamCallback() {
           @Override
-          public void accept(OllamaChatResponseModel response) {
-            if (stopFlag) {
-              return;
+          public void onToken(String token) {
+//              String thinking = response.getMessage().getThinking();
+//              String content = response.getMessage().getResponse();
+//
+//              String textToAppend;
+//              if (StringUtils.isNotBlank(thinking)) {
+//                textToAppend = thinking;
+//              } else {
+//                textToAppend = content;
+//              }
+
+            if (StringUtils.isNotBlank(token)) {
+              appendAIResponse(token);
             }
+          }
 
-            if (response.isDone()) {
-              SwingUtilities.invokeLater(() -> {
-                bottomView.getSendButton().setText(Contant.SEND);
-                // 完成时更新缓存
-                if (currentAIResponseArea != null) {
-                  lastCompletedAIResponse = currentAIResponseArea.getText();
-                }
-              });
-            } else {
-              String thinking = response.getMessage().getThinking();
-              String content = response.getMessage().getResponse();
-
-              String textToAppend;
-              if (StringUtils.isNotBlank(thinking)) {
-                textToAppend = thinking;
-              } else {
-                textToAppend = content;
+          @Override
+          public void onDone() {
+            OllamaClientUtils.StreamCallback.super.onDone();
+            SwingUtilities.invokeLater(() -> {
+              bottomView.getSendButton().setText(Contant.SEND);
+              // 完成时更新缓存
+              if (currentAIResponseArea != null) {
+                lastCompletedAIResponse = currentAIResponseArea.getText();
               }
+            });
+          }
 
-              if (StringUtils.isNotBlank(textToAppend)) {
-                appendAIResponse(textToAppend);
-              }
-            }
+          @Override
+          public void onError(String msg) {
+            OllamaClientUtils.StreamCallback.super.onError(msg);
           }
         });
 
+
+
+//          @Override
+//          public void accept(OllamaChatResponseModel response) {
+//            if (stopFlag) {
+//              return;
+//            }
+//
+//            if (response.isDone()) {
+//              SwingUtilities.invokeLater(() -> {
+//                bottomView.getSendButton().setText(Contant.SEND);
+//                // 完成时更新缓存
+//                if (currentAIResponseArea != null) {
+//                  lastCompletedAIResponse = currentAIResponseArea.getText();
+//                }
+//              });
+//            } else {
+//              String thinking = response.getMessage().getThinking();
+//              String content = response.getMessage().getResponse();
+//
+//              String textToAppend;
+//              if (StringUtils.isNotBlank(thinking)) {
+//                textToAppend = thinking;
+//              } else {
+//                textToAppend = content;
+//              }
+//
+//              if (StringUtils.isNotBlank(textToAppend)) {
+//                appendAIResponse(textToAppend);
+//              }
+//            }
+//          }
+//        });
+//
       } catch (Exception e) {
         if (!stopFlag) {
           appendAIResponse("\n❌ 错误: " + e.getMessage() + "\n");

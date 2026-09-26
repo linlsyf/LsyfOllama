@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.lsyf"
-version = "0.0.3"
+version = "0.0.4"
 
 // ✅ 关键修复：强制指定 JDK 21（IntelliJ Platform Plugin 2.x 必须）
 java {
@@ -40,6 +40,8 @@ dependencies {
     }
 
     implementation("io.github.ollama4j:ollama4j:1.1.4")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 }
 
 intellijPlatform {

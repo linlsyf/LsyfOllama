@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.lsyf.lsyfollama.constant.OllamaClientUtils;
+import com.lsyf.lsyfollama.llm.OllamaClientUtils;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 
 public class CodeGen {
@@ -41,7 +41,6 @@ public class CodeGen {
 //                "输出格式要求：纯代码，无换行符(\\n)或描述 \n";
     String prompt = actionDesc + selectedText + "  仅输出代码，不要任何解释、注释或额外文本。\n" +
         "输出格式要求：纯代码，无换行符(\\n)或描述 \n";
-
     final String newText = OllamaClientUtils.processText(prompt); // 自定义替换逻辑
     int endOffset = selectionModel.getSelectionEnd();
     int lineEndOffset = document.getLineEndOffset(document.getLineNumber(endOffset));

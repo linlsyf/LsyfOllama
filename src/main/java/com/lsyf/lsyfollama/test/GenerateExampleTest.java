@@ -1,12 +1,12 @@
 package com.lsyf.lsyfollama.test;
 
 import com.lsyf.lsyfollama.ChatConstant;
-import com.lsyf.lsyfollama.constant.OllamaClientUtils;
-import io.github.ollama4j.models.chat.*;
+import io.github.ollama4j.models.chat.OllamaChatMessage;
+import io.github.ollama4j.models.chat.OllamaChatMessageRole;
+import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.generate.OllamaGenerateRequest;
 import io.github.ollama4j.models.generate.OllamaGenerateStreamObserver;
 import io.github.ollama4j.models.generate.OllamaGenerateTokenHandler;
-import io.github.ollama4j.models.response.OllamaResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +38,13 @@ public class GenerateExampleTest {
         messages.add(new OllamaChatMessage(OllamaChatMessageRole.SYSTEM, promptSyStem));
         messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, prompt));
         request.setMessages(messages); // 必须包含消息列表
-        OllamaClientUtils.ollama.chat(request, new OllamaChatTokenHandler() {
-            @Override
-            public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
-//                  ollamaChatResponseModel.
-                System.out.println(ollamaChatResponseModel.getMessage().getResponse());
-            }
-        });
+//        OllamaClientUtils.ollama.chat(request, new OllamaChatTokenHandler() {
+//            @Override
+//            public void accept(OllamaChatResponseModel ollamaChatResponseModel) {
+////                  ollamaChatResponseModel.
+//                System.out.println(ollamaChatResponseModel.getMessage().getResponse());
+//            }
+//        });
 //        extracted();
 
 
@@ -94,8 +94,8 @@ public class GenerateExampleTest {
             }
         });
 
-        OllamaResult result =  OllamaClientUtils.ollama.generate(request,streamObserver);
-        System.out.println(result.getResponse());
+//        OllamaResult result =  OllamaClientUtils.ollama.generate(request,streamObserver);
+//        System.out.println(result.getResponse());
 
 
     }
