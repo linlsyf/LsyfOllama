@@ -9,8 +9,7 @@ public class OllamaConfig {
   private  String apiKey;
   private  String caCertPath;
 
-  public OllamaConfig() {
-  }
+
 
 
 }

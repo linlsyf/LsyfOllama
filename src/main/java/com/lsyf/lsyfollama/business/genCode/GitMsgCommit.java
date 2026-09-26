@@ -24,18 +24,14 @@ public class GitMsgCommit {
   public static void setCommit(AnActionEvent e) {
 
     Project project = e.getProject();
-
 //        Change[] changes = GitDiffUtil.getCommitChanges(e);
 //        Change[] changes = e.getData(VcsDataKeys.CHANGES);
-
 //        // 兜底：直接取 COMMIT_WORKFLOW_UI（社区实测可用 [6](@ref)）
     CommitWorkflowUi workflowUi = e.getData(VcsDataKeys.COMMIT_WORKFLOW_UI);
     if (workflowUi == null) {
       Messages.showInfoMessage("messageUi  is  null", "Debug");
       return;
     }
-
-//
 //// 优先使用 CommitMessageUi（新 API）
     CommitMessageUi messageUi = workflowUi.getCommitMessageUi();
 
@@ -52,19 +48,13 @@ public class GitMsgCommit {
             }
 
             if (ChatConstant.isAiModeSave) {
-              // 2. 调用 AI
-
               String prompt = diff.getGitmsg() + "  根据git信息 总结修改内容。\n" +
                   "输出格式要求：纯代码，无换行符(\\n)或描述 输入为英文内容 \n" +
                   "git信息如下: \n";
-
               prompt = prompt + prompt;
-
               final String newText = ChatClient.processText(prompt); // 自定义替换逻辑
-
               // 执行替换（线程安全）
               ApplicationManager.getApplication().invokeLater(() -> {
-
                 messageUi.setText(newText);
               });
 

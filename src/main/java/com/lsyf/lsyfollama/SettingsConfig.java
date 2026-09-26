@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+import static com.lsyf.lsyfollama.ChatConstant.isAiModeSave;
+
 public class SettingsConfig implements Configurable {
 
   SettingView settingView;
@@ -26,13 +28,9 @@ public class SettingsConfig implements Configurable {
 
   private void toggleState() {
     boolean state = PropertiesComponent.getInstance().getBoolean(ChatConstant.MY_COMMIT_IS_AI_SETTING, false);
-
     boolean stateCurrent = !state;
-
-    // 可以添加更多状态切换逻辑
-//    initViewValue();
+    isAiModeSave = stateCurrent;
     PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_IS_AI_SETTING, stateCurrent);
-    stateCurrent = PropertiesComponent.getInstance().getBoolean(ChatConstant.MY_COMMIT_IS_AI_SETTING, false);
     String stateStr = settingView.getIsAiDesc(stateCurrent);
     settingView.getToggleButton().setText(stateStr);
   }
@@ -60,6 +58,7 @@ public class SettingsConfig implements Configurable {
     PropertiesComponent.getInstance().setValue(ChatConstant.MY_MODEL_SETTING, MODE);
     PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_RECEIPT_SETTING, commitReceipt);
     PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_REJECT_SETTING, commitReject);
+    PropertiesComponent.getInstance().setValue(ChatConstant.MY_COMMIT_IS_AI_SETTING, isAiModeSave);
 
     ChatConstant.apiUrl = IP;
     ChatConstant.modelSetting = MODE;
@@ -67,7 +66,6 @@ public class SettingsConfig implements Configurable {
     ChatConstant.myCommitJectValue = commitReject;
 
     initModeSetting();
-
 
   }
 
@@ -78,11 +76,10 @@ public class SettingsConfig implements Configurable {
     ChatConstant.modelSetting = ChatConstant.modelSetting;
     ChatConstant.myCommitReceiptValue = ChatConstant.MY_COMMIT_RECEIPT_VALUE;
     ChatConstant.myCommitJectValue = ChatConstant.MY_COMMIT_REJECT_VALUE;
-    ChatConstant.isAiModeSave = ChatConstant.isAiModeDefault;
+    isAiModeSave = false;
     initViewValue();
     initModeSetting();
   }
-
 
   public void initModeSetting() {
 
@@ -91,6 +88,7 @@ public class SettingsConfig implements Configurable {
 //    ProjectInitData.getCfgInstance().setApiKey(ChatConstant.apiUrl);
 //    ProjectInitData.getCfgInstance().setCaCertPath(ChatConstant.apiUrl);
   }
+
   public void initViewValue() {
 
     settingView.getInputField().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_PLUGIN_SETTING, ChatConstant.API_TEST));
@@ -99,6 +97,7 @@ public class SettingsConfig implements Configurable {
     settingView.getCommitRejectFied().setText(PropertiesComponent.getInstance().getValue(ChatConstant.MY_COMMIT_REJECT_SETTING, ChatConstant.SETTING_RECEJCT));
 
     boolean state = PropertiesComponent.getInstance().getBoolean(ChatConstant.MY_COMMIT_IS_AI_SETTING, false);
+
     String stateStr = settingView.getIsAiDesc(state);
     settingView.getToggleButton().setText(stateStr);
 
