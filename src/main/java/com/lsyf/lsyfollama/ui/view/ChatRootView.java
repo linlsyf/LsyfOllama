@@ -16,9 +16,11 @@ import com.lsyf.lsyfollama.broadCast.evenbus.BusMessage;
 import com.lsyf.lsyfollama.broadCast.evenbus.LsyfGlobalNotifier;
 import com.lsyf.lsyfollama.constant.Contant;
 import com.lsyf.lsyfollama.constant.EvenBusContants;
+import com.lsyf.lsyfollama.constant.LlmContant;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.llm.ChatClient;
 import com.lsyf.lsyfollama.llm.ModelRequest;
+import com.lsyf.lsyfollama.ui.view.message.AiChatPanel;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
@@ -29,6 +31,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.lsyf.lsyfollama.constant.LlmContant.REPAIR_CHECK;
 
 @Data
 public class ChatRootView {
@@ -59,7 +63,8 @@ public class ChatRootView {
   private volatile String currentGeneratingContent = ""; // 当前正在生成的内容
 
   // ===== AI消息相关引用 =====
-  private JTextArea currentAIResponseArea;  // 当前AI回复的文本区域
+  private AiChatPanel messageResponsePanel;  // 当前AI回复的文本区域
+//  private MessageTextArea currentAIResponseArea;  // 当前AI回复的文本区域
   private JPanel currentAIPanel;           // 当前AI消息面板
   private String currentPrompt;            // 当前提问（用于重新生成）
 
@@ -68,7 +73,6 @@ public class ChatRootView {
   public ChatRootView(Project project) {
     this.project = project;
     initView();
-//    initListener();
 
   }
 
@@ -80,6 +84,7 @@ public class ChatRootView {
     initListeners();
 
   }
+
 
   /**
    * 初始化主面板 - 使用JBUI确保正确缩放
@@ -240,13 +245,24 @@ public class ChatRootView {
         if (EvenBusContants.SEND_MESSAGE.equals(busMessage.getKey())) {
           String prompt = busMessage.getValue().toString();
           sendMessage(prompt);
-        } else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())) {
+        }
+        else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())) {
           stopGeneration();
         }
 
       }
 
     });
+
+//      MessageBusConnection connection = ProjectInitData.getInstance().getProject().getMessageBus().connect();
+//
+//      connection.subscribe(FileSelectChangeListener.TOPIC, new FileSelectChangeListener() {
+//          @Override
+//          public void onMessage(BusMessage busMessage) {
+//
+//          }
+//      });
+
 
   }
 
@@ -364,20 +380,8 @@ public class ChatRootView {
       aiPanel.setBackground(BG_PANEL);
       aiPanel.setOpaque(true);
 
-      currentAIResponseArea = new JTextArea("");
-      currentAIResponseArea.setFont(JBUI.Fonts.label().deriveFont(JBUI.scaleFontSize(14f)));
-      currentAIResponseArea.setLineWrap(true);
-      currentAIResponseArea.setWrapStyleWord(true);
-      currentAIResponseArea.setEditable(false);
-      currentAIResponseArea.setBackground(BG_AI_BUBBLE);
-      currentAIResponseArea.setForeground(TEXT_COLOR);
-      currentAIResponseArea.setBorder(JBUI.Borders.empty(8, 12));
-      currentAIResponseArea.setOpaque(true);
-
-      int preferredWidth = JBUI.scale(400);
-      currentAIResponseArea.setSize(new Dimension(preferredWidth, Short.MAX_VALUE));
-      currentAIResponseArea.setPreferredSize(new Dimension(preferredWidth,
-          currentAIResponseArea.getPreferredSize().height));
+      messageResponsePanel = new AiChatPanel(project);
+//      currentAIResponseArea = new MessageTextArea();
 
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 0;
@@ -387,7 +391,7 @@ public class ChatRootView {
       gbc.weightx = 1.0;
       gbc.insets = JBUI.insets(4, 8, 4, 60);
 
-      aiPanel.add(currentAIResponseArea, gbc);
+      aiPanel.add(messageResponsePanel, gbc);
 
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, JBUI.scale(8), JBUI.scale(4)));
       buttonPanel.setBackground(BG_PANEL);
@@ -402,7 +406,7 @@ public class ChatRootView {
 
       acceptBtn.addActionListener(e -> {
         // 接受时更新缓存
-        lastCompletedAIResponse = currentAIResponseArea.getText();
+        lastCompletedAIResponse = messageResponsePanel.getText();
         DiffPreviewUtil.show(lastCompletedAIResponse);
       });
 
@@ -461,25 +465,25 @@ public class ChatRootView {
    */
   private void appendAIResponse(String text) {
     SwingUtilities.invokeLater(() -> {
-      if (currentAIResponseArea != null) {
-        currentAIResponseArea.append(text);
+      if (messageResponsePanel != null) {
+        messageResponsePanel.append(text);
         currentGeneratingContent += text; // 更新当前生成内容
 
-        Dimension preferredSize = currentAIResponseArea.getPreferredSize();
-        int width = currentAIResponseArea.getWidth();
-        if (width <= 0) {
-          width = JBUI.scale(400);
-        }
+//        Dimension preferredSize = currentAIResponseArea.getPreferredSize();
+//        int width = currentAIResponseArea.getWidth();
+//        if (width <= 0) {
+//          width = JBUI.scale(400);
+//        }
 
-        FontMetrics fm = currentAIResponseArea.getFontMetrics(currentAIResponseArea.getFont());
-        int lineHeight = fm.getHeight();
-        int lines = currentAIResponseArea.getLineCount();
-        int newHeight = Math.max(lineHeight * lines + JBUI.scale(20), JBUI.scale(40));
-
-        currentAIResponseArea.setPreferredSize(new Dimension(width, newHeight));
-        currentAIResponseArea.setSize(width, newHeight);
-
-        currentAIResponseArea.revalidate();
+//        FontMetrics fm = currentAIResponseArea.getFontMetrics(currentAIResponseArea.getFont());
+//        int lineHeight = fm.getHeight();
+//        int lines = currentAIResponseArea.getLineCount();
+//        int newHeight = Math.max(lineHeight * lines + JBUI.scale(20), JBUI.scale(40));
+//
+//        currentAIResponseArea.setPreferredSize(new Dimension(width, newHeight));
+//        currentAIResponseArea.setSize(width, newHeight);
+//
+//        currentAIResponseArea.revalidate();
         currentAIPanel.revalidate();
         chatContainer.revalidate();
 
@@ -509,8 +513,8 @@ public class ChatRootView {
       appThread.interrupt();
     }
     // 停止时更新缓存
-    if (currentAIResponseArea != null) {
-      lastCompletedAIResponse = currentAIResponseArea.getText();
+    if (messageResponsePanel != null) {
+      lastCompletedAIResponse = messageResponsePanel.getText();
     }
   }
 
@@ -532,17 +536,18 @@ public class ChatRootView {
 
     stopFlag = false;
     currentGeneratingContent = ""; // 重置当前生成内容
-
     appThread = new Thread(() -> {
       try {
-//        OllamaChatRequest request = new OllamaChatRequest();
         List<OllamaChatMessage> messages = new ArrayList<>();
 
         if (StringUtils.isNotBlank(lastRequestTxt)) {
           messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
         }
-
         String codeContext = ProjectInitData.getInstance().getDocumentContent();
+          if (LlmContant.REPAIR_CODE.equals(prompt)&& StringUtils.isEmpty(codeContext)){
+              appendAIResponse("\n❌ 错误: " + REPAIR_CHECK + "\n");
+
+          }
 
         lastRequestTxt = prompt;
           ModelRequest modelRequest=new ModelRequest();
@@ -563,9 +568,12 @@ public class ChatRootView {
             SwingUtilities.invokeLater(() -> {
               bottomView.getSendButton().setText(Contant.SEND);
               // 完成时更新缓存
-              if (currentAIResponseArea != null) {
-                lastCompletedAIResponse = currentAIResponseArea.getText();
+              if (messageResponsePanel != null) {
+                lastCompletedAIResponse = messageResponsePanel.getText();
               }
+
+              messageResponsePanel.endStream();
+
             });
           }
 
@@ -576,39 +584,6 @@ public class ChatRootView {
         });
 
 
-
-//          @Override
-//          public void accept(OllamaChatResponseModel response) {
-//            if (stopFlag) {
-//              return;
-//            }
-//
-//            if (response.isDone()) {
-//              SwingUtilities.invokeLater(() -> {
-//                bottomView.getSendButton().setText(Contant.SEND);
-//                // 完成时更新缓存
-//                if (currentAIResponseArea != null) {
-//                  lastCompletedAIResponse = currentAIResponseArea.getText();
-//                }
-//              });
-//            } else {
-//              String thinking = response.getMessage().getThinking();
-//              String content = response.getMessage().getResponse();
-//
-//              String textToAppend;
-//              if (StringUtils.isNotBlank(thinking)) {
-//                textToAppend = thinking;
-//              } else {
-//                textToAppend = content;
-//              }
-//
-//              if (StringUtils.isNotBlank(textToAppend)) {
-//                appendAIResponse(textToAppend);
-//              }
-//            }
-//          }
-//        });
-//
       } catch (Exception e) {
         if (!stopFlag) {
           appendAIResponse("\n❌ 错误: " + e.getMessage() + "\n");
@@ -616,8 +591,8 @@ public class ChatRootView {
         SwingUtilities.invokeLater(() -> {
           bottomView.getSendButton().setText(Contant.SEND);
           // 出错时也更新缓存
-          if (currentAIResponseArea != null) {
-            lastCompletedAIResponse = currentAIResponseArea.getText();
+          if (messageResponsePanel != null) {
+            lastCompletedAIResponse = messageResponsePanel.getText();
           }
         });
       }

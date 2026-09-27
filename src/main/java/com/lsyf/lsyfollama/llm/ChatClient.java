@@ -73,7 +73,6 @@ public class ChatClient {
     public static void chatStreaming(ModelRequest modelRequest, StreamCallback cb) {
         String selectedText = modelRequest.getContent();
 
-
 // 用 ArrayList 包一层，变成可变列表
         List<Map<String, Object>> messages = new ArrayList<>();
         messages.add(Map.of(LlmContant.ROLE, LlmContant.USER, "content", selectedText));

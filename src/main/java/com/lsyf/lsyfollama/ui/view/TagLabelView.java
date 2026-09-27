@@ -6,9 +6,14 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.lsyf.lsyfollama.broadCast.evenbus.BusMessage;
 import com.lsyf.lsyfollama.broadCast.evenbus.FileSelectChangeListener;
+import com.lsyf.lsyfollama.broadCast.evenbus.LsyfGlobalNotifier;
+import com.lsyf.lsyfollama.constant.Contant;
+import com.lsyf.lsyfollama.constant.EvenBusContants;
+import com.lsyf.lsyfollama.constant.LlmContant;
 import com.lsyf.lsyfollama.constant.ProjectInitData;
 import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 import lombok.Data;
@@ -22,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.lsyf.lsyfollama.constant.EvenBusContants.TYPE_BUSINESS;
+
 @Data
 @EqualsAndHashCode(callSuper = false)  // ← 明确忽略父类字段
 public class TagLabelView extends JPanel {
@@ -32,7 +39,7 @@ public class TagLabelView extends JPanel {
   List<String> commonTags;
 
   public JScrollPane createFilsList(JTextField inputField) {
-    commonTags = Arrays.asList( );
+    commonTags = Arrays.asList(Contant.REPAIR);
     this.inputField = inputField;
     tagScrollPane = initScrooller();
     initListener();
@@ -84,6 +91,7 @@ public class TagLabelView extends JPanel {
         System.out.println("select change2 ========" + str + "====================");
         commonTags = new ArrayList<>();
 
+        commonTags.add(Contant.REPAIR);
         commonTags.add(virtualFile.getName());
         // 预定义常用标签
         Editor editor = busMessage.getEditor();
@@ -113,8 +121,7 @@ public class TagLabelView extends JPanel {
 
         ApplicationManager.getApplication().invokeLater(() -> {
           initScrooller();              // 重新创建/填充内部组件
-//          tagScrollPane.revalidate();   // 通知布局管理器重新布局
-//          tagScrollPane.repaint();      // 触发重绘
+
         });
       }
     });
@@ -138,7 +145,7 @@ public class TagLabelView extends JPanel {
     label.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {
-        label.setBackground(new Color(233, 236, 239));
+        label.setBackground( new Color(0, 123, 255, 38));
         label.setCursor(new Cursor(Cursor.HAND_CURSOR));
       }
 
@@ -151,7 +158,18 @@ public class TagLabelView extends JPanel {
       @Override
       public void mouseClicked(MouseEvent e) {
 
-        if (text.equals("accept code")) {
+        if (text.equals(Contant.REPAIR)) {
+            MessageBus bus = ApplicationManager.getApplication().getMessageBus();
+
+            LsyfGlobalNotifier publisher = bus.syncPublisher(LsyfGlobalNotifier.TOPIC);
+            BusMessage busMessage = new BusMessage();
+            busMessage.setKey(EvenBusContants.SEND_MESSAGE);
+            busMessage.setValue(LlmContant.REPAIR_CODE);
+            busMessage.setMessageType(TYPE_BUSINESS);
+            publisher.onDatasChanged(busMessage);
+
+        }
+        else if (text.equals("accept code")) {
           DiffPreviewUtil.show("test");
 
 //          MyViewNotifier publisher = ProjectInitData.getInstance().getProject().getMessageBus()

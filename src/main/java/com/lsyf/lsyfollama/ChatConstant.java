@@ -43,7 +43,7 @@ public class ChatConstant {
   );
   public static boolean isAiModeSave = PropertiesComponent.getInstance().getBoolean(
       ChatConstant.MY_COMMIT_IS_AI_SETTING,
-      false // 默认值
+      true // 默认值
   );
 
 }
