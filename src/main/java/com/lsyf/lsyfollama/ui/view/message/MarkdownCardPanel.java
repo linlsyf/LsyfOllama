@@ -274,7 +274,11 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     card.setBorder(new RoundedBorder(CARD_BORDER, RADIUS));
     card.setAlignmentX(LEFT_ALIGNMENT);
 
-    JPanel header = new JPanel(new BorderLayout(8, 0));
+    // 用 BoxLayout(X_AXIS) 而不是 BorderLayout：
+    // BorderLayout 的 EAST 区在父容器宽度不足时会被压成 0 宽，Copy 按钮就消失了。
+    // BoxLayout 会尊重子组件自己设定的 maximumSize，不会被压没。
+    JPanel header = new JPanel();
+    header.setLayout(new BoxLayout(header, BoxLayout.X_AXIS));
     header.setOpaque(true);
     header.setBackground(HEADER_BG);
     header.setBorder(BorderFactory.createCompoundBorder(
@@ -284,8 +288,23 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     JLabel lang = new JLabel(seg.displayLang());
     lang.setFont(JBFont.label().deriveFont(Font.PLAIN, JBFont.label().getSize() - 2f));
     lang.setForeground(UIUtil.getLabelForeground());
-    header.add(lang, BorderLayout.WEST);
-    header.add(buildCopyButton(seg.body()), BorderLayout.EAST);
+    lang.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+    JButton copyBtn = buildCopyButton(seg.body());
+    copyBtn.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+    header.add(Box.createHorizontalStrut(2));
+    header.add(lang);
+    header.add(Box.createHorizontalGlue());     // 把按钮推到最右
+    header.add(copyBtn);
+    header.add(Box.createHorizontalStrut(2));
+
+    // 固定 header 高度
+    int headerH = Math.max(32, copyBtn.getPreferredSize().height + 8);
+    header.setPreferredSize(new Dimension(Integer.MAX_VALUE, headerH));
+    header.setMaximumSize(new Dimension(Integer.MAX_VALUE, headerH));
+    header.setMinimumSize(new Dimension(0, headerH));
+
     card.add(header, BorderLayout.NORTH);
 
     CodePane pane = new CodePane(seg.displayLang(), seg.body());
@@ -308,8 +327,48 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     codeScroll.setMinimumSize(new Dimension(0, h));
 
     card.add(codeScroll, BorderLayout.CENTER);
-    card.setMaximumSize(new Dimension(Integer.MAX_VALUE, card.getPreferredSize().height));
+
+    // 关键：不要用 card.getPreferredSize() —— 此时卡片还没进容器、布局未生效，
+    // 读到的高度偏小，BoxLayout 会按 maximumSize 裁剪，header（含 Copy 按钮）被裁掉。
+    // 改成逐段相加，再加边框 insets。
+    Insets bi = card.getBorder().getBorderInsets(card);
+    int cardH = headerH + h + bi.top + bi.bottom + 2;
+
+    card.setPreferredSize(new Dimension(Integer.MAX_VALUE, cardH));
+    card.setMaximumSize(new Dimension(Integer.MAX_VALUE, cardH));
+    card.setMinimumSize(new Dimension(0, cardH));
+
+    // 兜底路径：右键菜单一定可用，不依赖按钮是否可见
+    attachCopyPopup(card, seg.body());
+    attachCopyPopup(codeScroll, seg.body());
+    attachCopyPopup(pane, seg.body());
+
+    // 诊断：布局生效后再打印一次真实尺寸，确认 header / 按钮是否真的有尺寸
+    SwingUtilities.invokeLater(() -> {
+      System.out.println("[CARD] cardH=" + cardH + " headerH=" + headerH + " codeH=" + h
+          + " | card=" + card.getBounds()
+          + " header=" + header.getBounds()
+          + " btn=" + copyBtn.getBounds()
+          + " btnVisible=" + copyBtn.isVisible()
+          + " btnShowing=" + copyBtn.isShowing()
+          + " icon=" + copyBtn.getIcon()
+          + " text=" + copyBtn.getText());
+    });
+
     return card;
+  }
+
+  /** 给任意组件挂上「复制代码」右键菜单 */
+  private static void attachCopyPopup(@NotNull JComponent target, @NotNull String code) {
+    JPopupMenu menu = new JPopupMenu();
+    JMenuItem item = new JMenuItem("Copy Code", AllIcons.Actions.Copy);
+    item.addActionListener(e -> {
+      if (!code.isBlank()) {
+        CopyPasteManager.getInstance().setContents(new TextTransferable(code));
+      }
+    });
+    menu.add(item);
+    target.setComponentPopupMenu(menu);
   }
 
   private JButton buildCopyButton(String code) {
@@ -327,6 +386,13 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     btn.setBackground(HEADER_BG);
     btn.setMargin(JBUI.insets(2, 8, 2, 8));
     btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+    // 固定尺寸：BorderLayout 的 EAST 区在父容器宽度不足时会被压成 0 宽
+    Dimension bs = new Dimension(Math.max(76, btn.getPreferredSize().width), 26);
+    btn.setPreferredSize(bs);
+    btn.setMaximumSize(bs);
+    btn.setMinimumSize(bs);
+    btn.setSize(bs);
     btn.addActionListener(e -> {
       if (!code.isBlank()) {
         CopyPasteManager.getInstance().setContents(new TextTransferable(code));

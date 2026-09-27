@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify processText, chatStreaming">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/MessageTextArea.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/AiChatPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanelBAK.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownSplitter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MdSegment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ChatConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ChatConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/Contant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/Contant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/LlmContant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/constant/LlmContant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/TagLabelView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/ProjectUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/utils/ProjectUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/AiChatPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/AiChatPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -161,7 +149,7 @@
     "Gradle.LsyfOllama [runIde].executor": "Run",
     "Gradle.LsyfOllama [stop].executor": "Run",
     "Gradle.LsyfOllama [verifyPlugin].executor": "Run",
-    "Gradle.Run Plugin.executor": "Run",
+    "Gradle.Run Plugin.executor": "Debug",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
@@ -719,7 +707,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790428224886</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043">
+      <option name="closed" value="true" />
+      <created>1790478028482</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1790478028482</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
