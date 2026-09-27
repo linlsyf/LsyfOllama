@@ -120,9 +120,9 @@ public class ChatClient {
                   stringBuffer.append(token);
                     // 检查结束
                     if (ResponseParser.isOllamaDone(line)) {
-                      if (StringUtils.isEmpty(stringBuffer.toString())){
-                        cb.onToken("response  empty");   // 写入 IDEA Editor
-                      }
+//                      if (StringUtils.isEmpty(stringBuffer.toString())){
+//                        cb.onToken("response  empty");   // 写入 IDEA Editor
+//                      }
                         break;
                     }
                 }

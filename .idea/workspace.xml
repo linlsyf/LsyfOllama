@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="accept button">
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="log add">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanelBAK.java" beforeDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
     <option name="SHOW_DIALOG" value="false" />
@@ -738,7 +734,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790496783454</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="log add">
+      <option name="closed" value="true" />
+      <created>1790501953079</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1790501953080</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -759,7 +763,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="local change log" />
     <MESSAGE value="状态切换" />
     <MESSAGE value="Modify getGitmsg, setGitmsg, getResult, and 19 more methods" />
     <MESSAGE value="添加对比框" />
@@ -784,7 +787,8 @@
     <MESSAGE value="test" />
     <MESSAGE value="test accept" />
     <MESSAGE value="accept button" />
-    <option name="LAST_COMMIT_MESSAGE" value="accept button" />
+    <MESSAGE value="log add" />
+    <option name="LAST_COMMIT_MESSAGE" value="log add" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -841,18 +845,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>115</line>
-          <option name="timeStamp" value="91" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
           <line>123</line>
-          <option name="timeStamp" value="92" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>122</line>
-          <option name="timeStamp" value="93" />
+          <option name="timeStamp" value="94" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -60,7 +60,7 @@ public class ResponseParser {
       JsonNode root = mapper.readTree(json);
       return root.path("message")
           .path("content")
-          .asText("");
+          .asText("//");
     } catch (Exception e) {
       return "";
     }
