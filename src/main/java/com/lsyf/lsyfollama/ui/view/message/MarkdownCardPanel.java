@@ -709,4 +709,22 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     stopFlushTimer();
     content.removeAll();
   }
+
+
+  /** 最近一次渲染/流式的完整原文，供外层「接受」「重新生成」取用 */
+  public String getLastMarkdown() {
+    return lastMarkdown == null ? "" : lastMarkdown;
+  }
+
+  /**
+   * 从任意线程安全取用：如果当前正好在 EDT 上就直接读，
+   * 否则提交到 EDT 执行回调，避免读到半截内容。
+   */
+  public void getLastMarkdownAsync(@NotNull java.util.function.Consumer<String> callback) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      callback.accept(getLastMarkdown());
+      return;
+    }
+    ApplicationManager.getApplication().invokeLater(() -> callback.accept(getLastMarkdown()));
+  }
 }

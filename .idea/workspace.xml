@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="Modify processText, chatStreaming">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="完美实现代码显示">
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/AiChatPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/AiChatPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" afterDir="false" />
     </list>
@@ -715,7 +714,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790478028482</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="完美实现代码显示">
+      <option name="closed" value="true" />
+      <created>1790491586674</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1790491586674</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -736,7 +743,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="repari pluin" />
     <MESSAGE value="修改git" />
     <MESSAGE value="change" />
     <MESSAGE value="change  msg" />
@@ -761,7 +767,8 @@
     <MESSAGE value="Modify client" />
     <MESSAGE value="Modify local" />
     <MESSAGE value="Modify processText, chatStreaming" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modify processText, chatStreaming" />
+    <MESSAGE value="完美实现代码显示" />
+    <option name="LAST_COMMIT_MESSAGE" value="完美实现代码显示" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

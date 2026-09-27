@@ -45,8 +45,7 @@ public class AiChatPanel extends JPanel implements Disposable {
   }
 
   public String getText() {
-    return "";
-//    return markdown.getLastMarkdown();
+    return markdown.getLastMarkdown();
   }
 
   @Override public void dispose() { /* markdown 随 this 一起释放 */ }
