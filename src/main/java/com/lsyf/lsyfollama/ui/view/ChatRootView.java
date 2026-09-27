@@ -64,7 +64,7 @@ public class ChatRootView {
 
   // ===== AI消息相关引用 =====
   private AiChatPanel messageResponsePanel;  // 当前AI回复的文本区域
-//  private MessageTextArea currentAIResponseArea;  // 当前AI回复的文本区域
+  //  private MessageTextArea currentAIResponseArea;  // 当前AI回复的文本区域
   private JPanel currentAIPanel;           // 当前AI消息面板
   private String currentPrompt;            // 当前提问（用于重新生成）
 
@@ -84,7 +84,6 @@ public class ChatRootView {
     initListeners();
 
   }
-
 
   /**
    * 初始化主面板 - 使用JBUI确保正确缩放
@@ -245,8 +244,7 @@ public class ChatRootView {
         if (EvenBusContants.SEND_MESSAGE.equals(busMessage.getKey())) {
           String prompt = busMessage.getValue().toString();
           sendMessage(prompt);
-        }
-        else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())) {
+        } else if (EvenBusContants.STOP_MESSAGE.equals(busMessage.getKey())) {
           stopGeneration();
         }
 
@@ -262,7 +260,6 @@ public class ChatRootView {
 //
 //          }
 //      });
-
 
   }
 
@@ -469,21 +466,6 @@ public class ChatRootView {
         messageResponsePanel.append(text);
         currentGeneratingContent += text; // 更新当前生成内容
 
-//        Dimension preferredSize = currentAIResponseArea.getPreferredSize();
-//        int width = currentAIResponseArea.getWidth();
-//        if (width <= 0) {
-//          width = JBUI.scale(400);
-//        }
-
-//        FontMetrics fm = currentAIResponseArea.getFontMetrics(currentAIResponseArea.getFont());
-//        int lineHeight = fm.getHeight();
-//        int lines = currentAIResponseArea.getLineCount();
-//        int newHeight = Math.max(lineHeight * lines + JBUI.scale(20), JBUI.scale(40));
-//
-//        currentAIResponseArea.setPreferredSize(new Dimension(width, newHeight));
-//        currentAIResponseArea.setSize(width, newHeight);
-//
-//        currentAIResponseArea.revalidate();
         currentAIPanel.revalidate();
         chatContainer.revalidate();
 
@@ -544,15 +526,15 @@ public class ChatRootView {
           messages.add(new OllamaChatMessage(OllamaChatMessageRole.USER, lastRequestTxt));
         }
         String codeContext = ProjectInitData.getInstance().getDocumentContent();
-          if (LlmContant.REPAIR_CODE.equals(prompt)&& StringUtils.isEmpty(codeContext)){
-              appendAIResponse("\n❌ 错误: " + REPAIR_CHECK + "\n");
+        if (LlmContant.REPAIR_CODE.equals(prompt) && StringUtils.isEmpty(codeContext)) {
+          appendAIResponse("\n❌ 错误: " + REPAIR_CHECK + "\n");
 
-          }
+        }
 
         lastRequestTxt = prompt;
-          ModelRequest modelRequest=new ModelRequest();
-          modelRequest.setContent(prompt);
-          modelRequest.setContext(codeContext);
+        ModelRequest modelRequest = new ModelRequest();
+        modelRequest.setContent(prompt);
+        modelRequest.setContext(codeContext);
         ChatClient.chatStreaming(modelRequest, new ChatClient.StreamCallback() {
           @Override
           public void onToken(String token) {
@@ -582,7 +564,6 @@ public class ChatRootView {
             ChatClient.StreamCallback.super.onError(msg);
           }
         });
-
 
       } catch (Exception e) {
         if (!stopFlag) {

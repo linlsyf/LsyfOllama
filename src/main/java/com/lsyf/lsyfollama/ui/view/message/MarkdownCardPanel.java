@@ -436,6 +436,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
         javax.swing.Timer t = new javax.swing.Timer(1200, ev -> btn.setText("Accept"));
         t.setRepeats(false);
         t.start();
+
       } catch (Throwable t) {
         System.out.println("[ACCEPT] failed: " + t);
       }

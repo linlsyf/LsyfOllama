@@ -5,9 +5,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.ui.UIUtil;
+import com.lsyf.lsyfollama.utils.DiffPreviewUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class AiChatPanel extends JPanel implements Disposable {
 
@@ -20,9 +22,18 @@ public class AiChatPanel extends JPanel implements Disposable {
     setBackground(UIUtil.getPanelBackground());
     add(markdown, BorderLayout.CENTER);
     Disposer.register(this, markdown);
+    markdown.setAcceptHandler(new Consumer<String>() {
+      @Override
+      public void accept(String s) {
+        DiffPreviewUtil.show(s);
+
+      }
+    });
   }
 
-  /** AI 返回完整回复后调用（非流式路径） */
+  /**
+   * AI 返回完整回复后调用（非流式路径）
+   */
   public void onResponse(String text) {
     ApplicationManager.getApplication().invokeLater(() -> markdown.render(text));
   }
@@ -48,5 +59,6 @@ public class AiChatPanel extends JPanel implements Disposable {
     return markdown.getLastMarkdown();
   }
 
-  @Override public void dispose() { /* markdown 随 this 一起释放 */ }
+  @Override
+  public void dispose() { /* markdown 随 this 一起释放 */ }
 }
