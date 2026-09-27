@@ -62,6 +62,14 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   private volatile String lastMarkdown = "";
   private volatile boolean disposed = false;
   private volatile boolean streaming = false;
+
+  /** 点击「Accept」时的回调，参数为该代码块内容；为 null 时按钮点击不做任何事 */
+  private volatile java.util.function.Consumer<String> acceptHandler = null;
+
+  /** 注入 Accept 的处理逻辑，例如把代码插入编辑器 */
+  public void setAcceptHandler(@Nullable java.util.function.Consumer<String> handler) {
+    this.acceptHandler = handler;
+  }
   private final StringBuilder streamBuf = new StringBuilder();
   private Timer flushTimer;
   private boolean stickToBottom = true;
@@ -293,10 +301,16 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     JButton copyBtn = buildCopyButton(seg.body());
     copyBtn.setAlignmentY(Component.CENTER_ALIGNMENT);
 
+    // Accept 放在 Copy 右侧，始终创建 —— 不因未注入 handler 而消失
+    JButton acceptBtn = buildAcceptButton(seg.body());
+    acceptBtn.setAlignmentY(Component.CENTER_ALIGNMENT);
+
     header.add(Box.createHorizontalStrut(2));
     header.add(lang);
     header.add(Box.createHorizontalGlue());     // 把按钮推到最右
     header.add(copyBtn);
+    header.add(Box.createHorizontalStrut(4));
+    header.add(acceptBtn);
     header.add(Box.createHorizontalStrut(2));
 
     // 固定 header 高度
@@ -358,17 +372,75 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     return card;
   }
 
-  /** 给任意组件挂上「复制代码」右键菜单 */
-  private static void attachCopyPopup(@NotNull JComponent target, @NotNull String code) {
+  /** 给任意组件挂上「复制代码 / 接受代码」右键菜单 */
+  private void attachCopyPopup(@NotNull JComponent target, @NotNull String code) {
     JPopupMenu menu = new JPopupMenu();
-    JMenuItem item = new JMenuItem("Copy Code", AllIcons.Actions.Copy);
-    item.addActionListener(e -> {
+
+    JMenuItem copyItem = new JMenuItem("Copy Code", AllIcons.Actions.Copy);
+    copyItem.addActionListener(e -> {
       if (!code.isBlank()) {
         CopyPasteManager.getInstance().setContents(new TextTransferable(code));
       }
     });
-    menu.add(item);
+    menu.add(copyItem);
+
+    JMenuItem acceptItem = new JMenuItem("Accept Code", AllIcons.Actions.Commit);
+    acceptItem.addActionListener(e -> {
+      java.util.function.Consumer<String> h = acceptHandler;
+      if (h != null && !code.isBlank()) {
+        try {
+          h.accept(code);
+        } catch (Throwable t) {
+          System.out.println("[ACCEPT] failed: " + t);
+        }
+      }
+    });
+    menu.add(acceptItem);
+
     target.setComponentPopupMenu(menu);
+  }
+
+  /**
+   * 「Accept」按钮：位于 Copy 右侧，点击后把代码块交给外层处理。
+   * 未注入 handler 时按钮依然显示，只是点击后无动作。
+   */
+  private JButton buildAcceptButton(String code) {
+    Icon icon = AllIcons.Actions.Commit;
+    JButton btn = new JButton("Accept", icon);
+    btn.setToolTipText("Accept this code block");
+    btn.setFont(JBFont.label().deriveFont(Font.PLAIN, JBFont.label().getSize() - 2f));
+    btn.setForeground(UIUtil.getLabelForeground());
+    btn.setBorderPainted(true);
+    btn.setContentAreaFilled(true);
+    btn.setFocusPainted(false);
+    btn.setFocusable(false);
+    btn.setRequestFocusEnabled(false);
+    btn.setOpaque(true);
+    btn.setBackground(HEADER_BG);
+    btn.setMargin(JBUI.insets(2, 10, 2, 10));
+    btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+    // 固定尺寸，避免被 BoxLayout 压成 0 宽
+    Dimension bs = new Dimension(Math.max(84, btn.getPreferredSize().width), 26);
+    btn.setPreferredSize(bs);
+    btn.setMaximumSize(bs);
+    btn.setMinimumSize(bs);
+    btn.setSize(bs);
+
+    btn.addActionListener(e -> {
+      java.util.function.Consumer<String> h = acceptHandler;
+      if (h == null || code.isBlank()) return;
+      try {
+        h.accept(code);
+        btn.setText("Accepted");
+        javax.swing.Timer t = new javax.swing.Timer(1200, ev -> btn.setText("Accept"));
+        t.setRepeats(false);
+        t.start();
+      } catch (Throwable t) {
+        System.out.println("[ACCEPT] failed: " + t);
+      }
+    });
+    return btn;
   }
 
   private JButton buildCopyButton(String code) {
