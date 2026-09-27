@@ -86,6 +86,7 @@ public class ChatClient {
         }
         OllamaConfig cfg = ProjectInitData.getCfgInstance();
         try {
+          StringBuffer  stringBuffer=new StringBuffer();
             String body = MAPPER.writeValueAsString(Map.of(
                     "model", cfg.getModelSetting(),
                     "stream", true,
@@ -114,11 +115,14 @@ public class ChatClient {
                     String token = ResponseParser.extractOllamaStreamToken(line);
                     if (!token.isEmpty()) {
 //            fullResponse.append(token);
-                        cb.onToken(token.replace("", ""));   // 写入 IDEA Editor
+                        cb.onToken(token);   // 写入 IDEA Editor
                     }
-
+                  stringBuffer.append(token);
                     // 检查结束
                     if (ResponseParser.isOllamaDone(line)) {
+                      if (StringUtils.isEmpty(stringBuffer.toString())){
+                        cb.onToken("response  empty");   // 写入 IDEA Editor
+                      }
                         break;
                     }
                 }

@@ -119,12 +119,38 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
 
   // ================= 对外 API =================
 
+  /**
+   * 调试用：把文本的首尾原样打印出来（含不可见字符的 Unicode 码），
+   * 用来确认多余的标点（如行首冒号、行尾句号）是渲染层加的，还是上游传进来的。
+   */
+  private static String dump(String t) {
+    if (t == null) return "null";
+    StringBuilder sb = new StringBuilder();
+    sb.append("len=").append(t.length()).append(" [");
+    int n = Math.min(24, t.length());
+    for (int i = 0; i < n; i++) {
+      char c = t.charAt(i);
+      sb.append(c);
+      if (c < 0x20 || c > 0x7e) sb.append("(u").append(Integer.toHexString(c)).append(")");
+    }
+    sb.append(" ...");
+    int tailStart = Math.max(0, t.length() - 12);
+    for (int i = tailStart; i < t.length(); i++) {
+      char c = t.charAt(i);
+      sb.append(c);
+      if (c < 0x20 || c > 0x7e) sb.append("(u").append(Integer.toHexString(c)).append(")");
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
   /** 一次性渲染完整回复 */
   public void render(@NotNull String markdown) {
     stopFlushTimer();
     streaming = false;
     streamArea = null;
     lastMarkdown = markdown;
+    System.out.println("[MD] render " + dump(markdown));
 
     content.removeAll();
     for (MdSegment seg : MarkdownSplitter.parse(markdown)) {
@@ -166,6 +192,9 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     if (!streaming) beginStream();
 
     synchronized (streamBuf) {
+      if (streamBuf.length() == 0) {
+        System.out.println("[MD] firstChunk " + dump(chunk));
+      }
       streamBuf.append(chunk);
     }
     runOnEdt(this::scheduleFlush);
@@ -174,16 +203,18 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   /** 流式结束：一次性全量渲染成卡片 */
   public void endStream() {
     if (disposed) return;
-    final String text;
-    synchronized (streamBuf) {
-      text = streamBuf.toString();
-      streamBuf.setLength(0);
-    }
-    streaming = false;
-    lastMarkdown = text;
-
+    // 关键：读缓冲必须发生在这个 EDT 任务「执行时」，而不是 endStream「被调用时」。
+    // append() 走的是 runOnEdt，都还排在 EDT 队列里；这里同步读会读到空/残内容。
     runOnEdt(() -> {
       if (disposed) return;
+      final String text;
+      synchronized (streamBuf) {
+        text = streamBuf.toString();
+        streamBuf.setLength(0);
+      }
+      streaming = false;
+      lastMarkdown = text;
+      System.out.println("[MD] endStream(EDT) " + dump(text));
       stopFlushTimer();
       streamArea = null;
       render(text);                 // 全量重建，不做任何增量
@@ -436,7 +467,6 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
         javax.swing.Timer t = new javax.swing.Timer(1200, ev -> btn.setText("Accept"));
         t.setRepeats(false);
         t.start();
-
       } catch (Throwable t) {
         System.out.println("[ACCEPT] failed: " + t);
       }
