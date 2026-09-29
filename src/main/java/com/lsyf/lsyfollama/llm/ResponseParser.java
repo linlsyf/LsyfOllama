@@ -27,7 +27,7 @@ public class ResponseParser {
       return root.path("choices")
           .path(0)
           .path("delta")
-          .path("content")
+          .path("reasoning_content")
           .asText("");
     } catch (Exception e) {
       return "";

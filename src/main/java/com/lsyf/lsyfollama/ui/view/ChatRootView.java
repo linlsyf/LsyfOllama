@@ -466,8 +466,8 @@ public class ChatRootView {
         messageResponsePanel.append(text);
         currentGeneratingContent += text; // 更新当前生成内容
 
-        currentAIPanel.revalidate();
-        chatContainer.revalidate();
+//        currentAIPanel.revalidate();
+//        chatContainer.revalidate();
 
         scrollToBottom();
       }

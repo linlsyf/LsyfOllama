@@ -66,6 +66,11 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   /** 点击「Accept」时的回调，参数为该代码块内容；为 null 时按钮点击不做任何事 */
   private volatile java.util.function.Consumer<String> acceptHandler = null;
 
+  /** 流式代数号：新一轮 beginStream 会让上一轮遗留的 EDT 任务自动失效 */
+  private volatile int streamGen = 0;
+  /** 本轮是否已结束，用于丢弃 endStream 之后迟到的 chunk */
+  private volatile boolean ended = false;
+
   /** 注入 Accept 的处理逻辑，例如把代码插入编辑器 */
   public void setAcceptHandler(@Nullable java.util.function.Consumer<String> handler) {
     this.acceptHandler = handler;
@@ -146,6 +151,14 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
 
   /** 一次性渲染完整回复 */
   public void render(@NotNull String markdown) {
+    if (markdown == null) markdown = "";
+    // 防空：不要用空内容把已经显示的东西刷掉。
+    // 重复输入 / 多次结束信号时很容易出现第二次 render("")，把界面清空成白板。
+    if (markdown.isBlank()) {
+      System.out.println("[MD] render skipped (blank), keep existing content");
+      return;
+    }
+
     stopFlushTimer();
     streaming = false;
     streamArea = null;
@@ -161,18 +174,32 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
 
     content.revalidate();
     content.repaint();
+    scroll.revalidate();
+    scroll.repaint();
     scroll.getVerticalScrollBar().setValue(0);
+
+    // 第二遍布局：文本区高度依赖父容器宽度，首遍可能还没拿到真实宽度
+    SwingUtilities.invokeLater(() -> {
+      if (disposed) return;
+      content.revalidate();
+      content.repaint();
+      scroll.repaint();
+      System.out.println("[MD] afterLayout showing=" + isShowing()
+          + " panel=" + getBounds()
+          + " kids=" + content.getComponentCount()
+          + " contentSize=" + content.getSize()
+          + " viewport=" + scroll.getViewport().getSize()
+          + " child0=" + (content.getComponentCount() > 0
+          ? String.valueOf(content.getComponent(0).getBounds()) : "none"));
+    });
   }
 
   /** 开始一轮流式输出 */
   public void beginStream() {
     if (disposed) return;
-    streaming = true;
-    stickToBottom = true;
     synchronized (streamBuf) {
-      streamBuf.setLength(0);
+      beginStreamLocked();
     }
-    lastMarkdown = "";
 
     runOnEdt(() -> {
       if (disposed) return;
@@ -186,18 +213,42 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     });
   }
 
+  /** 在持有 streamBuf 锁的情况下重置一轮流式状态 */
+  private void beginStreamLocked() {
+    streamGen++;                 // 让上一轮遗留的 EDT 任务自动失效
+    ended = false;
+    streaming = true;
+    stickToBottom = true;
+    streamBuf.setLength(0);
+    lastMarkdown = "";
+  }
+
   /** 追加流式内容，可在任意线程调用 */
   public void append(@NotNull String chunk) {
-    if (disposed || chunk.isEmpty()) return;
-    if (!streaming) beginStream();
+    if (disposed || chunk == null || chunk.isEmpty()) return;
 
+    int gen;
     synchronized (streamBuf) {
+      if (!streaming) {
+        if (ended) {
+          // 本轮已结束，迟到的 chunk 直接丢弃。
+          // 否则会触发新的 beginStream，把刚渲染好的内容清空。
+          System.out.println("[MD] append ignored(ended) " + dump(chunk));
+          return;
+        }
+        beginStreamLocked();     // 首次 append 自动开一轮
+      }
+      gen = streamGen;
       if (streamBuf.length() == 0) {
-        System.out.println("[MD] firstChunk " + dump(chunk));
+        System.out.println("[MD] firstChunk gen=" + gen + " " + dump(chunk));
       }
       streamBuf.append(chunk);
     }
-    runOnEdt(this::scheduleFlush);
+
+    runOnEdt(() -> {
+      if (disposed || gen != streamGen) return;   // 跨轮的旧任务直接丢弃
+      scheduleFlush();
+    });
   }
 
   /** 流式结束：一次性全量渲染成卡片 */
@@ -208,13 +259,23 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     runOnEdt(() -> {
       if (disposed) return;
       final String text;
+      final int gen;
       synchronized (streamBuf) {
         text = streamBuf.toString();
         streamBuf.setLength(0);
+        gen = streamGen;
+        ended = true;               // 之后迟到的 append 一律丢弃
       }
       streaming = false;
+
+      // 空内容不要把已显示的东西刷掉
+      if (text.isBlank() && !lastMarkdown.isEmpty()) {
+        System.out.println("[MD] endStream blank, keep existing len=" + lastMarkdown.length());
+        return;
+      }
+
       lastMarkdown = text;
-      System.out.println("[MD] endStream(EDT) " + dump(text));
+      System.out.println("[MD] endStream(EDT) gen=" + gen + " " + dump(text));
       stopFlushTimer();
       streamArea = null;
       render(text);                 // 全量重建，不做任何增量
@@ -239,6 +300,23 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     return streaming;
   }
 
+  /** 最近一次渲染/流式的完整原文，供外层「接受」「重新生成」取用 */
+  public String getLastMarkdown() {
+    return lastMarkdown == null ? "" : lastMarkdown;
+  }
+
+  /**
+   * 从任意线程安全取用：如果当前正好在 EDT 上就直接读，
+   * 否则提交到 EDT 执行回调，避免读到半截内容。
+   */
+  public void getLastMarkdownAsync(@NotNull java.util.function.Consumer<String> callback) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      callback.accept(getLastMarkdown());
+      return;
+    }
+    ApplicationManager.getApplication().invokeLater(() -> callback.accept(getLastMarkdown()));
+  }
+
   // ================= 流式调度 =================
 
   private void scheduleFlush() {
@@ -260,14 +338,10 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
 
   /** 流式刷新：把全量文本塞进唯一的文本区，不做任何解析 / 卡片重建 */
   private void flushNow() {
-    if (disposed) return;
-    if (streamArea == null) {
-      // 极端情况：append 先于 beginStream 的 EDT 任务执行，这里补建
-      streamArea = new PlainTextArea(false, "");
-      content.removeAll();
-      content.add(streamArea);
-      content.add(Box.createVerticalGlue());
-    }
+    // 流式已结束就不再刷新，否则会把 render() 刚建好的卡片清掉
+    if (disposed || !streaming) return;
+    // 不再自行补建：补建会 removeAll()，误清已渲染的内容
+    if (streamArea == null) return;
     String text;
     synchronized (streamBuf) {
       text = streamBuf.toString();
@@ -811,23 +885,5 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     disposed = true;
     stopFlushTimer();
     content.removeAll();
-  }
-
-
-  /** 最近一次渲染/流式的完整原文，供外层「接受」「重新生成」取用 */
-  public String getLastMarkdown() {
-    return lastMarkdown == null ? "" : lastMarkdown;
-  }
-
-  /**
-   * 从任意线程安全取用：如果当前正好在 EDT 上就直接读，
-   * 否则提交到 EDT 执行回调，避免读到半截内容。
-   */
-  public void getLastMarkdownAsync(@NotNull java.util.function.Consumer<String> callback) {
-    if (SwingUtilities.isEventDispatchThread()) {
-      callback.accept(getLastMarkdown());
-      return;
-    }
-    ApplicationManager.getApplication().invokeLater(() -> callback.accept(getLastMarkdown()));
   }
 }

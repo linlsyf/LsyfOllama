@@ -112,7 +112,12 @@ public class ChatClient {
                         continue;
                     }
                     // 提取增量 token
-                    String token = ResponseParser.extractOllamaStreamToken(line);
+                  String token = ResponseParser.extractOllamaStreamToken(line);
+                  if (cfg.getBaseUrl().contains("chatgpt")){
+                    token = ResponseParser.extractStreamToken(line);
+                  }else{
+                    token = ResponseParser.extractOllamaStreamToken(line);
+                  }
                     if (!token.isEmpty()) {
 //            fullResponse.append(token);
                         cb.onToken(token);   // 写入 IDEA Editor
@@ -120,9 +125,9 @@ public class ChatClient {
                   stringBuffer.append(token);
                     // 检查结束
                     if (ResponseParser.isOllamaDone(line)) {
-//                      if (StringUtils.isEmpty(stringBuffer.toString())){
-//                        cb.onToken("response  empty");   // 写入 IDEA Editor
-//                      }
+                      if (StringUtils.isEmpty(stringBuffer.toString())){
+                        cb.onToken("response  empty");   // 写入 IDEA Editor
+                      }
                         break;
                     }
                 }
@@ -166,8 +171,12 @@ public class ChatClient {
     }
 
     private static Request.Builder baseRequest(OllamaConfig cfg, String body) {
-        String url = cfg.getBaseUrl().replaceAll("/$", "") + "/api/chat";
-        ;
+        String url ="";
+      if (cfg.getBaseUrl().contains("chatgpt")){
+        url = cfg.getBaseUrl().replaceAll("/$", "") + "/chat/completions";
+      }else{
+        url = cfg.getBaseUrl().replaceAll("/$", "") + "/api/chat";
+      }
 // 结果必须是：http://127.0.0.1:11434/api/chat
         return new Request.Builder()
                 .url(url)
