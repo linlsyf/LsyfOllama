@@ -3,12 +3,14 @@ package com.lsyf.lsyfollama.constant;
 import com.intellij.openapi.project.Project;
 import com.lsyf.lsyfollama.ChatConstant;
 import com.lsyf.lsyfollama.llm.OllamaConfig;
+import com.lsyf.lsyfollama.ui.view.ChatRootView;
 import lombok.Data;
 
 @Data
 public class ProjectInitData {
   Project project;
   static ProjectInitData instance;
+   ChatRootView chatTool ;
   static OllamaConfig cfgInstance;
 
    String documentContent;

@@ -15,6 +15,7 @@ public class ChatWindowHomeFactory implements ToolWindowFactory {
     ProjectInitData.getInstance().setProject(project);
     ChatRootView chatTool = new ChatRootView(project);
     chatTool.setProject(project);
+    ProjectInitData.getInstance().setChatTool(chatTool);
     JPanel contentRootPanl = chatTool.getChatPanel();
     toolWindow.getComponent().add(contentRootPanl);
     contentRootPanl.revalidate(); // 强制刷新布局

@@ -37,7 +37,6 @@
                 icon="/META-INF/pluginIcon.svg"
                 factoryClass="com.lsyf.lsyfollama.ui.toolWindowFactory.ChatWindowHomeFactory"/>
         <applicationConfigurable id="MyPlugin.Settings" displayName="LsyfSettings" instance="com.lsyf.lsyfollama.SettingsConfig"/>
-        <projectService serviceImplementation="com.lsyf.lsyfollama.ToolWindowService"/>
         <fileEditorManagerListener implementation="com.lsyf.lsyfollama.broadCast.MyFileEditorManagerListener"/>
 
         <postStartupActivity implementation="com.lsyf.lsyfollama.broadCast.evenbus.MyStartupActivity"/>
@@ -48,7 +47,13 @@
     </projectListeners>
     <actions>
 
-
+        <action id="AiChat.AskAboutSelection"
+                class="com.lsyf.lsyfollama.ui.view.AskAboutSelectionAction"
+                text="Ask AI (选中的代码)"
+                description="针对选中的代码弹出聊天框">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt Q"/>
+        </action>
         <action id="linlsyfQuery" class="com.lsyf.lsyfollama.business.actions.ContextMenuSearchAction" text="linlsyfQuery"
                 description="显示修复建议">
 
@@ -96,7 +101,7 @@
         </action>
 <!--        <add-to-group group-id="MainToolBar" anchor="after"-->
 <!--                      relative-to-action="ToolbarRunGroup"/>-->
-<!--        <startupActivity implementation="com.lsyf.lsyfollama.ui.activity.MyPluginStartupActivity"/>-->
+<!--        <startupActivity implementation="com.lsyf.lsyfollama.ui.view.SelectionChatStartup"/>-->
 
     </actions>
 
