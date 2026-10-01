@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="check">
+    <list default="true" id="fdde04ff-e944-4f5a-be84-e41da3f5e227" name="Changes" comment="check update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.intellijPlatform/self-update.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ResponseParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ResponseParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/ChatRootView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/ui/view/message/MarkdownCardPanel.java" afterDir="false" />
     </list>
     <list id="3f493e0a-cfe2-4766-95c8-183ec140d3b4" name="igon" comment="repari pluin" />
@@ -125,7 +122,7 @@
     &quot;Gradle.LsyfOllama [assemble].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [buildDependents].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [buildKotlinToolingMetadata].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LsyfOllama [buildPlugin].executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.LsyfOllama [buildPlugin].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [build].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [clean].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.LsyfOllama [compileJava].executor&quot;: &quot;Debug&quot;,
@@ -198,7 +195,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.Run Plugin">
+  <component name="RunManager" selected="Gradle.LsyfOllama [buildPlugin]">
     <configuration name="LsyfOllama [buildPlugin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -318,13 +315,13 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Gradle.Run Plugin" />
       <item itemvalue="Gradle.LsyfOllama [buildPlugin]" />
       <item itemvalue="Gradle.LsyfOllama [clean]" />
       <item itemvalue="Gradle.LsyfOllama [stop]" />
       <item itemvalue="Gradle.LsyfOllama [verifyPlugin]" />
       <item itemvalue="Shell Script.buildPlugin" />
       <item itemvalue="Shell Script.push" />
+      <item itemvalue="Gradle.Run Plugin" />
     </list>
     <recent_temporary>
       <list>
@@ -353,14 +350,6 @@
       <workItem from="1785075345736" duration="4601000" />
       <workItem from="1785417809629" duration="2486000" />
       <workItem from="1785422457419" duration="1613000" />
-    </task>
-    <task id="LOCAL-00001" summary="push logigc">
-      <option name="closed" value="true" />
-      <created>1755265623734</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1755265623734</updated>
     </task>
     <task id="LOCAL-00002" summary="push logigc">
       <option name="closed" value="true" />
@@ -746,7 +735,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790502746226</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="check update">
+      <option name="closed" value="true" />
+      <created>1790690548411</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1790690548411</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -767,7 +764,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Modify getGitmsg, setGitmsg, getResult, and 19 more methods" />
     <MESSAGE value="添加对比框" />
     <MESSAGE value="test topic" />
     <MESSAGE value="test topic  修改中" />
@@ -792,7 +788,8 @@
     <MESSAGE value="accept button" />
     <MESSAGE value="log add" />
     <MESSAGE value="check" />
-    <option name="LAST_COMMIT_MESSAGE" value="check" />
+    <MESSAGE value="check update" />
+    <option name="LAST_COMMIT_MESSAGE" value="check update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -824,7 +821,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>27</line>
+          <line>34</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -834,28 +831,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>97</line>
+          <line>156</line>
           <option name="timeStamp" value="79" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>137</line>
-          <option name="timeStamp" value="81" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>128</line>
-          <option name="timeStamp" value="94" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>104</line>
-          <option name="timeStamp" value="96" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lsyf/lsyfollama/llm/ChatClient.java</url>
-          <line>100</line>
-          <option name="timeStamp" value="97" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

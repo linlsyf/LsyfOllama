@@ -172,7 +172,7 @@ public class ChatClient {
 
     private static Request.Builder baseRequest(OllamaConfig cfg, String body) {
         String url ="";
-      if (cfg.getBaseUrl().contains("chatgpt")){
+      if (cfg.getBaseUrl().contains("gpt")){
         url = cfg.getBaseUrl().replaceAll("/$", "") + "/chat/completions";
       }else{
         url = cfg.getBaseUrl().replaceAll("/$", "") + "/api/chat";

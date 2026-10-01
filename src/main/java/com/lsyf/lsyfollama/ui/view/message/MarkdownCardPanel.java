@@ -3,6 +3,7 @@ package com.lsyf.lsyfollama.ui.view.message;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.colors.EditorColorsListener;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -48,6 +49,30 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   private static final int RADIUS = 8;
   private static final int FLUSH_DELAY_MS = 80;
 
+  /**
+   * 兜底：最后一次 append 之后超过这么久仍没收到 endStream，就强制结束并全量渲染。
+   * 防止上游漏调 endStream 时界面永远停在半截流式文本区。设为 0 可关闭。
+   */
+  private static final int IDLE_END_STREAM_MS = 60_000;
+
+  /** 宽度完全未知时的安全默认，避免 0 宽导致高度被算成几百行 */
+  private static final int FALLBACK_WIDTH = 600;
+
+  /**
+   * 子组件的 <b>preferred</b> 宽度。
+   *
+   * <p>绝对不能填 {@code Integer.MAX_VALUE}：BoxLayout(Y_AXIS) 容器的 preferred width
+   * 取子组件 preferred width 的最大值，填 MAX_VALUE 会让容器 preferred width 爆炸，
+   * 经 {@code getPreferredScrollableViewportSize()} 传给 JScrollPane，
+   * 最终把整个面板撑到三万多像素宽 —— 表现就是"白屏/黑屏 + 两条横贯的边框线"。
+   *
+   * <p>实际显示宽度由 {@code maximumSize} 决定，那里才用 MAX_VALUE。
+   */
+  private static final int PREFERRED_WIDTH = 600;
+
+  /** 超过这个宽度就认为是算错了（正常窗口不会这么宽），退回默认值 */
+  private static final int MAX_SANE_WIDTH = 4000;
+
   private static final JBColor CARD_BORDER =
       JBColor.namedColor("Component.borderColor", new JBColor(0xC9CCCF, 0x4A4F55));
   private static final JBColor HEADER_BG =
@@ -71,12 +96,16 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   /** 本轮是否已结束，用于丢弃 endStream 之后迟到的 chunk */
   private volatile boolean ended = false;
 
+  /** 本轮流式的首帧是否已上屏（首帧立即刷，不等 80ms 定时器） */
+  private boolean firstPaint = true;
+
   /** 注入 Accept 的处理逻辑，例如把代码插入编辑器 */
   public void setAcceptHandler(@Nullable java.util.function.Consumer<String> handler) {
     this.acceptHandler = handler;
   }
   private final StringBuilder streamBuf = new StringBuilder();
   private Timer flushTimer;
+  private Timer idleWatchdog;
   private boolean stickToBottom = true;
 
   public MarkdownCardPanel(@NotNull Project project) {
@@ -152,6 +181,11 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   /** 一次性渲染完整回复 */
   public void render(@NotNull String markdown) {
     if (markdown == null) markdown = "";
+    if (!SwingUtilities.isEventDispatchThread()) {
+      final String finalMd = markdown;
+      runOnEdt(() -> render(finalMd));
+      return;
+    }
     // 防空：不要用空内容把已经显示的东西刷掉。
     // 重复输入 / 多次结束信号时很容易出现第二次 render("")，把界面清空成白板。
     if (markdown.isBlank()) {
@@ -160,30 +194,41 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     }
 
     stopFlushTimer();
+    stopWatchdog();
     streaming = false;
     streamArea = null;
     lastMarkdown = markdown;
     System.out.println("[MD] render " + dump(markdown));
 
     content.removeAll();
-    for (MdSegment seg : MarkdownSplitter.parse(markdown)) {
-      content.add(seg.code() ? buildCodeCard(seg) : buildTextCard(seg.body()));
+
+    java.util.List<MdSegment> segs = MarkdownSplitter.parse(markdown);
+    System.out.println("[MD] parse segs=" + (segs == null ? "null" : segs.size()));
+
+    if (segs == null || segs.isEmpty()) {
+      // 兜底：splitter 一个段都没切出来时，把原文整块铺一个文本区。
+      // 否则 content 里只剩一个 glue，界面上就是一片空白（深色主题下即"黑屏"）。
+      System.out.println("[MD] splitter returned nothing, fallback to raw text");
+      content.add(buildTextCard(markdown));
       content.add(Box.createVerticalStrut(6));
+    } else {
+      for (MdSegment seg : segs) {
+        if (seg == null) continue;
+        String body = seg.body();
+        if (body != null && body.isBlank() && !seg.code()) continue;
+        content.add(seg.code() ? buildCodeCard(seg) : buildTextCard(body == null ? "" : body));
+        content.add(Box.createVerticalStrut(6));
+      }
     }
     content.add(Box.createVerticalGlue());
 
-    content.revalidate();
-    content.repaint();
-    scroll.revalidate();
-    scroll.repaint();
+    relayout();
     scroll.getVerticalScrollBar().setValue(0);
 
     // 第二遍布局：文本区高度依赖父容器宽度，首遍可能还没拿到真实宽度
     SwingUtilities.invokeLater(() -> {
       if (disposed) return;
-      content.revalidate();
-      content.repaint();
-      scroll.repaint();
+      relayout();
       System.out.println("[MD] afterLayout showing=" + isShowing()
           + " panel=" + getBounds()
           + " kids=" + content.getComponentCount()
@@ -191,7 +236,42 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
           + " viewport=" + scroll.getViewport().getSize()
           + " child0=" + (content.getComponentCount() > 0
           ? String.valueOf(content.getComponent(0).getBounds()) : "none"));
+      debugDump();
     });
+  }
+
+  // ================= 诊断 =================
+
+  /**
+   * 打印整棵组件树的真实尺寸。白屏/黑屏时一眼定位是哪一层塌成了 0 高。
+   * 从外部也可主动调用：{@code panel.debugDump()}。
+   */
+  public void debugDump() {
+    runOnEdt(() -> {
+      StringBuilder sb = new StringBuilder("\n[MD] ==== TREE ====");
+      sb.append("\n[MD] lastMarkdownLen=").append(getLastMarkdown().length());
+      dumpComp(this, 0, sb);
+      sb.append("[MD] ==== END ====");
+      System.out.println(sb);
+    });
+  }
+
+  private static void dumpComp(Component c, int depth, StringBuilder sb) {
+    sb.append('\n');
+    for (int i = 0; i < depth; i++) sb.append("  ");
+    sb.append(c.getClass().getSimpleName())
+        .append(" bounds=").append(c.getBounds())
+        .append(" pref=").append(c.getPreferredSize())
+        .append(" vis=").append(c.isVisible())
+        .append(" showing=").append(c.isShowing())
+        .append(" bg=").append(c.getBackground());
+    if (c instanceof JTextComponent) {
+      String t = ((JTextComponent) c).getText();
+      sb.append(" textLen=").append(t == null ? -1 : t.length());
+    }
+    if (c instanceof Container) {
+      for (Component k : ((Container) c).getComponents()) dumpComp(k, depth + 1, sb);
+    }
   }
 
   /** 开始一轮流式输出 */
@@ -204,12 +284,10 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     runOnEdt(() -> {
       if (disposed) return;
       stopFlushTimer();
-      streamArea = new PlainTextArea(false, "");
-      content.removeAll();
-      content.add(streamArea);
-      content.add(Box.createVerticalGlue());
-      content.revalidate();
-      content.repaint();
+      streamArea = null;          // 强制重建，避免复用上一轮已渲染的实例
+      firstPaint = true;
+      ensureStreamArea();
+      restartWatchdog();
     });
   }
 
@@ -221,6 +299,26 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     stickToBottom = true;
     streamBuf.setLength(0);
     lastMarkdown = "";
+  }
+
+  /**
+   * 在 EDT 上确保流式文本区存在。
+   *
+   * <p><b>这是本次修复的核心</b>：{@code beginStream()} 和 {@code append()} 的「首次自动开流」
+   * 两条路径都必须走这里。原实现只在 beginStream 里 new 组件，而 append 自动开流时只改了状态，
+   * 导致 {@code streamArea == null}，flushNow() 每次静默 return，所有 chunk 被丢弃 → 白屏。
+   */
+  private void ensureStreamArea() {
+    if (streamArea != null) return;
+    String cur;
+    synchronized (streamBuf) { cur = streamBuf.toString(); }
+    streamArea = new PlainTextArea(false, cur);
+    streamArea.setAlignmentX(LEFT_ALIGNMENT);
+    content.removeAll();
+    content.add(streamArea);
+    content.add(Box.createVerticalGlue());
+    relayout();
+    System.out.println("[MD] streamArea created, initialLen=" + cur.length());
   }
 
   /** 追加流式内容，可在任意线程调用 */
@@ -247,7 +345,14 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
 
     runOnEdt(() -> {
       if (disposed || gen != streamGen) return;   // 跨轮的旧任务直接丢弃
-      scheduleFlush();
+      ensureStreamArea();       // 自动开流时补建 UI，而不是让 flushNow 静默吞掉
+      restartWatchdog();
+      if (firstPaint) {
+        firstPaint = false;
+        flushNow();             // 首帧立即上屏，不等 80ms
+      } else {
+        scheduleFlush();
+      }
     });
   }
 
@@ -267,6 +372,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
         ended = true;               // 之后迟到的 append 一律丢弃
       }
       streaming = false;
+      stopWatchdog();
 
       // 空内容不要把已显示的东西刷掉
       if (text.isBlank() && !lastMarkdown.isEmpty()) {
@@ -283,17 +389,19 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   }
 
   public void clear() {
-    stopFlushTimer();
-    streaming = false;
-    streamArea = null;
-    lastMarkdown = "";
-    synchronized (streamBuf) {
-      streamBuf.setLength(0);
-    }
-    content.removeAll();
-    content.add(Box.createVerticalGlue());
-    content.revalidate();
-    content.repaint();
+    runOnEdt(() -> {
+      stopFlushTimer();
+      stopWatchdog();
+      streaming = false;
+      streamArea = null;
+      lastMarkdown = "";
+      synchronized (streamBuf) {
+        streamBuf.setLength(0);
+      }
+      content.removeAll();
+      content.add(Box.createVerticalGlue());
+      relayout();
+    });
   }
 
   public boolean isStreaming() {
@@ -314,7 +422,8 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
       callback.accept(getLastMarkdown());
       return;
     }
-    ApplicationManager.getApplication().invokeLater(() -> callback.accept(getLastMarkdown()));
+    ApplicationManager.getApplication()
+        .invokeLater(() -> callback.accept(getLastMarkdown()), ModalityState.any());
   }
 
   // ================= 流式调度 =================
@@ -336,21 +445,59 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     }
   }
 
+  /** 兜底：静默过久就强制收尾，避免上游漏调 endStream 时界面永远停在半截 */
+  private void restartWatchdog() {
+    if (IDLE_END_STREAM_MS <= 0) return;
+    if (idleWatchdog == null) {
+      idleWatchdog = new Timer(IDLE_END_STREAM_MS, e -> {
+        System.out.println("[MD] watchdog: no endStream within "
+            + IDLE_END_STREAM_MS + "ms, force endStream");
+        endStream();
+      });
+      idleWatchdog.setRepeats(false);
+    }
+    idleWatchdog.restart();
+  }
+
+  private void stopWatchdog() {
+    if (idleWatchdog != null) {
+      idleWatchdog.stop();
+      idleWatchdog = null;
+    }
+  }
+
   /** 流式刷新：把全量文本塞进唯一的文本区，不做任何解析 / 卡片重建 */
   private void flushNow() {
     // 流式已结束就不再刷新，否则会把 render() 刚建好的卡片清掉
     if (disposed || !streaming) return;
-    // 不再自行补建：补建会 removeAll()，误清已渲染的内容
+    // 不再「静默 return」：null 时补建，保证自动开流的路径也能出内容
+    ensureStreamArea();
     if (streamArea == null) return;
+
     String text;
     synchronized (streamBuf) {
       text = streamBuf.toString();
     }
+    if (text.isEmpty()) return;      // 不用空文本覆盖已显示的内容
     lastMarkdown = text;
     streamArea.setText(text);
-    content.revalidate();
-    content.repaint();
+    relayout();
     scrollToBottom();
+  }
+
+  /**
+   * 统一的重排出口。
+   *
+   * <p>原来只调 {@code content.revalidate()}，重排只会冒泡到 validate root（JBScrollPane），
+   * 外层消息列表不知道这张卡片长高了，内容就画在 0 高度区域里 —— 表现同样是「不显示」。
+   */
+  private void relayout() {
+    content.revalidate();
+    revalidate();             // MarkdownCardPanel 自身
+    content.repaint();
+    repaint();
+    scroll.revalidate();
+    scroll.repaint();
   }
 
   /** 主题切换但仍在流式时：重建文本区即可 */
@@ -358,8 +505,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     if (streamArea != null) {
       streamArea.applyTheme(false);
     }
-    content.revalidate();
-    content.repaint();
+    relayout();
   }
 
   private void scrollToBottom() {
@@ -368,6 +514,30 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
       JScrollBar bar = scroll.getVerticalScrollBar();
       bar.setValue(bar.getMaximum());
     });
+  }
+
+  /**
+   * 文本区可用的宽度。
+   *
+   * <p>依次取：viewport 宽度 → 本面板宽度 → 外层父容器宽度 → 常量兜底。
+   * 原实现在宽度为 0 时直接 Super.getPreferredSize()，
+   * 会把一段长文本按 ~100px 宽换算成上百行，撑出异常高度。
+   *
+   * <p>末尾的 MAX_SANE_WIDTH 夹断是<b>断环保险</b>：一旦上层把宽度算崩（几万像素），
+   * 这里不再跟着一起崩，退回默认值。
+   */
+  private int availableWidth() {
+    int w = 0;
+    if (scroll != null && scroll.getViewport() != null) {
+      w = scroll.getViewport().getWidth();
+    }
+    if (w <= 0) w = getWidth();
+    if (w <= 0) {
+      Container p = getParent();
+      w = p == null ? 0 : p.getWidth();
+    }
+    if (w <= 0 || w > MAX_SANE_WIDTH) w = FALLBACK_WIDTH;
+    return w;
   }
 
   // ================= 卡片 =================
@@ -419,8 +589,9 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     header.add(Box.createHorizontalStrut(2));
 
     // 固定 header 高度
+    // preferred 宽度必须是有限值，maximum 才用 MAX_VALUE（见 PREFERRED_WIDTH 注释）
     int headerH = Math.max(32, copyBtn.getPreferredSize().height + 8);
-    header.setPreferredSize(new Dimension(Integer.MAX_VALUE, headerH));
+    header.setPreferredSize(new Dimension(PREFERRED_WIDTH, headerH));
     header.setMaximumSize(new Dimension(Integer.MAX_VALUE, headerH));
     header.setMinimumSize(new Dimension(0, headerH));
 
@@ -441,7 +612,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     codeScroll.setAlignmentX(LEFT_ALIGNMENT);
 
     int h = pane.getFixedHeight();
-    codeScroll.setPreferredSize(new Dimension(Integer.MAX_VALUE, h));
+    codeScroll.setPreferredSize(new Dimension(PREFERRED_WIDTH, h));
     codeScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, h));
     codeScroll.setMinimumSize(new Dimension(0, h));
 
@@ -453,7 +624,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     Insets bi = card.getBorder().getBorderInsets(card);
     int cardH = headerH + h + bi.top + bi.bottom + 2;
 
-    card.setPreferredSize(new Dimension(Integer.MAX_VALUE, cardH));
+    card.setPreferredSize(new Dimension(PREFERRED_WIDTH, cardH));
     card.setMaximumSize(new Dimension(Integer.MAX_VALUE, cardH));
     card.setMinimumSize(new Dimension(0, cardH));
 
@@ -609,7 +780,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
       FontMetrics fm = getFontMetrics(base);
       int shown = Math.min(rowCount, MAX_CODE_LINES);
       fixedHeight = fm.getHeight() * Math.max(1, shown) + 14 + 10;
-      setPreferredSize(new Dimension(Integer.MAX_VALUE, fixedHeight));
+      setPreferredSize(new Dimension(PREFERRED_WIDTH, fixedHeight));
     }
 
     int getRowCount() { return rowCount; }
@@ -618,7 +789,10 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     @Override public Dimension getMaximumSize() { return new Dimension(Integer.MAX_VALUE, fixedHeight); }
     @Override public Dimension getMinimumSize() { return new Dimension(0, fixedHeight); }
 
-    @Override public Dimension getPreferredScrollableViewportSize() { return getPreferredSize(); }
+    /** 不能返回 getPreferredSize()：会把上层撑开，见 PREFERRED_WIDTH 注释 */
+    @Override public Dimension getPreferredScrollableViewportSize() {
+      return new Dimension(PREFERRED_WIDTH, fixedHeight);
+    }
     @Override public int getScrollableUnitIncrement(Rectangle r, int o, int d) { return 16; }
     @Override public int getScrollableBlockIncrement(Rectangle r, int o, int d) { return Math.max(16, r.height); }
     @Override public boolean getScrollableTracksViewportWidth() { return false; }
@@ -662,7 +836,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     private static final Set<String> GO = set("break case chan const continue default defer else fallthrough for func go goto if import interface map package range return select struct switch type var true false nil");
     private static final Set<String> RS = set("as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while");
     private static final Set<String> SQL = set("select from where insert into values update set delete create table drop alter add primary key foreign references join left right inner outer on group by order having limit offset as distinct and or not null is in like between union all");
-    private static final Set<String> KT = set("abstract actual as break by catch class companion const constructor continue crossinline data do dynamic else enum expect external false final finally for fun get if import infix init inline interface internal is lateinit noinline null object open operator out override package private protected public reified return sealed set super suspend tailrec this throw true try typealias val var vararg when where while");
+    private static final Set<String> KT = set("abstract actual as break by catch class companion const constructor continue crossinline data do dynamic else enum expect external false final finally for fun get if import in infix init inline interface internal is lateinit noinline null object open operator out override package private protected public reified return sealed set super suspend tailrec this throw true try typealias val var vararg when where while");
     private static final Set<String> CS = set("abstract as base bool break byte case catch char checked class const continue decimal default delegate do double else enum event explicit extern false finally fixed float for foreach goto if implicit in int interface internal is lock long namespace new null object operator out override params private protected public readonly ref return sbyte sealed short sizeof stackalloc static string struct switch this throw true try typeof uint ulong unchecked unsafe ushort using var virtual void volatile while");
     private static final Set<String> SH = set("if then else elif fi for while do done case esac function in until select return local export echo cd source exit set unset trap");
 
@@ -762,8 +936,11 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   /**
    * 只读文本区：正文与流式输出共用。
    * 高度按父容器可用宽度手动量，保证 BoxLayout 下不塌陷成 0 高度（白屏常见成因）。
+   *
+   * <p>注意：这里刻意做成<b>非 static</b> 内部类，才能拿到外层 {@code scroll} 的 viewport 宽度，
+   * 在父容器尚未布局时也能算出一个合理的换行宽度。
    */
-  private static final class PlainTextArea extends JTextArea {
+  private final class PlainTextArea extends JTextArea {
 
     private boolean code;
 
@@ -793,24 +970,33 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
       }
     }
 
+    /**
+     * 高度按可用宽度手动量；宽度返回一个<b>有限常量</b>。
+     *
+     * <p>宽度不能返回 availableWidth()：BoxLayout 会拿子组件的 preferred width
+     * 当容器的 preferred width，再经 viewport 反喂回来，形成自增的宽度环。
+     * 反正 tracksViewportWidth=true 会把宽度拉伸到 viewport 宽度，
+     * preferred width 填多少都不影响显示，只影响"容器该多宽"。
+     */
     @Override public Dimension getPreferredSize() {
-      int w = getParent() == null ? 0 : getParent().getWidth();
-      if (w <= 0) {
-        // 宽度未知时给一个安全默认，避免 0 宽 0 高 → 白屏
-        Dimension d = super.getPreferredSize();
-        return new Dimension(Math.max(100, d.width), Math.max(20, d.height));
-      }
+      int w = availableWidth();
       Insets in = getInsets();
       FontMetrics fm = getFontMetrics(getFont());
       int innerW = Math.max(1, w - in.left - in.right);
 
+      String t = getText();
+      if (t == null || t.isEmpty()) {
+        return new Dimension(PREFERRED_WIDTH, Math.max(20, fm.getHeight() + in.top + in.bottom));
+      }
+
       int lines = 0;
-      for (String para : getText().split("\n", -1)) {
+      for (String para : t.split("\n", -1)) {
         if (para.isEmpty()) { lines++; continue; }
         lines += code ? 1
             : Math.max(1, (int) Math.ceil(fm.stringWidth(para) / (double) innerW));
       }
-      return new Dimension(w, Math.max(20, lines * fm.getHeight() + in.top + in.bottom));
+      return new Dimension(PREFERRED_WIDTH,
+          Math.max(20, lines * fm.getHeight() + in.top + in.bottom));
     }
 
     @Override public Dimension getMaximumSize() {
@@ -834,7 +1020,16 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
     /** 卡片与 Copy 按钮重叠，必须关掉优化绘制，否则滚动留残影 */
     @Override public boolean isOptimizedDrawingEnabled() { return false; }
 
-    @Override public Dimension getPreferredScrollableViewportSize() { return getPreferredSize(); }
+    /**
+     * 不能返回 getPreferredSize()！
+     * 因为 tracksViewportWidth=true，viewport 宽度会反过来等于这个值，
+     * 而 preferred 又由子组件宽度算出 —— 一旦某个子组件 preferred 宽度是
+     * Integer.MAX_VALUE，这个环会把面板撑到几万像素宽（白屏元凶）。
+     * 固定成一个有限宽度，实际显示宽度仍由 viewport 决定。
+     */
+    @Override public Dimension getPreferredScrollableViewportSize() {
+      return new Dimension(PREFERRED_WIDTH, Math.max(1, getPreferredSize().height));
+    }
     @Override public int getScrollableUnitIncrement(Rectangle r, int o, int d) { return 16; }
     @Override public int getScrollableBlockIncrement(Rectangle r, int o, int d) { return Math.max(16, r.height); }
     @Override public boolean getScrollableTracksViewportWidth() { return true; }
@@ -863,9 +1058,14 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
 
   // ================= 工具 =================
 
+  /**
+   * 用 {@link ModalityState#any()} 提交：
+   * 上游常在模态进度（"Waiting for response…"）里跑流式，
+   * 默认的 NON_MODAL 会把任务压到模态结束才执行 —— 期间界面一片空白。
+   */
   private static void runOnEdt(@NotNull Runnable r) {
     if (SwingUtilities.isEventDispatchThread()) r.run();
-    else ApplicationManager.getApplication().invokeLater(r);
+    else ApplicationManager.getApplication().invokeLater(r, ModalityState.any());
   }
 
   private static Color codeBg() {
@@ -884,6 +1084,7 @@ public class MarkdownCardPanel extends JPanel implements Disposable {
   @Override public void dispose() {
     disposed = true;
     stopFlushTimer();
+    stopWatchdog();
     content.removeAll();
   }
 }
