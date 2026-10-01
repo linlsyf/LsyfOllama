@@ -1,11 +1,13 @@
 package com.lsyf.lsyfollama.ui.view;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
@@ -50,6 +52,10 @@ public class AskAboutSelectionAction extends AnAction {
         .setCancelKeyEnabled(true)        // Esc 关闭
         .setCancelOnClickOutside(false)   // 要输入，别一点外面就消失
         .setMinSize(new Dimension(480, 320))
+        .setCancelButton(new IconButton("关闭 (Esc)",           // ← 原生 X，点击自动 cancel
+            AllIcons.Actions.Close,
+            AllIcons.Actions.CloseHovered))
+
 //        .setDimensionServiceKey("AiChatPopup") // 记住上次窗口大小
         .createPopup();
 

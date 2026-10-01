@@ -49,7 +49,6 @@ public class ChatPanel extends JPanel implements com.intellij.openapi.Disposable
     JBScrollPane scroll = new JBScrollPane(messageBox);
     scroll.setBorder(JBUI.Borders.empty());
     add(scroll, BorderLayout.CENTER);
-
     // --- 输入区 ---
     input.setLineWrap(true);
     input.setWrapStyleWord(true);
@@ -63,7 +62,6 @@ public class ChatPanel extends JPanel implements com.intellij.openapi.Disposable
 
     JButton sendBtn = new JButton("发送");
     sendBtn.addActionListener(e -> send());
-
     JPanel bottom = new JPanel(new BorderLayout(6, 6));
     bottom.add(new JBScrollPane(input), BorderLayout.CENTER);
     bottom.add(sendBtn, BorderLayout.EAST);
